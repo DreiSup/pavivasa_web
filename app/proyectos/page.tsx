@@ -1,43 +1,32 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import AntetituloSeccion from '@/components/ui/AntetituloSeccion'
-import Migas from '@/components/layout/Migas'
-import { proyectos } from '@/lib/datos'
-import { NOMBRE_SERVICIO } from '@/lib/tipos'
+import { Suspense } from 'react'
+import FiltrosProyectos from '@/components/secciones/FiltrosProyectos'
+import { municipiosConObra, proyectos } from '@/lib/datos'
 
 export const metadata: Metadata = {
   title: 'Proyectos',
-  description: 'Obra ejecutada.',
+  description:
+    'Obras de hormigón impreso, pulido, lavado y microcemento en Alicante y Valencia, con técnica, modelo, color y ficha de ejecución.',
   alternates: { canonical: '/proyectos/' },
 }
 
 export default function Proyectos() {
+  const municipios = municipiosConObra().length
+
   return (
     <>
-      <Migas items={[{ nombre: 'Proyectos' }]} />
-      <section className="px-[18px] md:px-lat-desktop py-9 md:py-14 flex flex-col gap-8">
-        <div className="flex flex-col gap-4">
-          <AntetituloSeccion>Proyectos</AntetituloSeccion>
-          <h1 className="font-display font-extrabold fs-hero text-46 md:text-64 leading-[1.05] m-0">
-            Obra ejecutada
-          </h1>
-        </div>
-
-        {proyectos.length === 0 ? (
-          <p className="text-16 text-tinta-media m-0">
-            Sin proyectos todavía. Añádelos en <code>content/proyectos.json</code>.
+      <section className="px-lat-movil md:px-lat-desktop pt-8 pb-6 md:pt-14 md:pb-10">
+        <div className="max-w-contenido mx-auto flex flex-col md:flex-row md:justify-between md:items-end gap-3 md:gap-16">
+          <h1 className="font-display font-extrabold text-46 md:text-88 leading-[0.98] md:leading-[0.95]">Proyectos</h1>
+          <p className="text-16 md:text-20 text-tinta-media md:max-w-[520px]">
+            {proyectos.length} obras<span className="hidden md:inline"> documentadas</span> en {municipios} municipios de Alicante y Valencia.
+            <span className="hidden md:inline"> Con técnica, modelo, color y, cuando lo tenemos, la ficha de ejecución.</span>
           </p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {proyectos.map((p) => (
-              <Link key={p.slug} href={`/proyectos/${p.slug}/`} className="flex flex-col gap-2 bg-fondo-alt p-5 no-underline">
-                <h2 className="font-display font-bold fs-h3 text-20 text-tinta m-0">{p.titulo}</h2>
-                <span className="font-mono text-d-11 text-acero">{NOMBRE_SERVICIO[p.servicio]}</span>
-              </Link>
-            ))}
-          </div>
-        )}
+        </div>
       </section>
+      <Suspense>
+        <FiltrosProyectos proyectos={proyectos} />
+      </Suspense>
     </>
   )
 }

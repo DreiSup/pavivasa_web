@@ -1,19 +1,23 @@
 /**
  * NAP único del sitio (nombre, dirección, teléfono). Ningún componente escribe
- * un teléfono o una dirección a mano: todo sale de aquí. Lo que aún no esté
- * confirmado llega vacío por variable de entorno y se muestra con <DatoPendiente>.
+ * un teléfono o una dirección a mano: todo sale de aquí.
+ *
+ * Los valores por defecto son los que publica pavivasa.com (sept. 2026). Las
+ * variables de entorno los sobreescriben. Lo que la web no da (WhatsApp,
+ * horario) llega vacío y se muestra con <DatoPendiente>.
  */
 
-const telefonoEnv = process.env.NEXT_PUBLIC_TELEFONO?.trim() || undefined
+const telefonoEnv = process.env.NEXT_PUBLIC_TELEFONO?.trim() || '627 66 31 46'
 const whatsappEnv = process.env.NEXT_PUBLIC_WHATSAPP?.trim() || undefined
-const direccionEnv = process.env.NEXT_PUBLIC_DIRECCION?.trim() || undefined
+const direccionEnv = process.env.NEXT_PUBLIC_DIRECCION?.trim() || 'Calle Blasco Ibáñez, 16'
 
 export const nap = {
   nombre: 'Pavivasa',
-  email: process.env.EMAIL_DESTINO ?? 'info@pavivasa.com',
+  gestor: 'Gabriel',
+  email: process.env.EMAIL_DESTINO ?? 'gabriel.pavivasa@gmail.com',
   telefono: telefonoEnv,
-  telefonoMostrado: telefonoEnv ?? '9XX XXX XXX',
-  telefonoHref: telefonoEnv ? `tel:+34${telefonoEnv.replace(/\D/g, '')}` : undefined,
+  telefonoInternacional: `+34 ${telefonoEnv}`,
+  telefonoHref: `tel:+34${telefonoEnv.replace(/\D/g, '')}`,
   whatsapp: whatsappEnv,
   whatsappHref: whatsappEnv
     ? `https://wa.me/34${whatsappEnv.replace(/\D/g, '')}?text=${encodeURIComponent(
@@ -21,11 +25,26 @@ export const nap = {
       )}`
     : undefined,
   direccion: direccionEnv,
-  direccionMostrada: direccionEnv ?? 'CALLE Y NÚMERO · MUNICIPIO · CP',
-  municipio: 'MUNICIPIO',
-  codigoPostal: '00000',
-  provincia: 'PROVINCIA',
+  municipio: 'Sollana',
+  codigoPostal: '46430',
+  provincia: 'Valencia',
   pais: 'ES',
+  /** Una sola línea para pie, menú y legales. */
+  direccionCompleta: `${direccionEnv} · 46430 Sollana (Valencia)`,
+  redes: [
+    { nombre: 'Facebook', href: 'https://facebook.com/GabrielPavivasa' },
+    { nombre: 'Instagram', href: 'https://instagram.com/gabrielpavivasa.es' },
+    { nombre: 'X', href: 'https://x.com/GabrielPavivasa' },
+  ],
+}
+
+/** Claims verificables en la web actual. Se usan en BarraConfianza, Empresa y Presupuesto. */
+export const claims = {
+  anios: 'Más de 15 años de oficio',
+  garantia: '10 años de garantía con mantenimiento',
+  repiten: 'Más del 30 % de clientes repiten',
+  /** Cobertura declarada en /empresa/; pendiente de confirmar con el cliente. */
+  provincias: ['Valencia', 'Castellón', 'Alicante', 'Murcia', 'Albacete', 'Almería'],
 }
 
 export const sitio = {

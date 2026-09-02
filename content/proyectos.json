@@ -1,1 +1,348 @@
-[]
+[
+  {
+    "slug": "hormigon-impreso-denia",
+    "titulo": "Piedra inglesa, gris mate y crema",
+    "tituloLargo": "Piedra inglesa en gris mate y crema para una vivienda en urbanización",
+    "servicio": "hormigon-impreso",
+    "municipio": "Dénia",
+    "provincia": "Alicante",
+    "tipo": "Vivienda en urbanización",
+    "modelo": "Piedra inglesa",
+    "color": "Gris mate y crema",
+    "anioFoto": 2017,
+    "ficha": {
+      "hormigon": "HM20",
+      "espesor": "10 cm",
+      "arido": "12 mm",
+      "mallazo": "20×30 · 4 mm",
+      "fibra": "Polipropileno",
+      "dosificacionColor": "4 kg/m²"
+    },
+    "encargo": [
+      "Pavimento exterior de una vivienda en una urbanización de Dénia (Alicante). La tendencia del hormigón impreso sigue creciendo en urbanizaciones y unifamiliares: lejos de ser una moda pasajera, cada día presupuestamos trabajos de este tipo."
+    ],
+    "ejecucion": [
+      "Hormigón HM20 con 10 cm de espesor y árido de 12 mm, con mallazo de 20×30 y 4 mm y fibra de polipropileno, complementado con 4 kg de color por metro cuadrado.",
+      "En la misma vivienda conviven dos acabados: piedra inglesa en gris mate y piedra inglesa en crema. El cliente quedó contento con el resultado y con el trato durante la obra; para nosotros, eso es lo que se convierte en nuevos trabajos recomendados."
+    ],
+    "imagenes": [
+      { "etiqueta": "Foto principal · vista general del pavimento · dos acabados" },
+      { "etiqueta": "02 · gris mate" },
+      { "etiqueta": "03 · crema" },
+      { "etiqueta": "04 · detalle molde" }
+    ],
+    "destacado": true
+  },
+  {
+    "slug": "hormigon-impreso-moraira",
+    "titulo": "Manteado, gris y marrón",
+    "tituloLargo": "Manteado en gris y marrón para un chalé con jardín y piscina",
+    "servicio": "hormigon-impreso",
+    "municipio": "Moraira",
+    "provincia": "Alicante",
+    "tipo": "Chalé con jardín y piscina",
+    "modelo": "Manteado",
+    "color": "Gris y marrón",
+    "anioFoto": 2016,
+    "ficha": {
+      "hormigon": "HM20",
+      "espesor": "12 cm",
+      "arido": "12 mm",
+      "acabado": "Mate"
+    },
+    "encargo": [
+      "Chalé unifamiliar con jardín y piscina en una urbanización de Moraira. Un pavimento que diera al conjunto un toque vanguardista sin restar protagonismo a la piscina."
+    ],
+    "ejecucion": [
+      "Hormigón impreso modelo manteado en gris y marrón, con 12 cm de espesor de hormigón HM20, árido de 12 mm y acabado mate.",
+      "El impreso es una de las técnicas decorativas de exterior con más auge: la gama de texturas y colores permite un pavimento atractivo, de fácil mantenimiento y fácil personalización, tanto para renovar suelos como para construir un pavimento nuevo."
+    ],
+    "imagenes": [
+      { "etiqueta": "Foto principal · chalé con piscina · manteado" },
+      { "etiqueta": "02 · entrada" }
+    ],
+    "destacado": true
+  },
+  {
+    "slug": "hormigon-impreso-calpe-2",
+    "titulo": "Sillería grande, arena",
+    "tituloLargo": "Sillería grande en arena con juntas de dilatación de 5×5",
+    "servicio": "hormigon-impreso",
+    "municipio": "Calpe",
+    "provincia": "Alicante",
+    "tipo": "Pavimento exterior",
+    "modelo": "Sillería grande",
+    "color": "Arena",
+    "anioFoto": 2021,
+    "ficha": {
+      "hormigon": "HM25",
+      "espesor": "10 cm",
+      "arido": "12 mm",
+      "mallazo": "Sí",
+      "fibra": "Polipropileno",
+      "juntas": "5×5 m"
+    },
+    "encargo": ["Pavimento exterior de hormigón impreso en Calpe."],
+    "ejecucion": [
+      "Hormigón impreso en color arena y modelo sillería grande, con 10 cm de espesor de hormigón HM25, árido de 12 mm, mallazo y fibra de polipropileno, con juntas de dilatación de 5×5 y acabado impreso."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · sillería grande arena · original de móvil, 300 px" }],
+    "destacado": true
+  },
+  {
+    "slug": "hormigon-pulido-xabia",
+    "titulo": "Fratasado, crema 117",
+    "tituloLargo": "120 m² de hormigón pulido en crema 117 para una residencia en urbanización",
+    "servicio": "hormigon-pulido",
+    "municipio": "Xàbia",
+    "provincia": "Alicante",
+    "tipo": "Residencia en urbanización",
+    "modelo": "Fratasado",
+    "color": "Crema 117",
+    "superficie": 120,
+    "anioFoto": 2016,
+    "ficha": {},
+    "encargo": [
+      "Residencia en una urbanización de Xàbia, en la costa norte de la provincia de Alicante, en la comarca de la Marina Alta."
+    ],
+    "ejecucion": [
+      "120 metros de pavimentación de hormigón pulido (fratasado) en color crema 117, elegido por el cliente. Este pavimento destaca por la variedad de colores disponibles y, sobre todo, por su dureza y su resistencia a las manchas y a las condiciones climatológicas."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · pavimento pulido crema 117 · sin foto de obra en la web actual" }],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-pulido-alicante",
+    "titulo": "Fratasado, 117 crema marfil",
+    "tituloLargo": "Hormigón pulido en 117 crema marfil: interior, exterior y contorno de piscina",
+    "servicio": "hormigon-pulido",
+    "municipio": "Benissa",
+    "provincia": "Alicante",
+    "zona": "Urbanización Montemar la Viña",
+    "tipo": "Unifamiliar: interior, exterior y piscina",
+    "modelo": "Fratasado",
+    "color": "117 crema marfil",
+    "anioFoto": 2017,
+    "ficha": {},
+    "encargo": [
+      "Vivienda unifamiliar en la urbanización Montemar la Viña, en Benissa. Un mismo pavimento continuo para el interior, el exterior y el contorno de la piscina."
+    ],
+    "ejecucion": [
+      "Hormigón pulido (fratasado) en color 117, crema marfil, en el interior y el exterior de la vivienda y alrededor de la piscina. El resultado es muy vanguardista y el cliente quedó satisfecho."
+    ],
+    "imagenes": [
+      { "etiqueta": "Foto principal · pulido crema marfil · interior" },
+      { "etiqueta": "02 · contorno de piscina" }
+    ],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-pulido-daimus",
+    "titulo": "Nave industrial, 2000 m²",
+    "tituloLargo": "2000 m² de hormigón pulido en una nave industrial con muelle de carga",
+    "servicio": "hormigon-pulido",
+    "municipio": "Daimús",
+    "provincia": "Valencia",
+    "tipo": "Nave industrial con muelle de carga",
+    "modelo": "Pulido",
+    "superficie": 2000,
+    "anioFoto": 2016,
+    "ficha": {},
+    "encargo": [
+      "Nave industrial en Daimús, en la comarca de La Safor. El encargo incluía el muelle de carga y descarga y otros trabajos de construcción para terminar la estructura interior."
+    ],
+    "ejecucion": [
+      "2000 metros de pavimentación de hormigón pulido. Nos dedicamos a este tipo de pavimentación desde hace más de 15 años: durabilidad, resistencia y bajo coste lo hacen idóneo para soleras y naves industriales."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · nave industrial · pulido" }],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-lavado-valencia-godella",
+    "titulo": "Árido visto 12 mm, gris",
+    "tituloLargo": "Hormigón lavado gris con árido de 12 mm y piedra vista para un jardín",
+    "servicio": "hormigon-lavado",
+    "municipio": "Godella",
+    "provincia": "Valencia",
+    "tipo": "Jardín de vivienda",
+    "modelo": "Valencia aserras",
+    "color": "Gris",
+    "anioFoto": 2017,
+    "ficha": {
+      "arido": "12 mm · piedra vista"
+    },
+    "encargo": ["Jardín de una vivienda en Godella (Valencia)."],
+    "ejecucion": [
+      "Hormigón lavado (árido visto) en color gris con árido de 12 mm y piedra vista, modelo valencia aserras.",
+      "Además de su belleza, este hormigón mejora mucho el agarre: por eso se usa en aceras, plazas, zonas transitables y jardines. Su facilidad de ejecución respecto al hormigón convencional lo convierte en una alternativa más económica."
+    ],
+    "imagenes": [
+      { "etiqueta": "Foto principal · panorámica del jardín" },
+      { "etiqueta": "02 · detalle del pavimento" }
+    ],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-impreso-calpe",
+    "titulo": "Piedra inglesa, gris medio",
+    "tituloLargo": "Piedra inglesa en gris medio para una urbanización de Calpe",
+    "servicio": "hormigon-impreso",
+    "municipio": "Calpe",
+    "provincia": "Alicante",
+    "tipo": "Urbanización",
+    "modelo": "Piedra inglesa",
+    "color": "Gris medio",
+    "anioFoto": 2016,
+    "ficha": {},
+    "encargo": ["Urbanización en Calpe, en la costa norte de la provincia de Alicante, en la comarca de la Marina Alta."],
+    "ejecucion": [
+      "Pavimento de hormigón impreso en color gris medio y modelo piedra inglesa, ambos a elección del cliente. Este pavimento destaca por la variedad de diseños y, sobre todo, por su dureza y su resistencia a las manchas y a las condiciones climatológicas."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · piedra inglesa gris medio" }],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-impreso-benissa",
+    "titulo": "Adoquín belga, gris oscuro",
+    "tituloLargo": "Adoquín belga en gris oscuro sobre un terreno con fuerte desnivel",
+    "servicio": "hormigon-impreso",
+    "municipio": "Benissa",
+    "provincia": "Alicante",
+    "zona": "Urbanización Monte Mar",
+    "tipo": "Urbanización · terreno con desnivel",
+    "modelo": "Adoquín belga",
+    "color": "Gris oscuro",
+    "anioFoto": 2016,
+    "ficha": {},
+    "encargo": [
+      "Urbanización Monte Mar, en Benissa. El terreno tenía un fuerte desnivel, que se rellenó para evitar la acumulación de agua en algunas zonas."
+    ],
+    "ejecucion": ["Pavimento de hormigón impreso en color gris oscuro y modelo adoquín belga, ambos a elección del cliente."],
+    "imagenes": [{ "etiqueta": "Foto principal · adoquín belga · desnivel" }],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-impreso-lliria",
+    "titulo": "Sillería, color 107",
+    "tituloLargo": "Sillería en color 107 para una urbanización de Llíria",
+    "servicio": "hormigon-impreso",
+    "municipio": "Llíria",
+    "provincia": "Valencia",
+    "tipo": "Urbanización",
+    "modelo": "Sillería",
+    "color": "107",
+    "anioFoto": 2016,
+    "ficha": {},
+    "encargo": ["Urbanización en Llíria, capital de la comarca del Camp de Túria (Valencia)."],
+    "ejecucion": ["Pavimento de hormigón impreso en color 107 y modelo sillería, ambos a elección del cliente."],
+    "imagenes": [{ "etiqueta": "Foto principal · sillería color 107" }],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-impreso-montaberner",
+    "titulo": "Piedra inglesa, gris muy oscuro",
+    "tituloLargo": "Piedra inglesa en gris muy oscuro con otros trabajos de construcción",
+    "servicio": "hormigon-impreso",
+    "municipio": "Montaverner",
+    "provincia": "Valencia",
+    "tipo": "Con otros trabajos de construcción",
+    "modelo": "Piedra inglesa",
+    "color": "Gris muy oscuro",
+    "anioFoto": 2016,
+    "ficha": {},
+    "encargo": [
+      "Montaverner, en la comarca de la Vall d'Albaida (Valencia). El proyecto incluyó otros trabajos de construcción necesarios para ejecutar el pavimento correctamente."
+    ],
+    "ejecucion": [
+      "Pavimento de hormigón impreso modelo piedra inglesa en color gris muy oscuro, elegidos por el cliente. La estampación puede imitar adoquines, piedra, baldosas o pizarras."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · piedra inglesa gris muy oscuro" }],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-pulido-benissa",
+    "titulo": "Pulido, crema 117",
+    "tituloLargo": "Hormigón pulido en crema 117 con mallazo, fibra y 4 kg de color por m²",
+    "servicio": "hormigon-pulido",
+    "municipio": "Benissa",
+    "provincia": "Alicante",
+    "zona": "Urbanización Monte Mar",
+    "tipo": "Urbanización",
+    "modelo": "Pulido",
+    "color": "Crema 117",
+    "anioFoto": 2016,
+    "ficha": {
+      "mallazo": "Sí",
+      "fibra": "Polipropileno",
+      "dosificacionColor": "4 kg/m²"
+    },
+    "encargo": ["Urbanización Monte Mar, en Benissa, en el noreste de la provincia de Alicante."],
+    "ejecucion": [
+      "Pavimento de hormigón pulido en color crema 117, a elección del cliente, ejecutado con mallazo y fibra de polipropileno y 4 kg de color por metro cuadrado."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · pulido crema 117" }],
+    "destacado": false
+  },
+  {
+    "slug": "hormigon-pulido-ribarroja-del-turia",
+    "titulo": "Nave industrial, color natural",
+    "tituloLargo": "Hormigón pulido en color natural para una nave industrial",
+    "servicio": "hormigon-pulido",
+    "municipio": "Riba-roja de Túria",
+    "provincia": "Valencia",
+    "tipo": "Nave industrial",
+    "modelo": "Pulido",
+    "color": "Natural",
+    "anioFoto": 2016,
+    "ficha": {
+      "mallazo": "Sí",
+      "fibra": "Polipropileno"
+    },
+    "encargo": ["Nave industrial en Riba-roja de Túria, en la comarca del Camp de Túria (Valencia)."],
+    "ejecucion": [
+      "Pavimento de hormigón pulido en color natural, a elección del cliente, con mallazo y fibra de polipropileno.",
+      "Pavimentamos naves industriales desde hace más de 15 años: durabilidad, resistencia y bajo coste hacen del pulido el pavimento idóneo para soleras y obra industrial."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · nave industrial · pulido natural" }],
+    "destacado": false
+  },
+  {
+    "slug": "microcemento-en-moraira",
+    "titulo": "Baño completo, gris claro",
+    "tituloLargo": "Cuarto de baño completo en microcemento gris claro",
+    "servicio": "microcemento",
+    "municipio": "Moraira",
+    "provincia": "Alicante",
+    "tipo": "Cuarto de baño completo",
+    "modelo": "Microcemento",
+    "color": "Gris claro",
+    "ficha": {},
+    "encargo": ["Cuarto de baño completo en una urbanización de Moraira, núcleo del término municipal de Teulada (Alicante)."],
+    "ejecucion": [
+      "Microcemento en color gris claro, a elección del cliente. El microcemento abarca desde suelos a paredes, zonas de estar, piscinas, baños, cocinas o muebles, y es resistente al agua y a las altas temperaturas."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · baño en microcemento gris claro · sin foto en la web actual" }],
+    "destacado": false
+  },
+  {
+    "slug": "microcemento-en-alicante",
+    "titulo": "Reforma de baño",
+    "tituloLargo": "Reforma completa de baño en microcemento con color elegido por diseñador",
+    "servicio": "microcemento",
+    "municipio": "Alicante",
+    "provincia": "Alicante",
+    "tipo": "Reforma completa de baño",
+    "modelo": "Microcemento",
+    "color": "A elección del diseñador",
+    "anioFoto": 2016,
+    "ficha": {},
+    "encargo": [
+      "Reforma completa de baño en Alicante. El cliente eligió modelo y color con el asesoramiento de un diseñador; en los últimos años los diseñadores nos piden muchos trabajos de microcemento por su belleza, elegancia, modernidad y rapidez de ejecución."
+    ],
+    "ejecucion": [
+      "Al no ser necesario eliminar el material existente, se abaratan costes y tiempos y se evitan las molestias del desescombro. El microcemento es resistente al agua y a las altas temperaturas."
+    ],
+    "imagenes": [{ "etiqueta": "Foto principal · ducha en microcemento" }],
+    "destacado": false
+  }
+]

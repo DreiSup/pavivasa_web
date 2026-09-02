@@ -1,0 +1,131 @@
+'use server'
+
+import { z } from 'zod'
+import { cookies, headers } from 'next/headers'
+import { enviarEventoCAPI } from '@/lib/meta-capi'
+import { nap, sitio } from '@/lib/config'
+
+export type EstadoEnvio = {
+  estado: 'inicial' | 'error' | 'enviando' | 'enviado'
+  errores: Record<string, string>
+  resumen?: { espacio: string; municipio: string }
+}
+
+const esquema = z.object({
+  nombre: z.string().min(1, 'Escribe tu nombre.'),
+  telefono: z
+    .string()
+    .transform((v) => v.replace(/[\s+]/g, '').replace(/^34/, ''))
+    .refine((v) => /^\d{9}$/.test(v), 'Escribe un número de 9 cifras para que podamos llamarte.'),
+  email: z.string().email().optional().or(z.literal('')),
+  espacio: z.string().min(1, 'Selecciona una opción.'),
+  municipio: z.string().optional().default(''),
+  mensaje: z.string().optional().default(''),
+  privacidad: z.string().optional(),
+  evento_id: z.string().optional().default(''),
+})
+
+// Límite de envíos por IP: 3 / hora. En memoria — se reinicia con cada despliegue.
+const envios = new Map<string, number[]>()
+const LIMITE = 3
+const VENTANA_MS = 60 * 60 * 1000
+
+function limitePorIp(ip: string) {
+  const ahora = Date.now()
+  const previos = (envios.get(ip) ?? []).filter((t) => ahora - t < VENTANA_MS)
+  if (previos.length >= LIMITE) return false
+  previos.push(ahora)
+  envios.set(ip, previos)
+  return true
+}
+
+export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData): Promise<EstadoEnvio> {
+  // 1. Honeypot: campo oculto con nombre plausible. Si viene relleno, éxito falso sin enviar.
+  const honeypot = formData.get('empresa_web')
+  if (typeof honeypot === 'string' && honeypot.length > 0) {
+    return { estado: 'enviado', errores: {} }
+  }
+
+  // 2. Validación
+  const analizado = esquema.safeParse(Object.fromEntries(formData.entries()))
+  if (!analizado.success) {
+    const errores: Record<string, string> = {}
+    for (const issue of analizado.error.issues) {
+      errores[String(issue.path[0])] = issue.message
+    }
+    return { estado: 'error', errores }
+  }
+
+  // 3. Límite por IP
+  const listaCabeceras = await headers()
+  const ip = listaCabeceras.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'anonimo'
+  if (!limitePorIp(ip)) {
+    return { estado: 'error', errores: { form: 'Demasiados envíos seguidos. Llámanos o escríbenos por WhatsApp.' } }
+  }
+
+  const { nombre, telefono, email, espacio, municipio, mensaje, evento_id: eventoId } = analizado.data
+
+  // 4. Email con Resend (si hay clave)
+  const apiKey = process.env.RESEND_API_KEY
+  if (apiKey) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: `${nap.nombre} <presupuesto@${new URL(sitio.url).hostname}>`,
+          to: nap.email,
+          reply_to: email || undefined,
+          subject: `Presupuesto — ${nombre} · ${espacio}`,
+          text: [
+            `Nombre: ${nombre}`,
+            `Teléfono: ${telefono}`,
+            `Email: ${email || '—'}`,
+            `Espacio: ${espacio}`,
+            `Municipio: ${municipio || '—'}`,
+            `Mensaje: ${mensaje || '—'}`,
+          ].join('\n'),
+        }),
+      })
+    } catch {
+      return {
+        estado: 'error',
+        errores: { form: 'No hemos podido enviarlo. Llámanos o escríbenos por WhatsApp.' },
+      }
+    }
+  }
+
+  // 5. Aviso por Telegram (si hay credenciales)
+  const telegramToken = process.env.TELEGRAM_BOT_TOKEN
+  const telegramChat = process.env.TELEGRAM_CHAT_ID
+  if (telegramToken && telegramChat) {
+    try {
+      await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: telegramChat,
+          text: ['🔔 Nuevo presupuesto', `${nombre} · ${telefono}`, espacio, municipio || '—'].join('\n'),
+        }),
+        signal: AbortSignal.timeout(8000),
+      })
+    } catch {
+      // No bloquea el envío por un fallo de Telegram.
+    }
+  }
+
+  // 6. Meta CAPI, deduplicado con el Pixel por evento_id
+  const listaCookies = await cookies()
+  await enviarEventoCAPI({
+    eventoId,
+    telefono,
+    email: email || undefined,
+    ip,
+    userAgent: listaCabeceras.get('user-agent') ?? '',
+    url: `${sitio.url}/presupuesto/`,
+    fbp: listaCookies.get('_fbp')?.value,
+    fbc: listaCookies.get('_fbc')?.value,
+  })
+
+  return { estado: 'enviado', errores: {}, resumen: { espacio, municipio: municipio || '—' } }
+}

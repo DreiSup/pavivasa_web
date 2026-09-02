@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pavivasa — tokens. Mismos valores que tailwind.config.ts: cambiar en los dos sitios. */
+:root {
+  --fondo: #e9eae6;
+  --fondo-alt: #dadcd6;
+  --tinta: #1b1e1c;
+  --tinta-media: #5c625e;
+  --pigmento: #d9a441;
+  --acero: #41535c;
+
+  --pigmento-hover: #c6902f;
+  --sobre-tinta: #dadcd6;
+  --pendiente-oscuro: #9aa09b;
+  --error: #8c3a2b;
+
+  --cabecera: 84px;
+  --cabecera-scroll: 60px;
+  --ancla-offset: 150px;
+  --cabecera-actual: 84px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-size: 16px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--pigmento);
+  color: var(--tinta);
+}
+
+/* Foco visible en todo elemento interactivo. Nunca outline: none. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--pigmento);
+  outline-offset: 2px;
+}
+:where(.btn-primario):focus-visible {
+  outline: 2px solid var(--tinta);
+  outline-offset: 3px;
+}
+
+/* Radio 0 en todo el sitio */
+:where(button, input, select, textarea, img, video, figure, article, aside) {
+  border-radius: 0;
+}
+
+/* Dato sin confirmar por el cliente */
+.pendiente {
+  color: var(--tinta-media);
+  border-bottom: 1px dotted var(--tinta-media);
+}
+.sobre-oscuro .pendiente {
+  color: var(--pendiente-oscuro);
+  border-bottom-color: var(--pendiente-oscuro);
+}
+
+/* Secciones destino de anclas */
+[id^='seccion-'] {
+  scroll-margin-top: var(--ancla-offset);
+}
+
+/* Movimiento contenido, y desactivable */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Eje de anchura de la display. Ajustar a la fuente elegida. */
+.fs-hero {
+  font-stretch: 125%;
+}
+.fs-h2 {
+  font-stretch: 120%;
+}
+.fs-h3 {
+  font-stretch: 115%;
+}
+.fs-logo {
+  font-stretch: 118%;
+}

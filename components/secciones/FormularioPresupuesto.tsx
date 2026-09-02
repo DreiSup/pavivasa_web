@@ -1,0 +1,127 @@
+'use client'
+
+import { useActionState, useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import { enviarPresupuesto, type EstadoEnvio } from '@/app/presupuesto/actions'
+import Campo, { claseInput } from '../ui/Campo'
+import Boton from '../ui/Boton'
+import { registrarEvento } from '@/lib/eventos'
+
+const estadoInicial: EstadoEnvio = { estado: 'inicial', errores: {} }
+
+/** Opciones del desplegable principal. Adaptar al negocio. */
+const ESPACIOS = ['Opción 1', 'Opción 2', 'Opción 3', 'Otro']
+
+export default function FormularioPresupuesto({ variante = 'completo' }: { variante?: 'completo' | 'corto' }) {
+  const [estado, accion, enviando] = useActionState(enviarPresupuesto, estadoInicial)
+  const telefonoRef = useRef<HTMLInputElement>(null)
+  const [eventoId, setEventoId] = useState('')
+  const eventoDisparado = useRef(false)
+
+  // event_id compartido entre Pixel (navegador) y CAPI (servidor) para deduplicar el Lead.
+  useEffect(() => {
+    setEventoId(crypto.randomUUID())
+  }, [])
+
+  useEffect(() => {
+    if (estado.estado === 'error' && estado.errores.telefono) telefonoRef.current?.focus()
+  }, [estado])
+
+  useEffect(() => {
+    if (estado.estado === 'enviado' && !eventoDisparado.current) {
+      eventoDisparado.current = true
+      registrarEvento('envio_formulario', {
+        metaEstandar: 'Lead',
+        metaEventId: eventoId,
+        conversionAds: true,
+        params: { espacio: estado.resumen?.espacio, municipio: estado.resumen?.municipio },
+      })
+    }
+  }, [estado, eventoId])
+
+  if (estado.estado === 'enviado') {
+    return (
+      <div className="sobre-oscuro bg-tinta text-fondo p-[26px] flex flex-col gap-5">
+        <p className="font-mono text-d-11 tracking-[0.08em] uppercase text-sobre-tinta m-0">Recibido</p>
+        <p className="font-display font-bold fs-h2 text-26 m-0">Te llamamos lo antes posible.</p>
+        <div className="font-mono text-d-11 leading-[1.9] text-sobre-tinta">
+          <p className="m-0">{estado.resumen?.espacio}</p>
+          <p className="m-0">{estado.resumen?.municipio}</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <form action={accion} className="flex flex-col gap-4" aria-busy={enviando}>
+      {estado.errores.form ? (
+        <p className="font-sans text-14 font-semibold text-error" aria-live="polite">
+          {estado.errores.form}
+        </p>
+      ) : null}
+
+      {/* Honeypot: oculto para personas, visible para bots */}
+      <input type="text" name="empresa_web" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+      <input type="hidden" name="evento_id" value={eventoId} />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Campo etiqueta="Nombre y apellidos" htmlFor="nombre" obligatorio>
+          <input id="nombre" name="nombre" type="text" required readOnly={enviando} className={claseInput} />
+        </Campo>
+        <Campo etiqueta="Teléfono" htmlFor="telefono" obligatorio error={estado.errores.telefono}>
+          <input
+            ref={telefonoRef}
+            id="telefono"
+            name="telefono"
+            type="tel"
+            required
+            readOnly={enviando}
+            aria-invalid={Boolean(estado.errores.telefono)}
+            className={claseInput}
+          />
+        </Campo>
+      </div>
+
+      {variante === 'completo' ? (
+        <Campo etiqueta="Email" htmlFor="email">
+          <input id="email" name="email" type="email" readOnly={enviando} className={claseInput} />
+        </Campo>
+      ) : null}
+
+      <Campo etiqueta="¿Qué necesitas?" htmlFor="espacio" obligatorio>
+        <select id="espacio" name="espacio" required disabled={enviando} className={claseInput}>
+          {ESPACIOS.map((e) => (
+            <option key={e} value={e}>
+              {e}
+            </option>
+          ))}
+        </select>
+      </Campo>
+
+      {variante === 'completo' ? (
+        <>
+          <Campo etiqueta="Municipio" htmlFor="municipio" obligatorio>
+            <input id="municipio" name="municipio" type="text" required readOnly={enviando} className={claseInput} />
+          </Campo>
+          <Campo etiqueta="Cuéntanos algo más" htmlFor="mensaje">
+            <textarea id="mensaje" name="mensaje" rows={4} readOnly={enviando} className={claseInput} />
+          </Campo>
+          <label className="flex items-start gap-3 font-sans text-14 text-tinta-media">
+            <input type="checkbox" name="privacidad" required disabled={enviando} className="mt-1" />
+            <span>
+              He leído y acepto la{' '}
+              <Link href="/politica-de-privacidad/" className="text-tinta">
+                política de privacidad
+              </Link>
+              . *
+            </span>
+          </label>
+        </>
+      ) : null}
+
+      <Boton type="submit" variante="primario" anchoCompleto disabled={enviando}>
+        {enviando ? 'Enviando…' : 'Enviar y que me llamen'}
+      </Boton>
+    </form>
+  )
+}

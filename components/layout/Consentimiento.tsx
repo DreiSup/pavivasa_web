@@ -1,9 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import Script from 'next/script'
 import { useEffect, useState } from 'react'
 import { sitio } from '@/lib/config'
-import Boton from '../ui/Boton'
 
 const CLAVE = 'pv-consentimiento'
 
@@ -13,20 +13,32 @@ const CLAVE = 'pv-consentimiento'
  * cada uno solo si su ID está en las variables de entorno.
  */
 export default function Consentimiento() {
-  const [estado, setEstado] = useState<'pendiente' | 'aceptado' | 'rechazado'>('pendiente')
+  const [estado, setEstado] = useState<'cargando' | 'pendiente' | 'aceptado' | 'rechazado'>('cargando')
 
   useEffect(() => {
-    const guardado = window.localStorage.getItem(CLAVE)
-    if (guardado === 'aceptado' || guardado === 'rechazado') setEstado(guardado)
+    let guardado: string | null = null
+    try {
+      guardado = window.localStorage.getItem(CLAVE)
+    } catch {
+      // Sin almacenamiento: se pregunta cada vez.
+    }
+    setEstado(guardado === 'aceptado' || guardado === 'rechazado' ? guardado : 'pendiente')
   }, [])
 
   function decidir(valor: 'aceptado' | 'rechazado') {
-    window.localStorage.setItem(CLAVE, valor)
+    try {
+      window.localStorage.setItem(CLAVE, valor)
+    } catch {
+      // Sin almacenamiento: la decisión vale para esta visita.
+    }
     setEstado(valor)
   }
 
   const gtagId = sitio.gaId ?? sitio.googleAdsId
   const configs = [sitio.gaId, sitio.googleAdsId].filter(Boolean) as string[]
+
+  const boton =
+    'inline-flex items-center justify-center min-h-tactil px-[18px] font-sans text-14 font-semibold no-underline cursor-pointer transition-colors duration-cabecera'
 
   return (
     <>
@@ -58,20 +70,33 @@ export default function Consentimiento() {
       ) : null}
 
       {estado === 'pendiente' ? (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-tinta text-fondo px-[18px] py-4 md:px-lat-desktop md:py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-[56px] md:mb-0">
-          <p className="text-14 md:text-16 text-sobre-tinta m-0 max-w-[68ch]">
-            Usamos analítica y publicidad para entender cómo se usa esta web y mostrarte anuncios
-            relevantes. No se carga nada hasta que aceptas.
+        <section
+          aria-label="Aviso de cookies"
+          className="fixed z-[25] left-0 right-0 bottom-barra-movil md:left-lat-desktop md:right-auto md:bottom-6 md:w-[640px] bg-tinta text-sobre-tinta px-lat-movil py-4 md:px-6 md:py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-6"
+        >
+          <p className="text-14 text-sobre-tinta">
+            Usamos cookies propias para que la web funcione y, si aceptas, de medición.{' '}
+            <Link href="/politica-de-cookies/" className="text-sobre-tinta">
+              Política de cookies
+            </Link>
           </p>
-          <div className="flex gap-3 shrink-0">
-            <Boton variante="contorno" sobreOscuro type="button" onClick={() => decidir('rechazado')}>
+          <div className="grid grid-cols-2 gap-2 md:flex md:shrink-0">
+            <button
+              type="button"
+              onClick={() => decidir('rechazado')}
+              className={`${boton} bg-transparent border border-sobre-tinta text-sobre-tinta hover:bg-sobre-tinta hover:text-tinta`}
+            >
               Rechazar
-            </Boton>
-            <Boton variante="primario" type="button" onClick={() => decidir('aceptado')}>
+            </button>
+            <button
+              type="button"
+              onClick={() => decidir('aceptado')}
+              className={`${boton} bg-sobre-tinta border border-sobre-tinta text-tinta hover:bg-fondo-alt`}
+            >
               Aceptar
-            </Boton>
+            </button>
           </div>
-        </div>
+        </section>
       ) : null}
     </>
   )

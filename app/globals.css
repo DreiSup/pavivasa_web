@@ -4,22 +4,29 @@
 
 /* Pavivasa — tokens. Mismos valores que tailwind.config.ts: cambiar en los dos sitios. */
 :root {
-  --fondo: #e9eae6;
-  --fondo-alt: #dadcd6;
-  --tinta: #1b1e1c;
-  --tinta-media: #5c625e;
-  --pigmento: #d9a441;
-  --acero: #41535c;
+  --fondo: #edefec;
+  --fondo-alt: #dce0db;
+  --tinta: #141a18;
+  --tinta-media: #5a645f;
+  --pigmento: #b2462a;
+  --pigmento-hover: #8f3620;
+  --acero: #45606e;
+  --sobre-tinta: #f2f4f0;
+  --error: #c4161c;
 
-  --pigmento-hover: #c6902f;
-  --sobre-tinta: #dadcd6;
-  --pendiente-oscuro: #9aa09b;
-  --error: #8c3a2b;
+  --cabecera: 72px;
+  --cabecera-scroll: 56px;
+  --cabecera-movil: 60px;
+  --cabecera-actual: 60px;
+  --submenu: 48px;
+  --ancla-offset: calc(var(--cabecera-actual) + var(--submenu) + 24px);
+}
 
-  --cabecera: 84px;
-  --cabecera-scroll: 60px;
-  --ancla-offset: 150px;
-  --cabecera-actual: 84px;
+@media (min-width: 768px) {
+  :root {
+    --cabecera-actual: 72px;
+    --submenu: 56px;
+  }
 }
 
 * {
@@ -33,7 +40,14 @@ body {
   background: var(--fondo);
   color: var(--tinta);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.55;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   text-wrap: pretty;
 }
 
@@ -41,43 +55,75 @@ a {
   color: inherit;
 }
 
-::selection {
-  background: var(--pigmento);
-  color: var(--tinta);
+h1,
+h2,
+h3,
+h4,
+p,
+figure {
+  margin: 0;
 }
 
-/* Foco visible en todo elemento interactivo. Nunca outline: none. */
-:where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--pigmento);
-  outline-offset: 2px;
+::selection {
+  background: var(--pigmento);
+  color: var(--sobre-tinta);
 }
-:where(.btn-primario):focus-visible {
-  outline: 2px solid var(--tinta);
+
+/* Foco visible en todo elemento interactivo: 2 px acero desplazado. Nunca outline: none. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--acero);
   outline-offset: 3px;
 }
 
 /* Radio 0 en todo el sitio */
-:where(button, input, select, textarea, img, video, figure, article, aside) {
+:where(button, input, select, textarea, img, video, figure, article, aside, details) {
   border-radius: 0;
 }
 
-/* Dato sin confirmar por el cliente */
-.pendiente {
-  color: var(--tinta-media);
-  border-bottom: 1px dotted var(--tinta-media);
-}
-.sobre-oscuro .pendiente {
-  color: var(--pendiente-oscuro);
-  border-bottom-color: var(--pendiente-oscuro);
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  color: inherit;
 }
 
-/* Secciones destino de anclas */
+/* Secciones destino de anclas (submenú de servicio, TOC de artículo y legal) */
 [id^='seccion-'] {
   scroll-margin-top: var(--ancla-offset);
 }
 
+/* Casilla de privacidad: cuadrado de 20 px, marca en sobre-tinta */
+.casilla:checked {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M5 10l3.5 3.5L15 7' fill='none' stroke='%23F2F4F0' stroke-width='2'/></svg>");
+  background-size: 100% 100%;
+}
+
+/* Desplegables de filtro con aspecto de chip: flecha propia, sin la del navegador */
+.selector-chip {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23141A18' stroke-width='1.5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.selector-chip:hover {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23F2F4F0' stroke-width='1.5'/></svg>");
+}
+
+/* Spinner del estado "enviando": borde sin radio, giro lento */
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.girar {
+  animation: girar 1.2s linear infinite;
+}
+
 /* Movimiento contenido, y desactivable */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
@@ -86,18 +132,4 @@ a {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Eje de anchura de la display. Ajustar a la fuente elegida. */
-.fs-hero {
-  font-stretch: 125%;
-}
-.fs-h2 {
-  font-stretch: 120%;
-}
-.fs-h3 {
-  font-stretch: 115%;
-}
-.fs-logo {
-  font-stretch: 118%;
 }

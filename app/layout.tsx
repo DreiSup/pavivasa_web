@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { nap, sitio } from '@/lib/config'
 import { JsonLd, schemaNegocioLocal } from '@/lib/schema'
 import Cabecera from '@/components/layout/Cabecera'
@@ -12,17 +12,18 @@ import './globals.css'
 export const metadata: Metadata = {
   metadataBase: new URL(sitio.url),
   title: {
-    default: `${nap.nombre}`,
+    default: `${nap.nombre} · Pavimentos de hormigón impreso y pulido`,
     template: `%s | ${nap.nombre}`,
   },
-  description: 'Descripción del sitio pendiente.',
+  description:
+    'Pavimentos de hormigón impreso, pulido, lavado y microcemento en Valencia y Alicante. Más de 15 años de oficio y 10 años de garantía con mantenimiento.',
   alternates: { canonical: '/' },
 }
 
-export const viewport = {
+export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#E9EAE6',
+  themeColor: '#EDEFEC',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -37,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Saltar al contenido
         </a>
         <Cabecera />
-        <main id="contenido" className="flex-1">
+        <main id="contenido" className="flex-1 flex flex-col">
           {children}
         </main>
         <Pie />

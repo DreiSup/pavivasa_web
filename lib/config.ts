@@ -7,14 +7,19 @@
  * horario) llega vacío y se muestra con <DatoPendiente>.
  */
 
-const telefonoEnv = process.env.NEXT_PUBLIC_TELEFONO?.trim() || '627 66 31 46'
-const whatsappEnv = process.env.NEXT_PUBLIC_WHATSAPP?.trim() || undefined
-const direccionEnv = process.env.NEXT_PUBLIC_DIRECCION?.trim() || 'Calle Blasco Ibáñez, 16'
+/** Una variable vacía (como en .env.example o en el panel de Vercel) cuenta como no definida. */
+function env(nombre: string): string | undefined {
+  return process.env[nombre]?.trim() || undefined
+}
+
+const telefonoEnv = env('NEXT_PUBLIC_TELEFONO') ?? '627 66 31 46'
+const whatsappEnv = env('NEXT_PUBLIC_WHATSAPP')
+const direccionEnv = env('NEXT_PUBLIC_DIRECCION') ?? 'Calle Blasco Ibáñez, 16'
 
 export const nap = {
   nombre: 'Pavivasa',
   gestor: 'Gabriel',
-  email: process.env.EMAIL_DESTINO ?? 'gabriel.pavivasa@gmail.com',
+  email: env('EMAIL_DESTINO') ?? 'gabriel.pavivasa@gmail.com',
   telefono: telefonoEnv,
   telefonoInternacional: `+34 ${telefonoEnv}`,
   telefonoHref: `tel:+34${telefonoEnv.replace(/\D/g, '')}`,
@@ -48,9 +53,9 @@ export const claims = {
 }
 
 export const sitio = {
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://pavivasa.com',
-  gaId: process.env.NEXT_PUBLIC_GA_ID,
-  googleAdsId: process.env.NEXT_PUBLIC_GOOGLE_ADS_ID,
-  googleAdsLeadLabel: process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL,
-  metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID,
+  url: (env('NEXT_PUBLIC_SITE_URL') ?? 'https://pavivasa.com').replace(/\/+$/, ''),
+  gaId: env('NEXT_PUBLIC_GA_ID'),
+  googleAdsId: env('NEXT_PUBLIC_GOOGLE_ADS_ID'),
+  googleAdsLeadLabel: env('NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL'),
+  metaPixelId: env('NEXT_PUBLIC_META_PIXEL_ID'),
 }

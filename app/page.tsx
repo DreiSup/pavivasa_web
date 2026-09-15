@@ -14,7 +14,7 @@ import SeccionMuestrario from '@/components/secciones/SeccionMuestrario'
 import { nap } from '@/lib/config'
 import { proyectos, proyectosDestacados, proyectosPorServicio, serviciosOrdenados } from '@/lib/datos'
 import { RUTA_SERVICIO, SERVICIOS_FUERTES } from '@/lib/tipos'
-import { COLORES_OBRA, ESPACIOS, FAQ_HOME, MODELOS_IMPRESO } from '@/content/home'
+import { COLORES_OBRA, ESPACIOS, FAQ_HOME, HERO_HOME, MODELOS_IMPRESO } from '@/content/home'
 
 export const metadata: Metadata = {
   title: `${nap.nombre} · Hormigón impreso y pulido en Valencia y Alicante`,
@@ -60,7 +60,7 @@ export default function Home() {
           </div>
         </div>
         <BloquePosicion
-          etiqueta="Foto hero · contorno de piscina · piedra inglesa crema (Dénia)"
+          imagen={HERO_HOME}
           prioridad
           className="aspect-[4/3] md:aspect-auto !border-0 border-t md:border-t-0 md:!border-l md:!border-l-tinta/[.12] border-t-tinta/[.12] md:p-2"
         />
@@ -86,7 +86,7 @@ export default function Home() {
                 href={`/presupuesto/?espacio=${encodeURIComponent(e.nombre)}`}
                 className="group flex flex-col gap-2 md:gap-3 no-underline text-tinta"
               >
-                <BloquePosicion etiqueta={e.foto} compacto aviso="Foto · pendiente" className="aspect-square" />
+                <BloquePosicion imagen={e.imagen} compacto aviso="Foto · pendiente" className="aspect-square" />
                 <span className="font-display font-bold text-16 md:text-20 leading-[1.2] group-hover:text-pigmento transition-colors duration-cabecera">
                   {e.nombre}
                 </span>

@@ -75,7 +75,11 @@ export default function Empresa() {
       <div className="md:px-lat-desktop">
         <div className="max-w-contenido mx-auto">
           <BloquePosicion
-            etiqueta="Foto de equipo en obra · nunca stock"
+            imagen={{
+              etiqueta: 'Foto de equipo en obra · nunca stock',
+              src: '/img/trabajadores2.png',
+              alt: 'Equipo de Pavivasa extendiendo hormigón fresco descargado desde el camión hormigonera',
+            }}
             className="aspect-[4/3] md:aspect-[21/9] !border-x-0 md:!border-x [&>span:first-child]:md:top-[14px]"
           />
         </div>

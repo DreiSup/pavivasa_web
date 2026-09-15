@@ -27,3 +27,6 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# fotos originales (fuente); lo servible vive en public/img
+/img

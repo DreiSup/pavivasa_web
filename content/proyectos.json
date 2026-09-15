@@ -26,10 +26,26 @@
       "En la misma vivienda conviven dos acabados: piedra inglesa en gris mate y piedra inglesa en crema. El cliente quedó contento con el resultado y con el trato durante la obra; para nosotros, eso es lo que se convierte en nuevos trabajos recomendados."
     ],
     "imagenes": [
-      { "etiqueta": "Foto principal · vista general del pavimento · dos acabados" },
-      { "etiqueta": "02 · gris mate" },
-      { "etiqueta": "03 · crema" },
-      { "etiqueta": "04 · detalle molde" }
+      {
+        "etiqueta": "Foto principal · vista general del pavimento · dos acabados",
+        "src": "/img/impreso-piscina-olivo.jpg",
+        "alt": "Vista general del pavimento de hormigón impreso con los dos acabados, junto a la piscina y el olivo"
+      },
+      {
+        "etiqueta": "02 · gris mate",
+        "src": "/img/impreso-patio-gris.jpg",
+        "alt": "Zona pavimentada con piedra inglesa en gris mate"
+      },
+      {
+        "etiqueta": "03 · crema",
+        "src": "/img/impreso-patio-ocre.jpg",
+        "alt": "Zona pavimentada con piedra inglesa en tono crema bajo el porche"
+      },
+      {
+        "etiqueta": "04 · detalle molde",
+        "src": "/img/impreso-textura-piedra.jpg",
+        "alt": "Detalle del molde de piedra inglesa sobre el hormigón impreso"
+      }
     ],
     "destacado": true
   },
@@ -58,8 +74,16 @@
       "El impreso es una de las técnicas decorativas de exterior con más auge: la gama de texturas y colores permite un pavimento atractivo, de fácil mantenimiento y fácil personalización, tanto para renovar suelos como para construir un pavimento nuevo."
     ],
     "imagenes": [
-      { "etiqueta": "Foto principal · chalé con piscina · manteado" },
-      { "etiqueta": "02 · entrada" }
+      {
+        "etiqueta": "Foto principal · chalé con piscina · manteado",
+        "src": "/img/impreso-patio-olivo.jpg",
+        "alt": "Chalé con jardín y piscina pavimentado en hormigón impreso manteado en gris y marrón"
+      },
+      {
+        "etiqueta": "02 · entrada",
+        "src": "/img/impreso-camino-ladera1.jpg",
+        "alt": "Acceso al chalé en hormigón impreso manteado de tono marrón"
+      }
     ],
     "destacado": true
   },
@@ -82,11 +106,19 @@
       "fibra": "Polipropileno",
       "juntas": "5×5 m"
     },
-    "encargo": ["Pavimento exterior de hormigón impreso en Calpe."],
+    "encargo": [
+      "Pavimento exterior de hormigón impreso en Calpe."
+    ],
     "ejecucion": [
       "Hormigón impreso en color arena y modelo sillería grande, con 10 cm de espesor de hormigón HM25, árido de 12 mm, mallazo y fibra de polipropileno, con juntas de dilatación de 5×5 y acabado impreso."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · sillería grande arena · original de móvil, 300 px" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · sillería grande arena · original de móvil, 300 px",
+        "src": "/img/impreso-piscina-ocre.jpg",
+        "alt": "Pavimento exterior de hormigón impreso con molde de sillería grande en color arena junto a la piscina"
+      }
+    ],
     "destacado": true
   },
   {
@@ -108,7 +140,13 @@
     "ejecucion": [
       "120 metros de pavimentación de hormigón pulido (fratasado) en color crema 117, elegido por el cliente. Este pavimento destaca por la variedad de colores disponibles y, sobre todo, por su dureza y su resistencia a las manchas y a las condiciones climatológicas."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · pavimento pulido crema 117 · sin foto de obra en la web actual" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · pavimento pulido crema 117 · sin foto de obra en la web actual",
+        "src": "/img/pulido-piscina-jardin.jpg",
+        "alt": "Hormigón pulido en tono crema alrededor de la piscina de una residencia con palmeras"
+      }
+    ],
     "destacado": false
   },
   {
@@ -131,8 +169,16 @@
       "Hormigón pulido (fratasado) en color 117, crema marfil, en el interior y el exterior de la vivienda y alrededor de la piscina. El resultado es muy vanguardista y el cliente quedó satisfecho."
     ],
     "imagenes": [
-      { "etiqueta": "Foto principal · pulido crema marfil · interior" },
-      { "etiqueta": "02 · contorno de piscina" }
+      {
+        "etiqueta": "Foto principal · pulido crema marfil · interior",
+        "src": "/img/pulido-interior-acristalado.jpg",
+        "alt": "Interior de la vivienda con suelo de hormigón pulido en crema marfil"
+      },
+      {
+        "etiqueta": "02 · contorno de piscina",
+        "src": "/img/pulido-piscina-gris.jpg",
+        "alt": "Contorno de piscina en hormigón pulido junto a la vivienda"
+      }
     ],
     "destacado": false
   },
@@ -154,7 +200,13 @@
     "ejecucion": [
       "2000 metros de pavimentación de hormigón pulido. Nos dedicamos a este tipo de pavimentación desde hace más de 15 años: durabilidad, resistencia y bajo coste lo hacen idóneo para soleras y naves industriales."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · nave industrial · pulido" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · nave industrial · pulido",
+        "src": "/img/solera-pista-cubierta.jpg",
+        "alt": "Solera de hormigón pulido en el interior de una nave industrial con estructura metálica"
+      }
+    ],
     "destacado": false
   },
   {
@@ -171,14 +223,24 @@
     "ficha": {
       "arido": "12 mm · piedra vista"
     },
-    "encargo": ["Jardín de una vivienda en Godella (Valencia)."],
+    "encargo": [
+      "Jardín de una vivienda en Godella (Valencia)."
+    ],
     "ejecucion": [
       "Hormigón lavado (árido visto) en color gris con árido de 12 mm y piedra vista, modelo valencia aserras.",
       "Además de su belleza, este hormigón mejora mucho el agarre: por eso se usa en aceras, plazas, zonas transitables y jardines. Su facilidad de ejecución respecto al hormigón convencional lo convierte en una alternativa más económica."
     ],
     "imagenes": [
-      { "etiqueta": "Foto principal · panorámica del jardín" },
-      { "etiqueta": "02 · detalle del pavimento" }
+      {
+        "etiqueta": "Foto principal · panorámica del jardín",
+        "src": "/img/desactivado-paso-lateral.jpg",
+        "alt": "Paso lateral del jardín ejecutado en hormigón lavado con árido visto"
+      },
+      {
+        "etiqueta": "02 · detalle del pavimento",
+        "src": "/img/desactivado-muestras1.jpg",
+        "alt": "Detalle del árido visto del hormigón lavado, con dos granulometrías separadas por una junta"
+      }
     ],
     "destacado": false
   },
@@ -194,11 +256,19 @@
     "color": "Gris medio",
     "anioFoto": 2016,
     "ficha": {},
-    "encargo": ["Urbanización en Calpe, en la costa norte de la provincia de Alicante, en la comarca de la Marina Alta."],
+    "encargo": [
+      "Urbanización en Calpe, en la costa norte de la provincia de Alicante, en la comarca de la Marina Alta."
+    ],
     "ejecucion": [
       "Pavimento de hormigón impreso en color gris medio y modelo piedra inglesa, ambos a elección del cliente. Este pavimento destaca por la variedad de diseños y, sobre todo, por su dureza y su resistencia a las manchas y a las condiciones climatológicas."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · piedra inglesa gris medio" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · piedra inglesa gris medio",
+        "src": "/img/portada.png",
+        "alt": "Patio de una vivienda en urbanización pavimentado con piedra inglesa en gris medio"
+      }
+    ],
     "destacado": false
   },
   {
@@ -217,8 +287,16 @@
     "encargo": [
       "Urbanización Monte Mar, en Benissa. El terreno tenía un fuerte desnivel, que se rellenó para evitar la acumulación de agua en algunas zonas."
     ],
-    "ejecucion": ["Pavimento de hormigón impreso en color gris oscuro y modelo adoquín belga, ambos a elección del cliente."],
-    "imagenes": [{ "etiqueta": "Foto principal · adoquín belga · desnivel" }],
+    "ejecucion": [
+      "Pavimento de hormigón impreso en color gris oscuro y modelo adoquín belga, ambos a elección del cliente."
+    ],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · adoquín belga · desnivel",
+        "src": "/img/impreso-rampa-adoquin.jpg",
+        "alt": "Rampa de acceso en hormigón impreso con molde de adoquín belga sobre terreno con desnivel"
+      }
+    ],
     "destacado": false
   },
   {
@@ -233,9 +311,19 @@
     "color": "107",
     "anioFoto": 2016,
     "ficha": {},
-    "encargo": ["Urbanización en Llíria, capital de la comarca del Camp de Túria (Valencia)."],
-    "ejecucion": ["Pavimento de hormigón impreso en color 107 y modelo sillería, ambos a elección del cliente."],
-    "imagenes": [{ "etiqueta": "Foto principal · sillería color 107" }],
+    "encargo": [
+      "Urbanización en Llíria, capital de la comarca del Camp de Túria (Valencia)."
+    ],
+    "ejecucion": [
+      "Pavimento de hormigón impreso en color 107 y modelo sillería, ambos a elección del cliente."
+    ],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · sillería color 107",
+        "src": "/img/impreso-patio-chalet.jpg",
+        "alt": "Pavimento de hormigón impreso con molde de sillería en una vivienda de urbanización"
+      }
+    ],
     "destacado": false
   },
   {
@@ -256,7 +344,13 @@
     "ejecucion": [
       "Pavimento de hormigón impreso modelo piedra inglesa en color gris muy oscuro, elegidos por el cliente. La estampación puede imitar adoquines, piedra, baldosas o pizarras."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · piedra inglesa gris muy oscuro" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · piedra inglesa gris muy oscuro",
+        "src": "/img/impreso-patio-losa-gris.jpg",
+        "alt": "Patio pavimentado con piedra inglesa en gris muy oscuro"
+      }
+    ],
     "destacado": false
   },
   {
@@ -276,11 +370,19 @@
       "fibra": "Polipropileno",
       "dosificacionColor": "4 kg/m²"
     },
-    "encargo": ["Urbanización Monte Mar, en Benissa, en el noreste de la provincia de Alicante."],
+    "encargo": [
+      "Urbanización Monte Mar, en Benissa, en el noreste de la provincia de Alicante."
+    ],
     "ejecucion": [
       "Pavimento de hormigón pulido en color crema 117, a elección del cliente, ejecutado con mallazo y fibra de polipropileno y 4 kg de color por metro cuadrado."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · pulido crema 117" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · pulido crema 117",
+        "src": "/img/pulido-acceso-cipreses.jpg",
+        "alt": "Acceso en hormigón pulido color crema entre cipreses, en una vivienda de urbanización"
+      }
+    ],
     "destacado": false
   },
   {
@@ -298,12 +400,20 @@
       "mallazo": "Sí",
       "fibra": "Polipropileno"
     },
-    "encargo": ["Nave industrial en Riba-roja de Túria, en la comarca del Camp de Túria (Valencia)."],
+    "encargo": [
+      "Nave industrial en Riba-roja de Túria, en la comarca del Camp de Túria (Valencia)."
+    ],
     "ejecucion": [
       "Pavimento de hormigón pulido en color natural, a elección del cliente, con mallazo y fibra de polipropileno.",
       "Pavimentamos naves industriales desde hace más de 15 años: durabilidad, resistencia y bajo coste hacen del pulido el pavimento idóneo para soleras y obra industrial."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · nave industrial · pulido natural" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · nave industrial · pulido natural",
+        "src": "/img/pulido-explanada-gris.jpg",
+        "alt": "Explanada de hormigón pulido en color natural en una nave industrial"
+      }
+    ],
     "destacado": false
   },
   {
@@ -317,11 +427,19 @@
     "modelo": "Microcemento",
     "color": "Gris claro",
     "ficha": {},
-    "encargo": ["Cuarto de baño completo en una urbanización de Moraira, núcleo del término municipal de Teulada (Alicante)."],
+    "encargo": [
+      "Cuarto de baño completo en una urbanización de Moraira, núcleo del término municipal de Teulada (Alicante)."
+    ],
     "ejecucion": [
       "Microcemento en color gris claro, a elección del cliente. El microcemento abarca desde suelos a paredes, zonas de estar, piscinas, baños, cocinas o muebles, y es resistente al agua y a las altas temperaturas."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · baño en microcemento gris claro · sin foto en la web actual" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · baño en microcemento gris claro · sin foto en la web actual",
+        "src": "/img/microcemento-bano-banera.jpg",
+        "alt": "Bañera y paramentos del cuarto de baño revestidos en microcemento gris claro"
+      }
+    ],
     "destacado": false
   },
   {
@@ -342,7 +460,13 @@
     "ejecucion": [
       "Al no ser necesario eliminar el material existente, se abaratan costes y tiempos y se evitan las molestias del desescombro. El microcemento es resistente al agua y a las altas temperaturas."
     ],
-    "imagenes": [{ "etiqueta": "Foto principal · ducha en microcemento" }],
+    "imagenes": [
+      {
+        "etiqueta": "Foto principal · ducha en microcemento",
+        "src": "/img/microcemento-ducha.jpg",
+        "alt": "Ducha revestida en microcemento continuo tras la reforma completa del baño"
+      }
+    ],
     "destacado": false
   }
 ]

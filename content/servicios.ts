@@ -19,7 +19,11 @@ export const servicios: Record<ServicioId, Servicio> = {
       'Pavimentos de hormigón impreso, revestimiento de fachadas y muros, recubrimiento de piscinas, patios, terrazas, jardines o paseos. Piedra, adoquín, baldosa o pizarra: el molde y el color los eliges tú.',
     introMovil:
       'Patios, terrazas, piscinas, jardines, paseos, fachadas y muros. Piedra, adoquín, baldosa o pizarra: el molde y el color los eliges tú.',
-    imagenHero: { etiqueta: 'Foto · detalle molde piedra inglesa · Dénia' },
+    imagenHero: {
+      etiqueta: 'Foto · detalle molde piedra inglesa · Dénia',
+      src: '/img/impreso-textura-piedra.jpg',
+      alt: 'Detalle del molde de piedra inglesa marcado sobre hormigón impreso en tono terracota',
+    },
     queEs: {
       titulo: 'Una solera de hormigón con acabado decorativo',
       parrafos: [
@@ -88,7 +92,11 @@ export const servicios: Record<ServicioId, Servicio> = {
       'Pavimentos ideales tanto para suelos industriales como para terrazas, piscinas, jardines y zonas de interior. Durabilidad, impermeabilidad, precio y bajo mantenimiento, en acabado brillo o mate.',
     introMovil:
       'Suelos industriales, terrazas, piscinas, jardines e interiores. Durabilidad, impermeabilidad, precio y bajo mantenimiento.',
-    imagenHero: { etiqueta: 'Foto · nave industrial · pulido natural · Riba-roja' },
+    imagenHero: {
+      etiqueta: 'Foto · nave industrial · pulido natural · Riba-roja',
+      src: '/img/pulido-explanada-nave.jpg',
+      alt: 'Explanada de hormigón pulido en color natural ante una nave industrial blanca',
+    },
     queEs: {
       titulo: 'Un pavimento continuo que se integra en el hormigón',
       parrafos: [
@@ -151,7 +159,11 @@ export const servicios: Record<ServicioId, Servicio> = {
       'Gracias a las distintas clases de áridos, granulometrías y colores obtenemos una amplia variedad de acabados atractivos y resistentes. Rugosos, antideslizantes y muy resistentes al desgaste y a los agentes atmosféricos.',
     introMovil:
       'Árido visto: acabados rugosos, antideslizantes y muy resistentes al desgaste y a los agentes atmosféricos.',
-    imagenHero: { etiqueta: 'Foto · árido visto gris 12 mm · Godella' },
+    imagenHero: {
+      etiqueta: 'Foto · árido visto gris 12 mm · Godella',
+      src: '/img/desactivado-camino-gris.jpg',
+      alt: 'Acceso en hormigón lavado con árido visto de tono gris',
+    },
     queEs: {
       titulo: 'Árido a la vista, agarre en el pie',
       parrafos: [
@@ -208,7 +220,11 @@ export const servicios: Record<ServicioId, Servicio> = {
     intro:
       'Renovamos por completo suelos, paredes, baños, cocinas o revestimientos de tu hogar con un ahorro económico y de tiempo muy importante: no hay que retirar el material existente.',
     introMovil: 'Suelos, paredes, baños y cocinas renovados sin retirar el material existente.',
-    imagenHero: { etiqueta: 'Foto · baño en microcemento gris claro · Moraira' },
+    imagenHero: {
+      etiqueta: 'Foto · baño en microcemento gris claro · Moraira',
+      src: '/img/microcemento-bano-lavabos2.jpg',
+      alt: 'Baño revestido en microcemento gris claro con encimera continua y dos lavabos',
+    },
     queEs: {
       titulo: 'Un material sintético más duro que el cemento común',
       parrafos: [
@@ -295,7 +311,11 @@ export const servicios: Record<ServicioId, Servicio> = {
     intro:
       'Una solución limpia y segura para crear zonas lúdicas infantiles y zonas deportivas: pavimentos que minimizan el riesgo de lesiones por caídas desde los equipos de juego.',
     introMovil: 'Zonas infantiles y deportivas seguras. EPDM o SBR, normas EN 1176 y EN 1177.',
-    imagenHero: { etiqueta: 'Foto · parque infantil · sin obra documentada' },
+    imagenHero: {
+      etiqueta: 'Foto · parque infantil · sin obra documentada',
+      src: '/img/caucho-parque-juegos.jpg',
+      alt: 'Pavimento continuo de caucho rojo en un parque infantil con balancín y tobogán',
+    },
     queEs: {
       titulo: 'Amortiguación medida, no estimada',
       parrafos: [

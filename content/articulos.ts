@@ -12,7 +12,11 @@ export const articulos: Articulo[] = [
     servicio: 'hormigon-impreso',
     fecha: 'Junio 2024',
     fechaIso: '2024-06-01',
-    imagen: { etiqueta: 'Foto · impreso en Dénia · sustituye a las 7 fotos de 2024 sin alt' },
+    imagen: {
+      etiqueta: 'Foto · impreso en Dénia · sustituye a las 7 fotos de 2024 sin alt',
+      src: '/img/impreso-jardin-ladrillo.jpg',
+      alt: 'Acceso de vivienda en hormigón impreso con molde de ladrillo en espiga, junto a un muro de piedra',
+    },
     cuerpo: [
       {
         tipo: 'p',
@@ -70,7 +74,11 @@ export const articulos: Articulo[] = [
     servicio: 'hormigon-pulido',
     fecha: 'Junio 2024',
     fechaIso: '2024-06-01',
-    imagen: { etiqueta: 'Foto · fratasado en vivienda · sustituye a las 3 fotos de 2024' },
+    imagen: {
+      etiqueta: 'Foto · fratasado en vivienda · sustituye a las 3 fotos de 2024',
+      src: '/img/pulido-porche-vigas.jpg',
+      alt: 'Porche de vivienda con vigas de madera y suelo de hormigón fratasado fino',
+    },
     cuerpo: [
       {
         tipo: 'p',
@@ -123,7 +131,11 @@ export const articulos: Articulo[] = [
     servicio: 'hormigon-pulido',
     fecha: 'Agosto 2023',
     fechaIso: '2023-08-22',
-    imagen: { etiqueta: 'Foto · pulido · sustituye a la foto de WhatsApp de 2023 (1024 px)' },
+    imagen: {
+      etiqueta: 'Foto · pulido · sustituye a la foto de WhatsApp de 2023 (1024 px)',
+      src: '/img/pulido-interior-loft3.jpg',
+      alt: 'Interior con suelo de hormigón pulido brillante que refleja la luz de las ventanas',
+    },
     cuerpo: [
       {
         tipo: 'p',
@@ -158,7 +170,11 @@ export const articulos: Articulo[] = [
     servicio: 'hormigon-lavado',
     fecha: 'Junio 2024',
     fechaIso: '2024-06-01',
-    imagen: { etiqueta: 'Foto · árido visto · sustituye a las 6 fotos de 2024' },
+    imagen: {
+      etiqueta: 'Foto · árido visto · sustituye a las 6 fotos de 2024',
+      src: '/img/desactivado-muestras2.jpg',
+      alt: 'Detalle de hormigón desactivado con la piedra vista, en dos tonos separados por una junta',
+    },
     cuerpo: [
       {
         tipo: 'pendiente',

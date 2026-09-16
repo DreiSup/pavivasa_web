@@ -15,6 +15,12 @@ import EtiquetaTecnica from '../datos/EtiquetaTecnica'
 
 const estadoInicial: EstadoEnvio = { estado: 'inicial', errores: {} }
 
+// Espejo de la validación del servidor (`FOTO_MAX_BYTES` en actions.ts). Vercel
+// corta el cuerpo de la Server Action en 4,5 MB, así que por encima de 4 MB el envío
+// devolvería 413 antes de llegar a la acción: se rechaza aquí, en el navegador.
+const FOTO_MAX_BYTES = 4 * 1024 * 1024
+const FOTO_ERROR_TAMANO = 'La foto pesa más de 4 MB.'
+
 const claseChip =
   'inline-flex items-center min-h-tactil px-4 border border-tinta bg-sobre-tinta font-sans text-14 font-semibold text-tinta cursor-pointer transition-colors duration-cabecera ' +
   'peer-checked:bg-pigmento peer-checked:border-pigmento peer-checked:text-sobre-tinta peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-acero peer-focus-visible:outline-offset-[3px] hover:bg-tinta hover:text-sobre-tinta'
@@ -36,6 +42,7 @@ export default function FormularioPresupuesto({
   const telefonoRef = useRef<HTMLInputElement>(null)
   const [eventoId, setEventoId] = useState('')
   const [nombreFoto, setNombreFoto] = useState<string>()
+  const [errorFoto, setErrorFoto] = useState<string>()
   const eventoDisparado = useRef(false)
   const completo = variante === 'completo'
   const espacioPorDefecto = espacioInicial && NOMBRES_ESPACIOS.includes(espacioInicial) ? espacioInicial : undefined
@@ -60,6 +67,10 @@ export default function FormularioPresupuesto({
     startTransition(() => accion(datos))
   }
 
+  /**
+   * Solo `enviado` cuenta como conversión. El honeypot devuelve `descartado`, que se
+   * pinta igual pero no llega aquí: un bot ve "Recibido" sin generar un Lead.
+   */
   useEffect(() => {
     if (estado.estado === 'enviado' && !eventoDisparado.current) {
       eventoDisparado.current = true
@@ -72,7 +83,8 @@ export default function FormularioPresupuesto({
     }
   }, [estado, eventoId, variante])
 
-  if (estado.estado === 'enviado') {
+  // Lo que ve quien envía es lo mismo en los dos casos; lo que se mide, no.
+  if (estado.estado === 'enviado' || estado.estado === 'descartado') {
     const r = estado.resumen
     const lineas = [
       r?.espacio ? `Espacio · ${r.espacio}` : null,
@@ -104,6 +116,38 @@ export default function FormularioPresupuesto({
       </div>
     )
   }
+
+  // I4: misma casilla, mismo texto y mismo enlace en las dos variantes.
+  const casillaPrivacidad = (
+    <div className={`flex flex-col gap-[6px] ${completo ? 'md:col-span-2' : ''}`}>
+      <label className="flex items-start gap-3 text-14 leading-[1.5] cursor-pointer">
+        <input
+          type="checkbox"
+          name="privacidad"
+          value="si"
+          required
+          disabled={enviando}
+          aria-invalid={Boolean(estado.errores.privacidad)}
+          className="casilla appearance-none shrink-0 w-5 h-5 mt-[2px] border border-tinta bg-sobre-tinta cursor-pointer checked:bg-tinta aria-[invalid=true]:border-2 aria-[invalid=true]:border-error"
+        />
+        <span>
+          Acepto la{' '}
+          <Link href="/politica-de-privacidad/" className="text-tinta">
+            política de privacidad
+          </Link>
+          . Usaremos tus datos solo para responder a esta solicitud.{' '}
+          <span className="text-pigmento" aria-hidden="true">
+            *
+          </span>
+        </span>
+      </label>
+      {estado.errores.privacidad ? (
+        <p className="font-sans text-14 text-error" aria-live="polite">
+          {estado.errores.privacidad}
+        </p>
+      ) : null}
+    </div>
+  )
 
   return (
     <form
@@ -233,12 +277,12 @@ export default function FormularioPresupuesto({
             </div>
           </Campo>
 
-          <Campo etiqueta="Sube una foto del espacio" htmlFor="completo-foto" error={estado.errores.foto}>
+          <Campo etiqueta="Sube una foto del espacio" htmlFor="completo-foto" error={estado.errores.foto ?? errorFoto}>
             <label
               htmlFor="completo-foto"
               className="flex items-center justify-between gap-3 min-h-campo px-[14px] border border-dashed border-tinta-media bg-sobre-tinta text-14 text-tinta-media cursor-pointer has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-acero has-[:focus-visible]:outline-offset-[3px]"
             >
-              <span className="truncate">{nombreFoto ?? 'JPG o PNG · hasta 10 MB'}</span>
+              <span className="truncate">{nombreFoto ?? 'JPG o PNG · hasta 4 MB'}</span>
               <span className="font-semibold text-tinta border-b-2 border-tinta shrink-0">{nombreFoto ? 'Cambiar' : 'Elegir'}</span>
               <input
                 id="completo-foto"
@@ -246,7 +290,18 @@ export default function FormularioPresupuesto({
                 type="file"
                 accept="image/jpeg,image/png"
                 disabled={enviando}
-                onChange={(e) => setNombreFoto(e.target.files?.[0]?.name)}
+                onChange={(e) => {
+                  const archivo = e.target.files?.[0]
+                  // Se descarta el archivo: si se dejara puesto, el envío moriría con un 413.
+                  if (archivo && archivo.size > FOTO_MAX_BYTES) {
+                    e.target.value = ''
+                    setNombreFoto(undefined)
+                    setErrorFoto(FOTO_ERROR_TAMANO)
+                    return
+                  }
+                  setErrorFoto(undefined)
+                  setNombreFoto(archivo?.name)
+                }}
                 className="sr-only"
               />
             </label>
@@ -263,34 +318,7 @@ export default function FormularioPresupuesto({
             />
           </Campo>
 
-          <div className="md:col-span-2 flex flex-col gap-[6px]">
-            <label className="flex items-start gap-3 text-14 leading-[1.5] cursor-pointer">
-              <input
-                type="checkbox"
-                name="privacidad"
-                value="si"
-                required
-                disabled={enviando}
-                aria-invalid={Boolean(estado.errores.privacidad)}
-                className="casilla appearance-none shrink-0 w-5 h-5 mt-[2px] border border-tinta bg-sobre-tinta cursor-pointer checked:bg-tinta aria-[invalid=true]:border-2 aria-[invalid=true]:border-error"
-              />
-              <span>
-                Acepto la{' '}
-                <Link href="/politica-de-privacidad/" className="text-tinta">
-                  política de privacidad
-                </Link>
-                . Usaremos tus datos solo para responder a esta solicitud.{' '}
-                <span className="text-pigmento" aria-hidden="true">
-                  *
-                </span>
-              </span>
-            </label>
-            {estado.errores.privacidad ? (
-              <p className="font-sans text-14 text-error" aria-live="polite">
-                {estado.errores.privacidad}
-              </p>
-            ) : null}
-          </div>
+          {casillaPrivacidad}
 
           <div className="md:col-span-2 flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
             <Boton type="submit" variante="primario" cargando={enviando} className="md:!px-8">
@@ -319,15 +347,12 @@ export default function FormularioPresupuesto({
               ))}
             </select>
           </Campo>
+          {casillaPrivacidad}
           <Boton type="submit" variante="tinta" anchoCompleto cargando={enviando}>
             Enviar y que me llamen
           </Boton>
-          <span className="text-12 text-tinta-media">
-            Al enviar aceptas la{' '}
-            <Link href="/politica-de-privacidad/" className="text-tinta-media">
-              política de privacidad
-            </Link>
-            . <span className="hidden md:inline">Plazo de respuesta: <DatoPendiente>pendiente</DatoPendiente></span>
+          <span className="hidden md:inline text-12 text-tinta-media">
+            Plazo de respuesta: <DatoPendiente>pendiente</DatoPendiente>
           </span>
         </>
       )}

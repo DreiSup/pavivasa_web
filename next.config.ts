@@ -10,6 +10,21 @@ const nextConfig: NextConfig = {
     // El formulario de presupuesto admite una foto de hasta 10 MB.
     serverActions: { bodySizeLimit: '12mb' },
   },
+  /**
+   * `/blog/hormigon-desactivado-piedra-vista/` sigue publicada (puede tener
+   * enlaces entrantes) pero su cuerpo es solo el aviso de que el original está
+   * en rumano: no hay artículo que indexar. Se marca noindex por cabecera —
+   * Google trata X-Robots-Tag igual que <meta name="robots"> — y queda fuera
+   * del sitemap. Quitar esta entrada en cuanto haya texto en castellano.
+   */
+  async headers() {
+    return [
+      {
+        source: '/blog/hormigon-desactivado-piedra-vista/',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }],
+      },
+    ]
+  },
   async redirects() {
     // Redirecciones 301 de la web WordPress anterior. Con trailingSlash:true
     // cada `source` tiene que llevar barra final para coincidir.
@@ -23,6 +38,10 @@ const nextConfig: NextConfig = {
       { source: '/servicios/pavimentos-de-caucho/', destination: '/pavimentos-de-caucho/', permanent: true },
       { source: '/servicios/alicatados-en-valencia/', destination: '/alicatados/', permanent: true },
       { source: '/politica-de-cookies-ue/', destination: '/politica-de-cookies/', permanent: true },
+      // Rutas de servicio que en pavivasa.com cuelgan de la raíz (sin /servicios/)
+      { source: '/microcemento-decorativo/', destination: '/microcemento/', permanent: true },
+      { source: '/morteros-autonivelantes/', destination: '/autonivelantes/', permanent: true },
+      { source: '/pavimentos-caucho/', destination: '/pavimentos-de-caucho/', permanent: true },
       // Fichas de obra que colgaban de la raíz en WordPress
       { source: '/hormigon-impreso-denia/', destination: '/proyectos/hormigon-impreso-denia/', permanent: true },
       { source: '/hormigon-impreso-moraira/', destination: '/proyectos/hormigon-impreso-moraira/', permanent: true },

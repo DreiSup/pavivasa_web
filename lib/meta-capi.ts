@@ -4,6 +4,16 @@ function hash(valor: string) {
   return createHash('sha256').update(valor.trim().toLowerCase()).digest('hex')
 }
 
+/**
+ * Meta empareja el teléfono en formato E.164 sin el `+` (34 + 9 cifras en España).
+ * El formulario guarda solo las 9 cifras nacionales: hashearlas tal cual da un hash
+ * que no coincide con ningún usuario, así que el emparejamiento sería del 0 %.
+ */
+function normalizarTelefono(valor: string) {
+  const digitos = valor.replace(/\D/g, '').replace(/^00/, '')
+  return digitos.length === 9 ? `34${digitos}` : digitos
+}
+
 type EventoCAPI = {
   eventoId: string
   telefono: string
@@ -25,7 +35,7 @@ export async function enviarEventoCAPI(evento: EventoCAPI) {
   if (!pixelId || !token) return
 
   const userData: Record<string, unknown> = {
-    ph: [hash(evento.telefono)],
+    ph: [hash(normalizarTelefono(evento.telefono))],
     client_ip_address: evento.ip,
     client_user_agent: evento.userAgent,
   }

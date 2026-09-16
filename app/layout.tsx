@@ -18,6 +18,28 @@ export const metadata: Metadata = {
   description:
     'Pavimentos de hormigón impreso, pulido, lavado y microcemento en Valencia y Alicante. Más de 15 años de oficio y 10 años de garantía con mantenimiento.',
   alternates: { canonical: '/' },
+  /**
+   * Open Graph declarado una sola vez, aquí. Ninguna página declara el suyo: en
+   * Next, `openGraph` no se fusiona campo a campo, se sustituye entero, así que
+   * un `openGraph` parcial en una página tiraría la imagen de este bloque.
+   *
+   * Tres campos se omiten a propósito:
+   * - `title` y `description`: Next los hereda del title/description ya
+   *   resueltos de cada ruta. Fijarlos aquí publicaría el mismo og:title de la
+   *   portada en las 31 URLs.
+   * - `images`: la aporta el fichero `app/opengraph-image.jpg` (1200×630, foto
+   *   de obra real) por convención de fichero, que además emite og:image:width,
+   *   og:image:height y og:image:type. Declarar `images` aquí la anularía.
+   */
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',
+    siteName: nap.nombre,
+    // './' se resuelve contra el pathname de cada ruta y sobre metadataBase:
+    // og:url propio en cada página, sin ninguna URL escrita a mano.
+    url: './',
+  },
+  twitter: { card: 'summary_large_image' },
 }
 
 export const viewport: Viewport = {

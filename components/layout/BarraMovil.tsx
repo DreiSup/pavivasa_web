@@ -17,7 +17,7 @@ export default function BarraMovil() {
         className="flex items-center justify-center gap-[6px] bg-fondo text-tinta font-sans font-semibold text-16 no-underline border-t border-tinta/[.12]"
       >
         WhatsApp
-        {!nap.whatsapp ? <DatoPendiente pequeno>pendiente</DatoPendiente> : null}
+        {!nap.whatsapp ? "627663146" : null}
       </a>
     </div>
   )

@@ -13,7 +13,7 @@ function env(nombre: string): string | undefined {
 }
 
 const telefonoEnv = env('NEXT_PUBLIC_TELEFONO') ?? '627 66 31 46'
-const whatsappEnv = env('NEXT_PUBLIC_WHATSAPP')
+const whatsappEnv = env('NEXT_PUBLIC_WHATSAPP') ?? '627 66 31 46'
 const direccionEnv = env('NEXT_PUBLIC_DIRECCION') ?? 'Calle Blasco Ibáñez, 16'
 
 export const nap = {

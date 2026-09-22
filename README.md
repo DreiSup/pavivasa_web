@@ -9,26 +9,28 @@ variables de entorno), con el sistema visual y las nueve pantallas del canvas de
 ## Arranque
 
 ```bash
-npm install
-cp .env.example .env.local   # rellenar lo que haya
-npm run dev
-npm run build                # debe pasar sin warnings antes de cada commit
-npm run lint
+pnpm install
+cp apps/web/.env.example apps/web/.env.local   # rellenar lo que haya
+pnpm --filter web dev
+pnpm build                    # turbo run build; debe pasar sin warnings antes de cada commit
+pnpm lint
 ```
 
 ## Estructura
 
+Monorepo pnpm + Turborepo; la app Next vive en `apps/web`:
+
 ```
-app/          rutas: home, [servicio] (7), proyectos + [slug] (15), empresa, presupuesto,
-              blog + [slug] (4), legales, 404, sitemap, robots
-components/   layout · ui · datos · contenido · secciones (mismos nombres que el brief)
-content/      proyectos.json, servicios.ts, articulos.ts, home.ts — todo el copy real
-lib/          config (NAP y claims), tipos, datos, schema (JSON-LD), eventos, meta-capi, texto
+apps/web/src/app/          rutas: home, [servicio] (7), proyectos + [slug] (15), empresa,
+                            presupuesto, blog + [slug] (4), legales, 404, sitemap, robots
+apps/web/src/components/   layout · ui · datos · contenido · secciones (mismos nombres que el brief)
+apps/web/src/content/      proyectos.json, servicios.ts, articulos.ts, home.ts — todo el copy real
+apps/web/src/lib/          config (NAP y claims), tipos, datos, schema (JSON-LD), eventos, meta-capi, texto
 ```
 
 ## Sistema visual
 
-- Tokens en `tailwind.config.ts` y `app/globals.css` (cambiar valores, no nombres): fondo
+- Tokens en `apps/web/tailwind.config.ts` y `apps/web/src/app/globals.css` (cambiar valores, no nombres): fondo
   `#EDEFEC`, fondo-alt `#DCE0DB`, tinta `#141A18`, tinta-media `#5A645F`, pigmento `#B2462A`,
   pigmento-hover `#8F3620`, acero `#45606E`, sobre-tinta `#F2F4F0`, error `#C4161C`.
 - Familias: Big Shoulders (titulares), Barlow (texto), Overpass Mono (datos de obra, siempre

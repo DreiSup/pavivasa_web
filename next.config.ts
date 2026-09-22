@@ -7,8 +7,9 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
   experimental: {
-    // El formulario de presupuesto admite una foto de hasta 10 MB.
-    serverActions: { bodySizeLimit: '12mb' },
+    // FOTO_MAX_BYTES (actions.ts) = 4 MiB. Leaves headroom for the other
+    // multipart fields (a few KB) while staying under Vercel's ~4.5 MB cap.
+    serverActions: { bodySizeLimit: '4300kb' },
   },
   /**
    * `/blog/hormigon-desactivado-piedra-vista/` sigue publicada (puede tener

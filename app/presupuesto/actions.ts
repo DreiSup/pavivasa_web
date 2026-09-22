@@ -22,6 +22,13 @@ export type EstadoEnvio = {
 const FOTO_MAX_BYTES = 4 * 1024 * 1024
 const FOTO_TIPOS = ['image/jpeg', 'image/png']
 
+// Replaces control and line-separator characters (newline, CR, tab, NEL, U+2028/2029...)
+// with a space rather than rejecting the value: a valid lead must never fail just
+// because its landing URL had a stray control character in a utm_* param.
+function stripControlChars(value: string) {
+  return value.replace(/[\u0000-\u001f\u007f\u0085\u2028\u2029]/g, ' ')
+}
+
 const esquema = z.object({
   variante: z.enum(['corto', 'completo']).default('completo'),
   nombre: z.string().trim().min(1, 'Escribe tu nombre.'),
@@ -52,15 +59,21 @@ const esquema = z.object({
   // be lost. `utm_*` skip the charset check: they can carry decoded spaces,
   // accented campaign names, etc. `gclid`/`gbraid`/`wbraid`/`fbclid` are opaque
   // Google/Meta identifiers with a known URL-safe charset, so they keep it.
+  // `utm_*` still get control/line-separator characters (newline, CR, U+2028...)
+  // replaced with a space after the length cap (replacing never changes the
+  // string's length, so the cap still applies to the original value): they land
+  // verbatim in the plain-text email/Telegram lead notice (`attributionLine`
+  // below), and an unstripped newline would let a crafted landing URL fake extra
+  // "fields" in that notice.
   gclid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
   gbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
   wbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
   fbclid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
-  utm_source: z.string().trim().max(200).optional().default('').catch(''),
-  utm_medium: z.string().trim().max(200).optional().default('').catch(''),
-  utm_campaign: z.string().trim().max(200).optional().default('').catch(''),
-  utm_term: z.string().trim().max(200).optional().default('').catch(''),
-  utm_content: z.string().trim().max(200).optional().default('').catch(''),
+  utm_source: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
+  utm_medium: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
+  utm_campaign: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
+  utm_term: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
+  utm_content: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
   attribution_ts: z.string().trim().max(20).regex(/^\d*$/).optional().default('').catch(''),
   source_page: z.string().trim().max(80).regex(/^\/[\w/-]*$/).optional().default('/presupuesto/').catch('/presupuesto/'),
 })

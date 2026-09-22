@@ -36,7 +36,10 @@ export default function Consentimiento() {
   }, [])
 
   function decidir(valor: 'aceptado' | 'rechazado') {
-    const previous = readConsentStatus() // read before overwriting, needed for the withdrawal check below
+    // Whether THIS TAB's gtag/fbq are actually live right now — from React state, not
+    // storage: storage can already hold a different value (another tab withdrew, or
+    // this tab's own `setItem` never landed) while these scripts keep running granted.
+    const wasAccepted = estado === 'aceptado'
     try {
       window.localStorage.setItem(CONSENT_STORAGE_KEY, valor)
     } catch {
@@ -50,7 +53,7 @@ export default function Consentimiento() {
       return
     }
 
-    if (previous === 'aceptado') {
+    if (wasAccepted) {
       // Real withdrawal: gtag.js/fbevents.js are already loaded in this tab and
       // can't be "un-injected", so tell them to stop and reload to drop everything else.
       window.gtag?.('consent', 'update', {

@@ -1,9 +1,12 @@
 # dependencies
-/node_modules
+node_modules
 
 # next.js
-/.next/
-/out/
+.next/
+out/
+
+# turborepo
+.turbo
 
 # production
 /build
@@ -28,5 +31,5 @@ next-env.d.ts
 # vercel
 .vercel
 
-# fotos originales (fuente); lo servible vive en public/img
+# fotos originales (fuente); lo servible vive en apps/web/public/img
 /img

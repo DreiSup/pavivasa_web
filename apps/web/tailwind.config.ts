@@ -7,7 +7,7 @@ import type { Config } from 'tailwindcss'
  * paleta fría gris-verde, acento "pigmento" óxido de hierro, secundario "acero".
  */
 const config: Config = {
-  content: ['./app/**/*.{ts,tsx,mdx}', './components/**/*.{ts,tsx}', './content/**/*.{ts,tsx,mdx}'],
+  content: ['./src/app/**/*.{ts,tsx,mdx}', './src/components/**/*.{ts,tsx}', './src/content/**/*.{ts,tsx,mdx}'],
   theme: {
     // Se reemplaza la paleta por defecto de Tailwind: solo existen estos colores.
     colors: {

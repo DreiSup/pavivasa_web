@@ -5,16 +5,21 @@ import Script from 'next/script'
 import { useEffect, useState } from 'react'
 import { sitio } from '@/lib/config'
 import { CONSENT_STORAGE_KEY, readConsentStatus } from '@/lib/consent-status'
-import { clearAttributionCookie, promoteFirstTouchCookie } from '@/lib/attribution'
+import {
+  clearAttributionCookie,
+  deleteTrackerCookies,
+  hasAttributionCookie,
+  promoteFirstTouchCookie,
+} from '@/lib/attribution'
 
 /**
  * Banner RGPD. Nada de analítica ni publicidad se carga antes de aceptar.
  * Con consentimiento carga gtag (GA4 + Google Ads sobre el mismo script) y Meta Pixel,
  * cada uno solo si su ID está en las variables de entorno.
  *
- * `estado` (consentimiento persistido) y `bannerOpen` (visibilidad del banner) se
- * gestionan por separado: reabrir el banner desde "Configurar cookies" (Pie.tsx)
- * no debe desmontar los <Script> ya cargados en la página.
+ * `estado` (persisted consent) and `bannerOpen` (banner visibility) are managed
+ * separately: reopening the banner from "Configurar cookies" (Pie.tsx) must not
+ * unmount the <Script> tags already loaded on the page.
  */
 export default function Consentimiento() {
   const [estado, setEstado] = useState<'cargando' | 'pendiente' | 'aceptado' | 'rechazado'>('cargando')
@@ -53,9 +58,15 @@ export default function Consentimiento() {
       return
     }
 
+    // Any rejection drops the first-touch cookie if one exists, even when this tab's
+    // own state was never 'aceptado' (e.g. it was set by another tab, or by a
+    // previous session, and this tab only just loaded the banner).
+    if (hasAttributionCookie()) clearAttributionCookie()
+
     if (wasAccepted) {
       // Real withdrawal: gtag.js/fbevents.js are already loaded in this tab and
-      // can't be "un-injected", so tell them to stop and reload to drop everything else.
+      // can't be "un-injected", so tell them to stop, drop the cookies they already
+      // wrote, and reload to drop everything else.
       window.gtag?.('consent', 'update', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
@@ -63,7 +74,7 @@ export default function Consentimiento() {
         analytics_storage: 'denied',
       })
       window.fbq?.('consent', 'revoke')
-      clearAttributionCookie()
+      deleteTrackerCookies()
       window.location.reload()
     }
   }

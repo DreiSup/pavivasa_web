@@ -4,7 +4,7 @@ import { startTransition, useActionState, useEffect, useRef, useState, type Form
 import Link from 'next/link'
 import { enviarPresupuesto, type EstadoEnvio } from '@/app/presupuesto/actions'
 import { readConsentStatus } from '@/lib/consent-status'
-import { ATTRIBUTION_PARAMS, getAttributionForSubmit } from '@/lib/attribution'
+import { ATTRIBUTION_PARAMS, CLICK_ID_PARAMS, getAttributionForSubmit } from '@/lib/attribution'
 import { nap } from '@/lib/config'
 import { NOMBRES_ESPACIOS } from '@/content/home'
 import { registrarEvento } from '@/lib/eventos'
@@ -17,9 +17,11 @@ import EtiquetaTecnica from '../datos/EtiquetaTecnica'
 
 const estadoInicial: EstadoEnvio = { estado: 'inicial', errores: {} }
 
-// Espejo de la validación del servidor (`FOTO_MAX_BYTES` en actions.ts). Vercel
-// corta el cuerpo de la Server Action en 4,5 MB, así que por encima de 4 MB el envío
-// devolvería 413 antes de llegar a la acción: se rechaza aquí, en el navegador.
+// Mirrors the server-side validation (`FOTO_MAX_BYTES` in actions.ts). The photo is
+// capped at 4 MB here to leave headroom, under the Server Action's 4300kb body limit
+// (`serverActions.bodySizeLimit`, next.config.ts), for the rest of the multipart
+// form: above that combined limit the submission comes back as a 413 before
+// reaching the action, so it's rejected here, in the browser, instead.
 const FOTO_MAX_BYTES = 4 * 1024 * 1024
 const FOTO_ERROR_TAMANO = 'La foto pesa más de 4 MB.'
 
@@ -67,7 +69,8 @@ export default function FormularioPresupuesto({
     e.preventDefault()
     const datos = new FormData(e.currentTarget)
     // Read at submit time, not on mount: consent may have changed during the session.
-    datos.set('marketing_consent', readConsentStatus() === 'aceptado' ? 'aceptado' : 'rechazado')
+    const marketingConsent = readConsentStatus() === 'aceptado' ? 'aceptado' : 'rechazado'
+    datos.set('marketing_consent', marketingConsent)
     // First-touch cookie (post-consent) takes priority over this session's own capture.
     // Whitelisted read: the cookie/sessionStorage source is unvalidated JSON (see
     // lib/attribution.ts readCookie/readSession), so an unfiltered Object.entries
@@ -75,6 +78,10 @@ export default function FormularioPresupuesto({
     // (e.g. `marketing_consent`, set just above, or the `empresa_web` honeypot).
     const attribution = getAttributionForSubmit()
     for (const key of ATTRIBUTION_PARAMS) {
+      // GDPR: click identifiers (gclid/gbraid/wbraid/fbclid) never leave the browser
+      // without marketing consent. utm_* is non-identifying campaign info and is
+      // still sent (see the matching server-side drop in app/presupuesto/actions.ts).
+      if (marketingConsent !== 'aceptado' && (CLICK_ID_PARAMS as readonly string[]).includes(key)) continue
       const value = attribution[key]
       if (value) datos.set(key, value)
     }

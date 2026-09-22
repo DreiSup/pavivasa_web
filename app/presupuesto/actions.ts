@@ -17,8 +17,8 @@ export type EstadoEnvio = {
   resumen?: { nombre: string; telefono: string; espacio: string; superficie?: string; municipio?: string }
 }
 
-// Vercel corta el cuerpo de una Server Action en 4,5 MB: por encima de eso la
-// subida devuelve 413 en producción aunque funcione en local.
+// Server Action body is capped at 4300kb (`serverActions.bodySizeLimit`, next.config.ts):
+// Next.js itself rejects anything above that with a 413 before it reaches this action.
 const FOTO_MAX_BYTES = 4 * 1024 * 1024
 const FOTO_TIPOS = ['image/jpeg', 'image/png']
 
@@ -27,6 +27,16 @@ const FOTO_TIPOS = ['image/jpeg', 'image/png']
 // because its landing URL had a stray control character in a utm_* param.
 function stripControlChars(value: string) {
   return value.replace(/[\u0000-\u001f\u007f\u0085\u2028\u2029]/g, ' ')
+}
+
+// `attributionLine` below joins fields with ' · ' and each field as `key=value`: a
+// utm_* value carrying either sequence could inject a fake extra field into the
+// plain-text email/Telegram lead notice. Collapsed to a single space (not
+// stripped outright, to avoid gluing adjacent words together) rather than
+// rejected: `.max(200)` above already ran against the original, untransformed
+// input, so a transform that shortens the value here can't bypass that cap.
+function sanitizeAttributionValue(value: string) {
+  return stripControlChars(value).replace(/ ?· ?/g, ' ').replaceAll('=', ' ')
 }
 
 const esquema = z.object({
@@ -73,11 +83,11 @@ const esquema = z.object({
   gbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
   wbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
   fbclid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
-  utm_source: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
-  utm_medium: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
-  utm_campaign: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
-  utm_term: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
-  utm_content: z.string().trim().max(200).transform(stripControlChars).optional().default('').catch(''),
+  utm_source: z.string().trim().max(200).transform(sanitizeAttributionValue).optional().default('').catch(''),
+  utm_medium: z.string().trim().max(200).transform(sanitizeAttributionValue).optional().default('').catch(''),
+  utm_campaign: z.string().trim().max(200).transform(sanitizeAttributionValue).optional().default('').catch(''),
+  utm_term: z.string().trim().max(200).transform(sanitizeAttributionValue).optional().default('').catch(''),
+  utm_content: z.string().trim().max(200).transform(sanitizeAttributionValue).optional().default('').catch(''),
   attribution_ts: z.string().trim().max(20).regex(/^\d*$/).optional().default('').catch(''),
   source_page: z.string().trim().max(80).regex(/^\/[\w/-]*$/).optional().default('/presupuesto/').catch('/presupuesto/'),
 })
@@ -109,6 +119,26 @@ function buildFbc(fbclid: string, ts: string): string | undefined {
   if (!fbclid) return undefined
   const timestamp = /^\d+$/.test(ts) ? ts : Date.now().toString()
   return `fb.1.${timestamp}.${fbclid}`
+}
+
+const TELEGRAM_MAX_CHARS = 4096
+
+/**
+ * Telegram's `sendMessage` rejects the whole message outright above 4096
+ * characters — there's no partial delivery, so staying under the cap matters more
+ * than what gets cut to get there. The attribution line is shortened (or dropped)
+ * first since it's the least essential part of the notice. Only if the lead's own
+ * data (name, phone, message...) still doesn't fit on its own — no realistic
+ * combination of the current field caps should reach that — is the final text
+ * hard-cut as a last resort, rather than have the whole notice bounce.
+ */
+function capTelegramText(baseLines: string[], attributionLine: string): string {
+  const base = baseLines.join('\n')
+  if (!attributionLine) return base.slice(0, TELEGRAM_MAX_CHARS)
+  const prefix = '\nOrigen: '
+  const budget = TELEGRAM_MAX_CHARS - base.length - prefix.length
+  const withAttribution = budget > 0 ? `${base}${prefix}${attributionLine.slice(0, budget)}` : base
+  return withAttribution.slice(0, TELEGRAM_MAX_CHARS)
 }
 
 export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData): Promise<EstadoEnvio> {
@@ -157,12 +187,22 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
     source_page: sourcePage,
   } = analizado.data
 
+  // GDPR defensive check: click identifiers must never be forwarded — to Meta CAPI,
+  // the email/Telegram notice, or anywhere else — without marketing consent, even if
+  // a tampered client request submits them anyway (the primary gate is client-side,
+  // see FormularioPresupuesto.tsx).
+  const marketingConsentGranted = marketingConsent === 'aceptado'
+  const gclidSeguro = marketingConsentGranted ? gclid : ''
+  const gbraidSeguro = marketingConsentGranted ? gbraid : ''
+  const wbraidSeguro = marketingConsentGranted ? wbraid : ''
+  const fbclidSeguro = marketingConsentGranted ? fbclid : ''
+
   // "Origen" block for the email/Telegram notice: only the attribution fields present.
   const attributionLine = [
-    gclid && `gclid=${gclid}`,
-    gbraid && `gbraid=${gbraid}`,
-    wbraid && `wbraid=${wbraid}`,
-    fbclid && `fbclid=${fbclid}`,
+    gclidSeguro && `gclid=${gclidSeguro}`,
+    gbraidSeguro && `gbraid=${gbraidSeguro}`,
+    wbraidSeguro && `wbraid=${wbraidSeguro}`,
+    fbclidSeguro && `fbclid=${fbclidSeguro}`,
     utm_source && `utm_source=${utm_source}`,
     utm_medium && `utm_medium=${utm_medium}`,
     utm_campaign && `utm_campaign=${utm_campaign}`,
@@ -247,21 +287,21 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: telegramChat,
-          text: [
-            '🔔 Nuevo presupuesto',
-            `${nombre} · ${formatearTelefono(telefono)}`,
-            email || null,
-            espacio,
-            superficie ? `${superficie} m²` : null,
-            municipio || '—',
-            mensaje || null,
-            adjunto
-              ? `Foto: ${adjunto.filename}${entregado ? ' — adjunta en el email' : ' — SIN ENTREGAR: el email no ha salido'}`
-              : null,
-            attributionLine ? `Origen: ${attributionLine}` : null,
-          ]
-            .filter(Boolean)
-            .join('\n'),
+          text: capTelegramText(
+            [
+              '🔔 Nuevo presupuesto',
+              `${nombre} · ${formatearTelefono(telefono)}`,
+              email || null,
+              espacio,
+              superficie ? `${superficie} m²` : null,
+              municipio || '—',
+              mensaje || null,
+              adjunto
+                ? `Foto: ${adjunto.filename}${entregado ? ' — adjunta en el email' : ' — SIN ENTREGAR: el email no ha salido'}`
+                : null,
+            ].filter((l): l is string => Boolean(l)),
+            attributionLine,
+          ),
         }),
         signal: AbortSignal.timeout(8000),
       })
@@ -293,7 +333,7 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
       fbp: listaCookies.get('_fbp')?.value,
       // No _fbc cookie (Pixel blocked, third-party cookies restricted...):
       // rebuild it from the fbclid captured on landing.
-      fbc: listaCookies.get('_fbc')?.value ?? buildFbc(fbclid, attributionTs),
+      fbc: listaCookies.get('_fbc')?.value ?? buildFbc(fbclidSeguro, attributionTs),
     })
   }
 

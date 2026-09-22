@@ -1,5 +1,4 @@
 import { nap } from '@/lib/config'
-import DatoPendiente from '../datos/DatoPendiente'
 
 /** Barra fija inferior en móvil: Llamar / WhatsApp. Único elemento con sombra en todo el sitio. */
 export default function BarraMovil() {
@@ -17,7 +16,7 @@ export default function BarraMovil() {
         className="flex items-center justify-center gap-[6px] bg-fondo text-tinta font-sans font-semibold text-16 no-underline border-t border-tinta/[.12]"
       >
         WhatsApp
-        {!nap.whatsapp ? "627663146" : null}
+        <span className="font-mono text-d-12 font-medium opacity-80">{nap.whatsapp}</span>
       </a>
     </div>
   )

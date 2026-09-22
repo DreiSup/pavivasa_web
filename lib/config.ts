@@ -3,8 +3,8 @@
  * un teléfono o una dirección a mano: todo sale de aquí.
  *
  * Los valores por defecto son los que publica pavivasa.com (sept. 2026). Las
- * variables de entorno los sobreescriben. Lo que la web no da (WhatsApp,
- * horario) llega vacío y se muestra con <DatoPendiente>.
+ * variables de entorno los sobreescriben. Lo que la web no da (horario)
+ * llega vacío y se muestra con <DatoPendiente>.
  */
 
 /** Una variable vacía (como en .env.example o en el panel de Vercel) cuenta como no definida. */
@@ -13,7 +13,8 @@ function env(nombre: string): string | undefined {
 }
 
 const telefonoEnv = env('NEXT_PUBLIC_TELEFONO') ?? '627 66 31 46'
-const whatsappEnv = env('NEXT_PUBLIC_WHATSAPP') ?? '627 66 31 46'
+/** El WhatsApp es el mismo móvil salvo que la variable diga otro. */
+const whatsappEnv = env('NEXT_PUBLIC_WHATSAPP') ?? telefonoEnv
 const direccionEnv = env('NEXT_PUBLIC_DIRECCION') ?? 'Calle Blasco Ibáñez, 16'
 
 export const nap = {

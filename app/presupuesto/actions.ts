@@ -50,7 +50,11 @@ const esquema = z.object({
   evento_id: z.string().optional().default(''),
   // Absent on the no-JS path (no onSubmit means no `set` on the field): defaults
   // to 'rechazado', safe-by-default for the Meta CAPI gate (step 7).
-  marketing_consent: z.enum(['aceptado', 'rechazado']).optional().default('rechazado'),
+  // `.catch` instead of failing the parse: an unrecognized/malformed value here
+  // (e.g. a foreign key injected via a tossed attribution cookie, see
+  // FormularioPresupuesto.tsx) must fail closed to 'rechazado', not fail the
+  // whole safeParse and lose an otherwise-valid lead.
+  marketing_consent: z.enum(['aceptado', 'rechazado']).optional().default('rechazado').catch('rechazado'),
   // Attribution: each field has `.catch('')` instead of failing the parse. If it
   // didn't, an unexpected character in a `gclid` or an over-length `utm_campaign`
   // (Google Ads ValueTrack values can be long; the client already truncates to

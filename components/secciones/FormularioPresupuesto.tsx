@@ -4,7 +4,7 @@ import { startTransition, useActionState, useEffect, useRef, useState, type Form
 import Link from 'next/link'
 import { enviarPresupuesto, type EstadoEnvio } from '@/app/presupuesto/actions'
 import { readConsentStatus } from '@/lib/consent-status'
-import { getAttributionForSubmit } from '@/lib/attribution'
+import { ATTRIBUTION_PARAMS, getAttributionForSubmit } from '@/lib/attribution'
 import { nap } from '@/lib/config'
 import { NOMBRES_ESPACIOS } from '@/content/home'
 import { registrarEvento } from '@/lib/eventos'
@@ -69,10 +69,16 @@ export default function FormularioPresupuesto({
     // Read at submit time, not on mount: consent may have changed during the session.
     datos.set('marketing_consent', readConsentStatus() === 'aceptado' ? 'aceptado' : 'rechazado')
     // First-touch cookie (post-consent) takes priority over this session's own capture.
+    // Whitelisted read: the cookie/sessionStorage source is unvalidated JSON (see
+    // lib/attribution.ts readCookie/readSession), so an unfiltered Object.entries
+    // loop here would let any injected key overwrite an unrelated FormData field
+    // (e.g. `marketing_consent`, set just above, or the `empresa_web` honeypot).
     const attribution = getAttributionForSubmit()
-    for (const [key, value] of Object.entries(attribution)) {
-      if (value) datos.set(key === 'ts' ? 'attribution_ts' : key, value)
+    for (const key of ATTRIBUTION_PARAMS) {
+      const value = attribution[key]
+      if (value) datos.set(key, value)
     }
+    if (attribution.ts) datos.set('attribution_ts', attribution.ts)
     datos.set('source_page', window.location.pathname)
     startTransition(() => accion(datos))
   }

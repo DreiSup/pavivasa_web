@@ -44,6 +44,25 @@ const esquema = z.object({
   // Absent on the no-JS path (no onSubmit means no `set` on the field): defaults
   // to 'rechazado', safe-by-default for the Meta CAPI gate (step 7).
   marketing_consent: z.enum(['aceptado', 'rechazado']).optional().default('rechazado'),
+  // Attribution: each field has `.catch('')` instead of failing the parse. If it
+  // didn't, an unexpected character in a `gclid` or an over-length `utm_campaign`
+  // (Google Ads ValueTrack values can be long; the client already truncates to
+  // 200) would fail the whole `safeParse` and land on `errores.gclid`, a key no
+  // field in the form renders — the visitor would see nothing and the lead would
+  // be lost. `utm_*` skip the charset check: they can carry decoded spaces,
+  // accented campaign names, etc. `gclid`/`gbraid`/`wbraid`/`fbclid` are opaque
+  // Google/Meta identifiers with a known URL-safe charset, so they keep it.
+  gclid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
+  gbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
+  wbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
+  fbclid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
+  utm_source: z.string().trim().max(200).optional().default('').catch(''),
+  utm_medium: z.string().trim().max(200).optional().default('').catch(''),
+  utm_campaign: z.string().trim().max(200).optional().default('').catch(''),
+  utm_term: z.string().trim().max(200).optional().default('').catch(''),
+  utm_content: z.string().trim().max(200).optional().default('').catch(''),
+  attribution_ts: z.string().trim().max(20).regex(/^\d*$/).optional().default('').catch(''),
+  source_page: z.string().trim().max(80).regex(/^\/[\w/-]*$/).optional().default('/presupuesto/').catch('/presupuesto/'),
 })
 
 // Límite de envíos por IP: 3 / hora. En memoria — se reinicia con cada despliegue.
@@ -62,6 +81,17 @@ function limitePorIp(ip: string) {
 
 function formatearTelefono(t: string) {
   return `${t.slice(0, 3)} ${t.slice(3, 5)} ${t.slice(5, 7)} ${t.slice(7)}`
+}
+
+/**
+ * Fallback for `_fbc` when there's no cookie (Meta Pixel blocked, third-party
+ * cookies restricted...): rebuilds the same format from the `fbclid` captured
+ * on landing. Meta's official format: `fb.<subdomain>.<timestamp_ms>.<fbclid>`.
+ */
+function buildFbc(fbclid: string, ts: string): string | undefined {
+  if (!fbclid) return undefined
+  const timestamp = /^\d+$/.test(ts) ? ts : Date.now().toString()
+  return `fb.1.${timestamp}.${fbclid}`
 }
 
 export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData): Promise<EstadoEnvio> {
@@ -97,7 +127,33 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
     privacidad,
     evento_id: eventoId,
     marketing_consent: marketingConsent,
+    gclid,
+    gbraid,
+    wbraid,
+    fbclid,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_term,
+    utm_content,
+    attribution_ts: attributionTs,
+    source_page: sourcePage,
   } = analizado.data
+
+  // "Origen" block for the email/Telegram notice: only the attribution fields present.
+  const attributionLine = [
+    gclid && `gclid=${gclid}`,
+    gbraid && `gbraid=${gbraid}`,
+    wbraid && `wbraid=${wbraid}`,
+    fbclid && `fbclid=${fbclid}`,
+    utm_source && `utm_source=${utm_source}`,
+    utm_medium && `utm_medium=${utm_medium}`,
+    utm_campaign && `utm_campaign=${utm_campaign}`,
+    utm_term && `utm_term=${utm_term}`,
+    utm_content && `utm_content=${utm_content}`,
+  ]
+    .filter(Boolean)
+    .join(' · ')
 
   const errores: Record<string, string> = {}
   if (variante === 'completo' && !municipio) errores.municipio = 'Dinos el municipio de la obra.'
@@ -147,7 +203,10 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
             `Municipio: ${municipio || '—'}`,
             `Mensaje: ${mensaje || '—'}`,
             `Foto: ${adjunto ? adjunto.filename : '—'}`,
-          ].join('\n'),
+            attributionLine ? `Origen: ${attributionLine}` : null,
+          ]
+            .filter((l): l is string => Boolean(l))
+            .join('\n'),
           attachments: adjunto ? [adjunto] : undefined,
         }),
         signal: AbortSignal.timeout(15000),
@@ -182,6 +241,7 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
             adjunto
               ? `Foto: ${adjunto.filename}${entregado ? ' — adjunta en el email' : ' — SIN ENTREGAR: el email no ha salido'}`
               : null,
+            attributionLine ? `Origen: ${attributionLine}` : null,
           ]
             .filter(Boolean)
             .join('\n'),
@@ -212,9 +272,11 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
       email: email || undefined,
       ip,
       userAgent: listaCabeceras.get('user-agent') ?? '',
-      url: `${sitio.url}/presupuesto/`,
+      url: `${sitio.url}${sourcePage}`,
       fbp: listaCookies.get('_fbp')?.value,
-      fbc: listaCookies.get('_fbc')?.value,
+      // No _fbc cookie (Pixel blocked, third-party cookies restricted...):
+      // rebuild it from the fbclid captured on landing.
+      fbc: listaCookies.get('_fbc')?.value ?? buildFbc(fbclid, attributionTs),
     })
   }
 

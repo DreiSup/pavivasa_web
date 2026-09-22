@@ -5,6 +5,7 @@ import Script from 'next/script'
 import { useEffect, useState } from 'react'
 import { sitio } from '@/lib/config'
 import { CONSENT_STORAGE_KEY, readConsentStatus } from '@/lib/consent-status'
+import { clearAttributionCookie, promoteFirstTouchCookie } from '@/lib/attribution'
 
 /**
  * Banner RGPD. Nada de analítica ni publicidad se carga antes de aceptar.
@@ -44,7 +45,12 @@ export default function Consentimiento() {
     setEstado(valor)
     setBannerOpen(false)
 
-    if (valor === 'rechazado' && previous === 'aceptado') {
+    if (valor === 'aceptado') {
+      promoteFirstTouchCookie()
+      return
+    }
+
+    if (previous === 'aceptado') {
       // Real withdrawal: gtag.js/fbevents.js are already loaded in this tab and
       // can't be "un-injected", so tell them to stop and reload to drop everything else.
       window.gtag?.('consent', 'update', {
@@ -54,6 +60,7 @@ export default function Consentimiento() {
         analytics_storage: 'denied',
       })
       window.fbq?.('consent', 'revoke')
+      clearAttributionCookie()
       window.location.reload()
     }
   }

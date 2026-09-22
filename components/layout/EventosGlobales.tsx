@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { registrarEvento } from '@/lib/eventos'
+import { captureLandingParams } from '@/lib/attribution'
 
 /**
  * Delegación de clic sobre tel:/wa.me en todo el documento. Así BarraMovil,
@@ -9,6 +10,10 @@ import { registrarEvento } from '@/lib/eventos'
  */
 export default function EventosGlobales() {
   useEffect(() => {
+    // Once per full page load (landing), not on every <Link> navigation:
+    // exactly the "on landing" semantics this needs.
+    captureLandingParams()
+
     function alClic(evento: MouseEvent) {
       const enlace = (evento.target as HTMLElement).closest('a')
       if (!enlace) return

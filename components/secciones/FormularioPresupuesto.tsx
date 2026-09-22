@@ -4,6 +4,7 @@ import { startTransition, useActionState, useEffect, useRef, useState, type Form
 import Link from 'next/link'
 import { enviarPresupuesto, type EstadoEnvio } from '@/app/presupuesto/actions'
 import { readConsentStatus } from '@/lib/consent-status'
+import { getAttributionForSubmit } from '@/lib/attribution'
 import { nap } from '@/lib/config'
 import { NOMBRES_ESPACIOS } from '@/content/home'
 import { registrarEvento } from '@/lib/eventos'
@@ -67,6 +68,12 @@ export default function FormularioPresupuesto({
     const datos = new FormData(e.currentTarget)
     // Read at submit time, not on mount: consent may have changed during the session.
     datos.set('marketing_consent', readConsentStatus() === 'aceptado' ? 'aceptado' : 'rechazado')
+    // First-touch cookie (post-consent) takes priority over this session's own capture.
+    const attribution = getAttributionForSubmit()
+    for (const [key, value] of Object.entries(attribution)) {
+      if (value) datos.set(key === 'ts' ? 'attribution_ts' : key, value)
+    }
+    datos.set('source_page', window.location.pathname)
     startTransition(() => accion(datos))
   }
 

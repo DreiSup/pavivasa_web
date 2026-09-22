@@ -3,6 +3,7 @@
 import { startTransition, useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import { enviarPresupuesto, type EstadoEnvio } from '@/app/presupuesto/actions'
+import { readConsentStatus } from '@/lib/consent-status'
 import { nap } from '@/lib/config'
 import { NOMBRES_ESPACIOS } from '@/content/home'
 import { registrarEvento } from '@/lib/eventos'
@@ -64,6 +65,8 @@ export default function FormularioPresupuesto({
   function alEnviar(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const datos = new FormData(e.currentTarget)
+    // Read at submit time, not on mount: consent may have changed during the session.
+    datos.set('marketing_consent', readConsentStatus() === 'aceptado' ? 'aceptado' : 'rechazado')
     startTransition(() => accion(datos))
   }
 

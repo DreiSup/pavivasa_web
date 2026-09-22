@@ -41,6 +41,9 @@ const esquema = z.object({
   mensaje: z.string().trim().max(2000, 'Acorta un poco el mensaje.').optional().default(''),
   privacidad: z.string().optional(),
   evento_id: z.string().optional().default(''),
+  // Absent on the no-JS path (no onSubmit means no `set` on the field): defaults
+  // to 'rechazado', safe-by-default for the Meta CAPI gate (step 7).
+  marketing_consent: z.enum(['aceptado', 'rechazado']).optional().default('rechazado'),
 })
 
 // Límite de envíos por IP: 3 / hora. En memoria — se reinicia con cada despliegue.
@@ -82,8 +85,19 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
     }
     return { estado: 'error', errores }
   }
-  const { variante, nombre, telefono, email, espacio, superficie, municipio, mensaje, privacidad, evento_id: eventoId } =
-    analizado.data
+  const {
+    variante,
+    nombre,
+    telefono,
+    email,
+    espacio,
+    superficie,
+    municipio,
+    mensaje,
+    privacidad,
+    evento_id: eventoId,
+    marketing_consent: marketingConsent,
+  } = analizado.data
 
   const errores: Record<string, string> = {}
   if (variante === 'completo' && !municipio) errores.municipio = 'Dinos el municipio de la obra.'
@@ -188,17 +202,21 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
   }
 
   // 7. Meta CAPI, deduplicado con el Pixel por evento_id
-  const listaCookies = await cookies()
-  await enviarEventoCAPI({
-    eventoId,
-    telefono,
-    email: email || undefined,
-    ip,
-    userAgent: listaCabeceras.get('user-agent') ?? '',
-    url: `${sitio.url}/presupuesto/`,
-    fbp: listaCookies.get('_fbp')?.value,
-    fbc: listaCookies.get('_fbc')?.value,
-  })
+  // Gated on marketing consent, read at submit time (see FormularioPresupuesto.tsx).
+  // Without consent the lead is still delivered by email/Telegram, but no event is sent to Meta.
+  if (marketingConsent === 'aceptado') {
+    const listaCookies = await cookies()
+    await enviarEventoCAPI({
+      eventoId,
+      telefono,
+      email: email || undefined,
+      ip,
+      userAgent: listaCabeceras.get('user-agent') ?? '',
+      url: `${sitio.url}/presupuesto/`,
+      fbp: listaCookies.get('_fbp')?.value,
+      fbc: listaCookies.get('_fbc')?.value,
+    })
+  }
 
   return {
     estado: 'enviado',

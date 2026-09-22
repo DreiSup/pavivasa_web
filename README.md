@@ -39,6 +39,15 @@ lib/          config (NAP y claims), tipos, datos, schema (JSON-LD), eventos, me
 - Todo dato que la web actual no da (horario, WhatsApp, m², años, NIF, textos legales,
   respuestas de FAQ) se pinta con `DatoPendiente`. No se inventa.
 
+## Despliegue (Vercel)
+
+Monorepo pnpm + Turborepo; la app Next vive en `apps/web`. Al fusionar esta rama a `main`,
+antes del siguiente deploy hay que cambiar a mano en el dashboard del proyecto Vercel
+(`pavivasa-web`): *Root Directory* → `apps/web`, con *Include files outside the Root
+Directory* activado (para que llegue `pnpm-lock.yaml`/`turbo.json` de la raíz). Sin ese
+cambio, Vercel sigue construyendo desde la raíz plana antigua y el build falla o no
+encuentra `apps/web/.next`.
+
 ## Pendiente del cliente
 
 WhatsApp (`NEXT_PUBLIC_WHATSAPP`), horario, fotos originales a 2400 px, logotipos del Kit

@@ -33,8 +33,9 @@ function stripControlChars(value: string) {
 // utm_* value carrying either sequence could inject a fake extra field into the
 // plain-text email/Telegram lead notice. Collapsed to a single space (not
 // stripped outright, to avoid gluing adjacent words together) rather than
-// rejected: `.max(200)` above already ran against the original, untransformed
-// input, so a transform that shortens the value here can't bypass that cap.
+// rejected: `.max(200)` below already ran against the original, untransformed
+// input, so this transform running after it (and only ever shortening the
+// value, never lengthening it) can't bypass that cap.
 function sanitizeAttributionValue(value: string) {
   return stripControlChars(value).replace(/ ?· ?/g, ' ').replaceAll('=', ' ')
 }
@@ -74,11 +75,11 @@ const esquema = z.object({
   // accented campaign names, etc. `gclid`/`gbraid`/`wbraid`/`fbclid` are opaque
   // Google/Meta identifiers with a known URL-safe charset, so they keep it.
   // `utm_*` still get control/line-separator characters (newline, CR, U+2028...)
-  // replaced with a space after the length cap (replacing never changes the
-  // string's length, so the cap still applies to the original value): they land
-  // verbatim in the plain-text email/Telegram lead notice (`attributionLine`
-  // below), and an unstripped newline would let a crafted landing URL fake extra
-  // "fields" in that notice.
+  // replaced with a space after the length cap runs (`sanitizeAttributionValue`
+  // only ever shortens the value from there, never lengthens it, so the cap
+  // still applies to the original value): they land verbatim in the plain-text
+  // email/Telegram lead notice (`attributionLine` below), and an unstripped
+  // newline would let a crafted landing URL fake extra "fields" in that notice.
   gclid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
   gbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
   wbraid: z.string().trim().max(200).regex(/^[\w.-]*$/).optional().default('').catch(''),
@@ -128,9 +129,10 @@ const TELEGRAM_MAX_CHARS = 4096
  * characters — there's no partial delivery, so staying under the cap matters more
  * than what gets cut to get there. The attribution line is shortened (or dropped)
  * first since it's the least essential part of the notice. Only if the lead's own
- * data (name, phone, message...) still doesn't fit on its own — no realistic
- * combination of the current field caps should reach that — is the final text
- * hard-cut as a last resort, rather than have the whole notice bounce.
+ * data (name, phone, message...) still doesn't fit on its own is the final text
+ * hard-cut as a last resort, rather than have the whole notice bounce — this can
+ * happen for real: `nombre`, `municipio` and `email` have no `.max()` in the
+ * schema above, so a long-enough submission reaches this path.
  */
 function capTelegramText(baseLines: string[], attributionLine: string): string {
   const base = baseLines.join('\n')

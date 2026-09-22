@@ -1,5 +1,7 @@
 import { createHash } from 'crypto'
 
+import { sitio } from './config'
+
 function hash(valor: string) {
   return createHash('sha256').update(valor.trim().toLowerCase()).digest('hex')
 }
@@ -30,8 +32,12 @@ type EventoCAPI = {
  * navegador vía el mismo event_id. Sin credenciales, no hace nada y no falla.
  */
 export async function enviarEventoCAPI(evento: EventoCAPI) {
-  const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
-  const token = process.env.META_CAPI_ACCESS_TOKEN
+  // Reuses lib/config.ts's already-cleaned value (empty/whitespace treated as
+  // unset) instead of reading process.env directly again. This module is
+  // server-only, so a dynamic vs. literal env read makes no difference here —
+  // it's just one source of truth for the pixel id.
+  const pixelId = sitio.metaPixelId
+  const token = process.env.META_CAPI_ACCESS_TOKEN?.trim() || undefined
   if (!pixelId || !token) return
 
   const userData: Record<string, unknown> = {

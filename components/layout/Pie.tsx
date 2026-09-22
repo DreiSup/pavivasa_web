@@ -98,6 +98,11 @@ export default function Pie() {
                 {l.texto}
               </Link>
             ))}
+            {/* Reopens the cookie banner; the click listener lives in Consentimiento.tsx
+                (same delegation pattern as EventosGlobales), so this stays a Server Component. */}
+            <button type="button" data-cookie-settings className="text-left text-sobre-tinta/70 hover:text-sobre-tinta">
+              Configurar cookies
+            </button>
           </nav>
         </div>
       </div>

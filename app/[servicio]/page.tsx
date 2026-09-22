@@ -23,6 +23,9 @@ export function generateStaticParams() {
   return ORDEN_SERVICIOS.map((servicio) => ({ servicio }))
 }
 
+// Full param set is known at build time: unknown slugs 404 immediately, no on-demand render/cache entry.
+export const dynamicParams = false
+
 export async function generateMetadata({ params }: { params: Promise<{ servicio: string }> }): Promise<Metadata> {
   const { servicio: id } = await params
   const servicio = servicioPorId(id)

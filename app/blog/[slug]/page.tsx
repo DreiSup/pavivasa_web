@@ -15,6 +15,9 @@ export function generateStaticParams() {
   return articulos.map((a) => ({ slug: a.slug }))
 }
 
+// Full param set is known at build time: unknown slugs 404 immediately, no on-demand render/cache entry.
+export const dynamicParams = false
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const articulo = articuloPorSlug(slug)

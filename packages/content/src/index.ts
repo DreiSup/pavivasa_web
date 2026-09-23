@@ -6,11 +6,13 @@
  * `scripts/validate.ts` (the `content:validate` task) — see this package's
  * README.
  */
-// Explicit named re-exports, not `export * from './queries/index.ts'`: a
-// star export forces bundlers to treat the whole re-exported surface as one
-// opaque unit in some configurations, defeating the point of the file
-// splits in `queries/` (confirmed empirically while building this phase —
-// see the phase report).
+// Explicit named re-exports, not `export * from './queries/index.ts'`, as a
+// precaution: a star export is a plausible thing for a bundler to treat
+// more conservatively than named re-exports, which would defeat the point
+// of the file splits in `queries/`. Removed at the same time as the fixes
+// in README.md's "Client-bundle rule" section, but not re-tested in
+// isolation — see that section for what WAS confirmed.
+
 export { getBusiness, resolveBusiness } from './queries/business.ts'
 export type { BusinessOverrides, ResolvedBusiness } from './queries/business.ts'
 export { getClaims } from './queries/claims.ts'

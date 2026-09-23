@@ -107,7 +107,11 @@ What actually works, in order of how much it costs:
    just never reaches the sibling it doesn't need.
 3. **No `export * from` barrels** for anything client-reachable. Use
    explicit named re-exports (`export { getSpaceNames } from './space-names.ts'`)
-   — a star export defeated elimination even with (1) and (2) in place.
+   instead — as a precaution, not a confirmed isolated cause: this
+   package's own `export *` barrel was removed at the same time as (1) and
+   (2) went in, and never restored to re-test alone. A star export is a
+   plausible thing for a bundler to treat more conservatively than a named
+   one, but that specific claim wasn't isolated here.
 
 Every query file in `queries/` follows rule 2 already (`business.ts` /
 `claims.ts`, `home.ts` / `space-names.ts`): each imports only its own slice

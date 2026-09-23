@@ -75,6 +75,44 @@ the `zod` package; keeping it out of `data/`/`queries/` keeps it out of the
 client bundle. See `packages/config`'s `env.ts`/`env.schema.ts` split for
 the same pattern.
 
+## Client-bundle rule: one export per file, not per function
+
+`apps/web`'s legacy adapters (`lib/config`, `content/home`…) are imported by
+`'use client'` components for ONE specific value (e.g. `NOMBRES_ESPACIOS`,
+`nap`), while the same adapter also exports other values only server
+components need (e.g. `claims`, `HERO_HOME`). It's tempting to think
+splitting those into separate *functions* — `getClaims()` apart from
+`getBusiness()`, each reading its own data — is enough to keep the unused
+one out of the client bundle. **It isn't.** Confirmed with real builds while
+building phase 2: as long as both functions live in the same **file** (or
+are re-exported through a barrel using `export * from`), the unused one's
+whole dependency chain still ships. ES modules execute a module's entire
+top-level code once it's imported, regardless of which binding is actually
+read afterward, and neither Next's minifier nor a `/*#__PURE__*/` hint on
+the call site reliably drops that once the module is already included.
+
+What actually works, in order of how much it costs:
+
+1. **`"sideEffects": ["**/*.css"]`** (or similar) in `apps/web/package.json`.
+   Without an explicit `sideEffects` declaration, a bundler must assume any
+   local module *might* matter even with zero used exports, so it won't be
+   excluded outright. This alone let whole-module elimination work for
+   files nothing imports.
+2. **Physically separate files** for anything a client component reads vs.
+   anything only a server component reads — even when the fixed import
+   specifier (`@/lib/config`, `@/content/home`) can't change: turn the file
+   into a directory with an `index.ts` that re-exports each piece from its
+   own sibling module (`nap.ts` / `claims.ts`, `hero.ts` / `space-names.ts`).
+   The specifier keeps resolving; the client compilation's import graph
+   just never reaches the sibling it doesn't need.
+3. **No `export * from` barrels** for anything client-reachable. Use
+   explicit named re-exports (`export { getSpaceNames } from './space-names.ts'`)
+   — a star export defeated elimination even with (1) and (2) in place.
+
+Every query file in `queries/` follows rule 2 already (`business.ts` /
+`claims.ts`, `home.ts` / `space-names.ts`): each imports only its own slice
+of `data/`, never a sibling's.
+
 ## Legal texts
 
 `src/legal/*.md` are unverified source documents, not rendered anywhere —

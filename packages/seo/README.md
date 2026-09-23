@@ -17,6 +17,9 @@ src/
   sitemap.ts         buildSitemapEntries
   robots.ts          buildRobots
   canonical.ts       buildCanonical/buildAlternates (unwired, for a future locale rollout)
+  routes.ts          DEFAULT_ROUTES — public route prefixes (/proyectos/, /blog/), with an
+                     optional `routes` override on buildSitemapEntries/buildArticleJsonLd
+  index.ts           explicit named re-exports only, no `export * from`
 ```
 
 ## Design

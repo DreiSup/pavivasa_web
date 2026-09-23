@@ -23,7 +23,8 @@ export type BusinessOverrides = {
 export type ResolvedBusiness = {
   name: string
   manager: string
-  email?: string
+  /** Always defined — `Business.email` is required (`business.email`, unless `overrides.email` replaces it). */
+  email: string
   phone: string
   whatsapp: string
   address: string

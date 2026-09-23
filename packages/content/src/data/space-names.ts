@@ -5,7 +5,7 @@ import type { Localized } from '../schemas/localized.ts'
  * `home.ts` as their own tiny, standalone array — same pattern as, and same
  * reason as, `service-catalog.ts`.
  *
- * `apps/web/src/content/home.ts`'s `NOMBRES_ESPACIOS` export (the quote
+ * `apps/web/src/content/home/space-names.ts`'s `NOMBRES_ESPACIOS` export (the quote
  * form's dropdown options) is read by `FormularioPresupuesto.tsx`, a
  * `'use client'` component, and by the server action
  * `app/presupuesto/actions.ts`. `home.ts`'s full `home` object also carries

@@ -10,7 +10,7 @@ export const socialLinkSchema = z.object({
 export const businessSchema = z.object({
   name: z.string().min(1),
   manager: z.string().min(1),
-  email: z.string().email().optional(),
+  email: z.string().email(),
   phone: z.string().optional(),
   whatsapp: z.string().optional(),
   address: z.string().optional(),

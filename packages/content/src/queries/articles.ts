@@ -1,4 +1,5 @@
 import { articles } from '../data/articles.ts'
+import { projects } from '../data/projects.ts'
 import type { ArticleBlock } from '../schemas/article.ts'
 import type { ServiceId } from '../schemas/service.ts'
 import { pickLocalized, pickLocalizedList, resolveImage } from './resolve.ts'
@@ -8,7 +9,8 @@ export type ResolvedArticleBlock =
   | { type: 'paragraph'; text: string }
   | { type: 'heading'; id: string; text: string }
   | { type: 'orderedList'; items: { title: string; text: string }[] }
-  | { type: 'projectCallout'; slug: string; title: string; lines: string[] }
+  /** `slug` is omitted (not `undefined`) when the referenced project has no slug for `locale` — see `resolveImage`'s comment on why omission, not `undefined`. */
+  | { type: 'projectCallout'; slug?: string; title: string; lines: string[] }
   | { type: 'pending'; text: string }
 
 export type ResolvedArticle = {
@@ -45,8 +47,14 @@ function resolveBlock(block: ArticleBlock, locale: Locale): ResolvedArticleBlock
     }
     case 'projectCallout': {
       const title = pickLocalized(block.title, locale)
+      if (title === undefined) return undefined
       const lines = pickLocalizedList(block.lines, locale)
-      return title !== undefined ? { type: 'projectCallout', slug: block.slug, title, lines } : undefined
+      // `block.slug` is always the referenced project's `es` slug (a lookup
+      // key, checked against `projects` by `scripts/validate.ts`) — resolve
+      // it to that same project's slug for `locale`, which may not exist.
+      const project = projects.find((p) => p.slug.es === block.slug)
+      const slug = project ? pickLocalized(project.slug, locale) : undefined
+      return { type: 'projectCallout', ...(slug !== undefined ? { slug } : {}), title, lines }
     }
     case 'pending': {
       const text = pickLocalized(block.text, locale)
@@ -69,7 +77,7 @@ function resolveArticle(article: (typeof articles)[number], locale: Locale): Res
     title,
     excerpt: pickLocalized(article.excerpt, locale) ?? '',
     service: article.service,
-    date: article.date,
+    date: pickLocalized(article.date, locale) ?? '',
     dateIso: article.dateIso,
     image: resolveImage(article.image, locale),
     body,

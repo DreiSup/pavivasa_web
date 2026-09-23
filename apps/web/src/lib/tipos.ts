@@ -35,7 +35,7 @@ export const RUTA_SERVICIO: Record<ServicioId, string> = Object.fromEntries(
   catalogo.map((c) => [c.id, `/${c.slug}/`]),
 ) as Record<ServicioId, string>
 
-/** Orden del menú actual de pavivasa.com. Los tres primeros son el punto fuerte declarado. */
+/** Orden del menú actual de pavivasa.com. `SERVICIOS_FUERTES` (no necesariamente los tres primeros de este orden) es el punto fuerte declarado. */
 export const ORDEN_SERVICIOS: ServicioId[] = catalogo.map((c) => c.id) as ServicioId[]
 
 export const SERVICIOS_FUERTES: ServicioId[] = catalogo.filter((c) => c.flagship).map((c) => c.id) as ServicioId[]

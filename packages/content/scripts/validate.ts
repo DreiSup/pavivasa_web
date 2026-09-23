@@ -22,7 +22,7 @@ import { z } from 'zod'
 import type { Service } from '../src/schemas/service.ts'
 import { businessSchema } from '../src/schemas/business.zod.ts'
 import { claimsSchema } from '../src/schemas/claims.zod.ts'
-import { serviceSchema } from '../src/schemas/service.zod.ts'
+import { serviceSchema, serviceIdSchema } from '../src/schemas/service.zod.ts'
 import { projectSchema } from '../src/schemas/project.zod.ts'
 import { articleSchema } from '../src/schemas/article.zod.ts'
 import { homeContentSchema } from '../src/schemas/home.zod.ts'
@@ -71,7 +71,7 @@ for (const article of articles) {
 zodIssues('home', homeContentSchema.safeParse(home))
 
 const serviceCatalogEntrySchema = z.object({
-  id: z.string(),
+  id: serviceIdSchema,
   slug: localizedText,
   shortName: localizedText,
   name: localizedText,
@@ -105,7 +105,7 @@ if (serviceCatalog.length !== services.length) fail(`service catalog has ${servi
 
 // ---- 2b. spaceNames must stay in sync with home.spaces + otherSpaceLabel --
 // (data/space-names.ts intentionally duplicates this out of data/home.ts —
-// see its own comment: apps/web/src/content/home.ts's NOMBRES_ESPACIOS is
+// see its own comment: apps/web/src/content/home/space-names.ts's NOMBRES_ESPACIOS is
 // read by a 'use client' component and must not drag hero/FAQ/showcase text
 // along with it.)
 

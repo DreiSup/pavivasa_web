@@ -11,7 +11,8 @@ export type Business = {
   name: string
   /** Contact person's name — proper noun: plain. */
   manager: string
-  email?: string
+  /** Required: the business always publishes one. Still overridable by `EMAIL_DESTINO` — see `resolveBusiness`. */
+  email: string
   phone?: string
   whatsapp?: string
   address?: string

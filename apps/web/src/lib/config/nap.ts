@@ -37,7 +37,7 @@ const resolved = resolveBusiness(
 export const nap = {
   nombre: resolved.name,
   gestor: resolved.manager,
-  email: resolved.email!,
+  email: resolved.email,
   telefono: resolved.phone,
   telefonoInternacional: resolved.phoneInternational,
   telefonoHref: resolved.phoneHref,

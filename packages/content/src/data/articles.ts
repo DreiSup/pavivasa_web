@@ -12,7 +12,7 @@ export const articles = [
     title: { es: 'Hormigón impreso en Dénia: la solución ideal para embellecer tus espacios' },
     excerpt: { es: 'Qué es, qué ventajas tiene y dónde se usa el hormigón impreso en la Marina Alta.' },
     service: 'hormigon-impreso',
-    date: 'Junio 2024',
+    date: { es: 'Junio 2024' },
     dateIso: '2024-06-01',
     image: {
       label: { es: 'Foto · impreso en Dénia · sustituye a las 7 fotos de 2024 sin alt' },
@@ -84,7 +84,7 @@ export const articles = [
     title: { es: 'Hormigón fratasado fino decorativo en viviendas' },
     excerpt: { es: 'Superficie continua y sin juntas para interiores y exteriores: durabilidad, mantenimiento y color.' },
     service: 'hormigon-pulido',
-    date: 'Junio 2024',
+    date: { es: 'Junio 2024' },
     dateIso: '2024-06-01',
     image: {
       label: { es: 'Foto · fratasado en vivienda · sustituye a las 3 fotos de 2024' },
@@ -149,7 +149,7 @@ export const articles = [
     title: { es: 'Brillo y elegancia: explorando el hormigón pulido' },
     excerpt: { es: 'Cómo se pule el hormigón y por qué se usa en viviendas, exposiciones y locales.' },
     service: 'hormigon-pulido',
-    date: 'Agosto 2023',
+    date: { es: 'Agosto 2023' },
     dateIso: '2023-08-22',
     image: {
       label: { es: 'Foto · pulido · sustituye a la foto de WhatsApp de 2023 (1024 px)' },
@@ -194,7 +194,7 @@ export const articles = [
       es: 'Estética natural, agarre y bajo mantenimiento: el árido visto en caminos, accesos, terrazas y piscinas.',
     },
     service: 'hormigon-lavado',
-    date: 'Junio 2024',
+    date: { es: 'Junio 2024' },
     dateIso: '2024-06-01',
     image: {
       label: { es: 'Foto · árido visto · sustituye a las 6 fotos de 2024' },

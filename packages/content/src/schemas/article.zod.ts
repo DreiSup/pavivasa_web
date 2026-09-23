@@ -30,7 +30,7 @@ export const articleSchema = z.object({
   title: localizedText,
   excerpt: localizedText,
   service: serviceIdSchema,
-  date: z.string().min(1),
+  date: localizedText,
   dateIso: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   image: imageSchema,
   body: z.array(articleBlockSchema).min(1),

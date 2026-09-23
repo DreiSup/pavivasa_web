@@ -16,7 +16,15 @@ function imagen(img: { label: string; src?: string; alt?: string }): Imagen {
   }
 }
 
-function bloque(block: ResolvedArticleBlock): BloqueArticulo {
+/**
+ * `undefined` only for a `projectCallout` whose project has no `es` slug —
+ * never happens today (`es` is `Localized<T>`'s mandatory locale for a
+ * project that exists at all, and `scripts/validate.ts` checks every
+ * `projectCallout` references one that does), but `block.slug` is typed
+ * optional to also carry other locales, where it can be. Dropped rather
+ * than rendered without a link.
+ */
+function bloque(block: ResolvedArticleBlock): BloqueArticulo | undefined {
   switch (block.type) {
     case 'paragraph':
       return { tipo: 'p', texto: block.text }
@@ -25,7 +33,7 @@ function bloque(block: ResolvedArticleBlock): BloqueArticulo {
     case 'orderedList':
       return { tipo: 'ol', items: block.items.map((item) => ({ titulo: item.title, texto: item.text })) }
     case 'projectCallout':
-      return { tipo: 'obra', slug: block.slug, titulo: block.title, lineas: block.lines }
+      return block.slug !== undefined ? { tipo: 'obra', slug: block.slug, titulo: block.title, lineas: block.lines } : undefined
     case 'pending':
       return { tipo: 'pendiente', texto: block.text }
   }
@@ -39,6 +47,6 @@ export const articulos: Articulo[] = getArticles('es').map((a) => ({
   fecha: a.date,
   fechaIso: a.dateIso,
   imagen: imagen(a.image),
-  cuerpo: a.body.map(bloque),
+  cuerpo: a.body.map(bloque).filter((b): b is BloqueArticulo => b !== undefined),
   cierre: a.closing,
 }))

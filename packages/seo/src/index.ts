@@ -29,3 +29,6 @@ export { buildRobots } from './robots.ts'
 export type { RobotsRules } from './robots.ts'
 
 export { buildCanonical, buildAlternates } from './canonical.ts'
+
+export { DEFAULT_ROUTES } from './routes.ts'
+export type { RoutePrefixes } from './routes.ts'

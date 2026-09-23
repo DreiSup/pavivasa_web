@@ -13,17 +13,30 @@ export const serviceIdSchema = z.enum([
   'alicatados',
 ])
 
-const specSheetSchema = z.object({
-  title: localizedText,
-  text: localizedText,
-  columns: z.array(localizedText).min(1),
-  rows: z.array(
-    z.object({
-      parameter: localizedText,
-      values: z.array(localizedText.nullable()),
-    }),
-  ),
-})
+const specSheetSchema = z
+  .object({
+    title: localizedText,
+    text: localizedText,
+    columns: z.array(localizedText).min(1),
+    rows: z.array(
+      z.object({
+        parameter: localizedText,
+        /** One value per column, in the same order — length checked against `columns` below. */
+        values: z.array(localizedText.nullable()),
+      }),
+    ),
+  })
+  .superRefine((sheet, ctx) => {
+    for (const [i, row] of sheet.rows.entries()) {
+      if (row.values.length !== sheet.columns.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['rows', i, 'values'],
+          message: `expected ${sheet.columns.length} value(s) (one per column), got ${row.values.length}`,
+        })
+      }
+    }
+  })
 
 const specListSchema = z.object({
   title: localizedText,

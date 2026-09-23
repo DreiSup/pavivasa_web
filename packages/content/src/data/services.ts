@@ -2,10 +2,12 @@ import type { Service } from '../schemas/service.ts'
 
 /**
  * Real copy for each service (pavivasa.com, Sept. 2026), unchanged from
- * Spanish. Array order is the site's menu order (`01`..`07`); the first
- * three (`flagship: true`) are the declared strongest offer. What the
- * current site doesn't give (FAQ answers, some execution data) stays
- * `undefined` and is rendered as pending data.
+ * Spanish. Array order is the site's menu order (`01`..`07`); the three
+ * marked `flagship: true` (`hormigon-impreso`, `hormigon-pulido`,
+ * `microcemento` — not necessarily contiguous in this order) are the
+ * declared strongest offer. What the current site doesn't give (FAQ
+ * answers, some execution data) stays `undefined` and is rendered as
+ * pending data.
  */
 export const services = [
   {

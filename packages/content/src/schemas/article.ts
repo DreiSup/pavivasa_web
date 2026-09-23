@@ -19,8 +19,8 @@ export type Article = {
   title: Localized<string>
   excerpt: Localized<string>
   service: ServiceId
-  /** Display date as published on the current site ("Junio 2024") — plain, like `dateIso`. */
-  date: string
+  /** Display date as published on the current site ("Junio 2024") — visitor-facing copy: `Localized`, unlike `dateIso`. */
+  date: Localized<string>
   dateIso: string
   image: ImageContent
   body: ArticleBlock[]

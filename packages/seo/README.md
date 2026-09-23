@@ -43,6 +43,22 @@ reproduces the exact `['Valencia', 'Alicante']` this site published before
 the migration (both provinces are in `declaredOrder`, in that order) without
 hardcoding a province list inside this package.
 
+## `robots.ts` — AI crawlers named explicitly
+
+§7 of `arquitectura-plantilla-monorepo.md` ("robots.ts permite explícitamente
+los rastreadores de IA", user's decision 2026-09-15) requires each of
+`GPTBot`, `OAI-SearchBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`
+and `CCBot` to get its own `User-agent:` group in the emitted `robots.txt`,
+not just to be left unblocked by the `*` catch-all. `buildRobots` emits one
+`allow: '/'` rule per crawler in `AI_CRAWLERS`, in addition to `*`.
+`scripts/verify/checks/robots.mjs` asserts this (`ai-crawler-not-explicit`)
+so the rule can't silently regress back to relying on `*` alone. Per RFC
+9309 §2.2.1, a crawler with its own group ignores `*` entirely — if `*`
+ever gets a `Disallow`, mirror it in each named group too, or that crawler
+would see it as fully open where the intent may have been narrower.
+Separately, check that Cloudflare (if it ever fronts this domain) doesn't
+block these bots at the edge — `robots.txt` can't cover that.
+
 ## `html` byte-identity note
 
 The JSON-LD builders' key order matters: the build snapshot toolkit

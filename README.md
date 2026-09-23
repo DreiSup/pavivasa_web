@@ -80,8 +80,8 @@ directamente desde `apps/web`). Después de cualquier cambio de contenido:
   haya `src`, la pieza se pinta como `BloquePosicion` (trama + etiqueta).
 
 Todo campo de texto que lee el visitante es `Localized<T>` (`{ es, en?, fr?,
-de? }`, `es` obligatorio) — ver la sección "El campo `Localized<T>`" del
-README de `@site/content`.
+de? }`, `es` obligatorio) — ver "The `Localized<T>` rule" en el README de
+`@site/content`.
 
 ## Variables de entorno
 
@@ -125,8 +125,9 @@ Al conectar (o revisar) el proyecto `pavivasa-web` en el dashboard de Vercel:
 2. **Include files outside the Root Directory** → activado (para que llegue
    `pnpm-lock.yaml`, `turbo.json`, `pnpm-workspace.yaml` y `tsconfig.base.json`
    de la raíz del monorepo).
-3. Vercel detecta pnpm por `packageManager` en el `package.json` raíz — no
-   hace falta tocar nada, pero **revisar que no queden overrides antiguos**
+3. Vercel detecta pnpm por `pnpm-lock.yaml` en la raíz del repo (y respeta la
+   versión fijada en `packageManager` si Corepack está activo) — no debería
+   hacer falta tocar nada, pero **revisar que no queden overrides antiguos**
    de Install Command / Build Command de cuando el repo era una app plana
    con npm (p. ej. `npm install` / `npm run build`): si están fijados a mano,
    sobreviven a este cambio de Root Directory y rompen el build. Deben
@@ -153,22 +154,27 @@ branch protection en GitHub) — ver el comentario final de `ci.yml`.
 ## Adaptadores legacy
 
 `apps/web/src/lib/config/`, `src/lib/datos.ts`, `src/lib/tipos.ts`,
-`src/lib/schema.tsx`, `src/lib/eventos.ts`, `src/lib/meta-capi.ts` y
-`src/content/*` son adaptadores: mismas formas y valores en español que
-antes de la migración a monorepo, pero ahora leyendo de `@site/content`,
-`@site/seo`, `@site/tracking` y `@site/config` por debajo. Cada uno lleva el
-comentario `legacy adapter, delete when the new design consumes @site/*
-directly` — se borran cuando el rediseño consuma los paquetes `@site/*`
-directamente en vez de pasar por estas capas de compatibilidad. Hasta
-entonces, **no tocar** `apps/web/src/app/**` ni `apps/web/src/components/**`
-(están congelados; salida pública debe seguir siendo idéntica).
+`src/lib/schema.tsx`, `src/lib/eventos.ts`, `src/lib/meta-capi.ts`,
+`src/lib/consent-status.ts`, `src/lib/attribution.ts` y `src/content/*` son
+adaptadores: mismas formas y valores en español que antes de la migración a
+monorepo, pero ahora leyendo de `@site/content`, `@site/seo`,
+`@site/tracking` y `@site/config` por debajo. Cada uno lleva el comentario
+`legacy adapter, delete when the new design consumes @site/* directly` — se
+borran cuando el rediseño consuma los paquetes `@site/*` directamente en vez
+de pasar por estas capas de compatibilidad (`src/lib/texto.ts` es la
+excepción: un helper puro de formato de texto, sin envolver ningún `@site/*`,
+así que no lleva esa etiqueta). Hasta entonces, **no tocar**
+`apps/web/src/app/**` ni `apps/web/src/components/**` (están congelados;
+salida pública debe seguir siendo idéntica).
 
-Dos adaptadores NO se borran con el resto porque ya son instancias propias de
-esta app sobre las factorías genéricas de `@site/tracking`, con claves de
-cookie/localStorage que nunca deben cambiar para visitantes recurrentes:
-`src/lib/consent-status.ts` (`'aceptado'`/`'rechazado'`, clave
-`pv-consentimiento`) y `src/lib/attribution.ts` (`pv-attribution` /
-`pv-attribution-session`).
+Dos de ellos — `src/lib/consent-status.ts` (`'aceptado'`/`'rechazado'`,
+clave `pv-consentimiento`) y `src/lib/attribution.ts` (`pv-attribution` /
+`pv-attribution-session`) — configuran las factorías genéricas de
+`@site/tracking` con las claves y valores exactos que este sitio siempre ha
+persistido. Se borrarán igual que el resto cuando el rediseño llegue, pero
+lo que los sustituya tiene que configurar esas mismas factorías con esas
+mismas claves y valores: cambiarlos invalida el consentimiento/atribución
+guardado de un visitante recurrente.
 
 ## i18n
 

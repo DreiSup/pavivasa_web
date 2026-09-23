@@ -65,9 +65,8 @@ normativa que sigue todo esto.
   (`components/layout/Consentimiento.tsx`, `lib/consent-status.ts` sobre
   `@site/tracking`).
 - Todo evento sale por `trackEvent` (`@site/tracking`, vía el adaptador
-  `lib/eventos.ts`). Nunca `gtag`/`fbq` directos.
-- Un solo evento de salida por interacción (no duplicar el mismo lead en dos
-  sistemas de tracking a la vez).
+  `lib/eventos.ts`), único punto de salida — nunca `gtag`/`fbq` directos ni
+  una llamada paralela a otro sistema de tracking desde el componente.
 
 **Idioma del código** (§2 de `arquitectura-plantilla-monorepo.md`)
 
@@ -87,9 +86,10 @@ bundle rule")
   se separa por *función* (dos funciones en el mismo archivo siguen tirando
   del árbol entero) — se separa por **archivo**. Un `index.ts` reexporta
   cada pieza desde su propio módulo hermano.
-- `"sideEffects"` declarado en el `package.json` que empaqueta (hoy
-  `apps/web`: `["**/*.css"]`) — sin eso, el bundler no puede eliminar un
-  módulo entero aunque nada use sus exports.
+- `"sideEffects"` declarado en cada `package.json` (`false` en los cuatro
+  paquetes `@site/*`; `apps/web` necesita `["**/*.css"]` en vez de `false`
+  porque sí importa hojas de estilo por su efecto) — sin eso, el bundler no
+  puede eliminar un módulo entero aunque nada use sus exports.
 - Nunca `export * from` en un paquete `@site/*` alcanzable desde cliente.
   Reexports nombrados explícitos siempre (`export { x } from './x.ts'`).
 
@@ -114,8 +114,11 @@ pnpm content:validate   # Zod sobre packages/content
 pnpm lint
 pnpm typecheck
 pnpm build               # turbo run build; debe pasar sin warnings
-pnpm verify               # postbuild: sitemap, JSON-LD, metadata, robots, imágenes/CTAs, enlaces
-pnpm verify:secrets       # con valores centinela — ver scripts/verify/README.md
+pnpm verify               # postbuild sobre el build de arriba: sitemap, JSON-LD, metadata,
+                          # robots, imágenes/CTAs, enlaces
+# verify:secrets necesita su PROPIO build con valores centinela para los
+# secretos de servidor (sobrescribe el .next de arriba) — ver
+# scripts/verify/README.md o el paso equivalente en .github/workflows/ci.yml
 ```
 
 Si se tocó `apps/web/src/app/**` o `src/components/**` (solo permitido fuera

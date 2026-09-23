@@ -1,7 +1,15 @@
 /**
- * Modelo de contenido. Aquí se define el catálogo de la empresa: qué servicios
- * ofrece y qué datos tiene cada obra. Todo el contenido real vive en `content/`.
+ * legacy adapter, delete when the new design consumes @site/* directly
+ *
+ * Same Spanish types and same values as before this migration. Types are
+ * kept literally as they were so the frontend type-checks unchanged; the
+ * five small lookup constants below are now derived from
+ * `@site/content`'s light service catalog (never from the full `services`
+ * content — see `packages/content/src/data/service-catalog.ts`'s comment on
+ * why: several `'use client'` components import this module just for these
+ * constants).
  */
+import { getServiceCatalog } from '@site/content'
 
 export type ServicioId =
   | 'hormigon-impreso'
@@ -12,49 +20,25 @@ export type ServicioId =
   | 'pavimentos-de-caucho'
   | 'alicatados'
 
+const catalogo = getServiceCatalog('es')
+
 /** Nombre corto, para etiquetas y filtros (siempre en mono, versalitas). */
-export const TECNICA_CORTA: Record<ServicioId, string> = {
-  'hormigon-impreso': 'Impreso',
-  'hormigon-pulido': 'Pulido',
-  'hormigon-lavado': 'Lavado',
-  microcemento: 'Microcemento',
-  autonivelantes: 'Autonivelantes',
-  'pavimentos-de-caucho': 'Caucho',
-  alicatados: 'Alicatados',
-}
+export const TECNICA_CORTA: Record<ServicioId, string> = Object.fromEntries(
+  catalogo.map((c) => [c.id, c.shortName]),
+) as Record<ServicioId, string>
 
-export const NOMBRE_SERVICIO: Record<ServicioId, string> = {
-  'hormigon-impreso': 'Hormigón impreso',
-  'hormigon-pulido': 'Hormigón pulido',
-  'hormigon-lavado': 'Hormigón lavado',
-  microcemento: 'Microcemento decorativo',
-  autonivelantes: 'Autonivelantes',
-  'pavimentos-de-caucho': 'Pavimentos de caucho',
-  alicatados: 'Alicatados',
-}
+export const NOMBRE_SERVICIO: Record<ServicioId, string> = Object.fromEntries(
+  catalogo.map((c) => [c.id, c.name]),
+) as Record<ServicioId, string>
 
-export const RUTA_SERVICIO: Record<ServicioId, string> = {
-  'hormigon-impreso': '/hormigon-impreso/',
-  'hormigon-pulido': '/hormigon-pulido/',
-  'hormigon-lavado': '/hormigon-lavado/',
-  microcemento: '/microcemento/',
-  autonivelantes: '/autonivelantes/',
-  'pavimentos-de-caucho': '/pavimentos-de-caucho/',
-  alicatados: '/alicatados/',
-}
+export const RUTA_SERVICIO: Record<ServicioId, string> = Object.fromEntries(
+  catalogo.map((c) => [c.id, `/${c.slug}/`]),
+) as Record<ServicioId, string>
 
 /** Orden del menú actual de pavivasa.com. Los tres primeros son el punto fuerte declarado. */
-export const ORDEN_SERVICIOS: ServicioId[] = [
-  'hormigon-impreso',
-  'hormigon-pulido',
-  'hormigon-lavado',
-  'microcemento',
-  'autonivelantes',
-  'pavimentos-de-caucho',
-  'alicatados',
-]
+export const ORDEN_SERVICIOS: ServicioId[] = catalogo.map((c) => c.id) as ServicioId[]
 
-export const SERVICIOS_FUERTES: ServicioId[] = ['hormigon-impreso', 'hormigon-pulido', 'microcemento']
+export const SERVICIOS_FUERTES: ServicioId[] = catalogo.filter((c) => c.flagship).map((c) => c.id) as ServicioId[]
 
 /** Foto que aún no existe: solo la etiqueta de qué va ahí. */
 export type Imagen = {

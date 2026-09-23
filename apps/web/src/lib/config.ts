@@ -1,78 +1,63 @@
 /**
- * NAP único del sitio (nombre, dirección, teléfono). Ningún componente escribe
- * un teléfono o una dirección a mano: todo sale de aquí.
+ * legacy adapter, delete when the new design consumes @site/* directly
  *
- * Los valores por defecto son los que publica pavivasa.com (sept. 2026). Las
- * variables de entorno los sobreescriben. Lo que la web no da (horario)
- * llega vacío y se muestra con <DatoPendiente>.
+ * Same exports, same Spanish shapes, same values as before this migration —
+ * now sourced from `@site/content` (business facts, locale 'es') and
+ * `@site/config` (env). See `apps/web/src/lib/tipos.ts` for the kept
+ * Spanish types.
  */
+import { publicEnv, site } from '@site/config'
+import { getBusiness, resolveBusiness } from '@site/content'
 
-/**
- * Trims a raw env value and turns an empty/whitespace-only string into
- * `undefined` (an unset variable, like in .env.example or Vercel's panel,
- * should behave the same as one set to "").
- *
- * IMPORTANT: this only cleans a value you already read. Every
- * `NEXT_PUBLIC_*` read below must still be written as the literal
- * `process.env.NEXT_PUBLIC_X` — Next.js only inlines that exact member
- * expression into client bundles at build time; a dynamic lookup like
- * `process.env[nombre]` is invisible to that replacement and stays
- * `undefined` in every 'use client' component.
- */
-function clean(valor: string | undefined): string | undefined {
-  return valor?.trim() || undefined
-}
+const business = getBusiness()
 
-const telefonoEnv = clean(process.env.NEXT_PUBLIC_TELEFONO) ?? '627 66 31 46'
-/** El WhatsApp es el mismo móvil salvo que la variable diga otro. */
-const whatsappEnv = clean(process.env.NEXT_PUBLIC_WHATSAPP) ?? telefonoEnv
-const direccionEnv = clean(process.env.NEXT_PUBLIC_DIRECCION) ?? 'Calle Blasco Ibáñez, 16'
+// EMAIL_DESTINO is read directly here (not via `@site/config/server`) on
+// purpose: this module is imported by several `'use client'` components
+// (Cabecera, MenuMovil, Consentimiento…) for `nap`/`sitio`. `@site/config`'s
+// server subpath must never be reachable from that graph — see its own
+// comment. Reading a non-`NEXT_PUBLIC_` var here is exactly what this file
+// did before the migration: Next.js never inlines its value into the client
+// bundle (no literal `NEXT_PUBLIC_` prefix to match), so on the client this
+// is always `undefined` and falls back to `business.email` below, same as
+// always. Only server components/Server Actions ever see the real value.
+const emailOverride = process.env.EMAIL_DESTINO?.trim() || undefined
+
+const resolved = resolveBusiness({
+  phone: publicEnv.NEXT_PUBLIC_TELEFONO,
+  whatsapp: publicEnv.NEXT_PUBLIC_WHATSAPP,
+  address: publicEnv.NEXT_PUBLIC_DIRECCION,
+  email: emailOverride,
+})
 
 export const nap = {
-  nombre: 'Pavivasa',
-  gestor: 'Gabriel',
-  // EMAIL_DESTINO is server-only (no NEXT_PUBLIC_ prefix): Next.js never
-  // inlines it into client bundles, so in a 'use client' component this is
-  // always `undefined` and falls back to the default below. That's fine —
-  // no client component renders `nap.email`; the real address is only used
-  // server-side (server components and app/presupuesto/actions.ts).
-  email: clean(process.env.EMAIL_DESTINO) ?? 'gabriel.pavivasa@gmail.com',
-  telefono: telefonoEnv,
-  telefonoInternacional: `+34 ${telefonoEnv}`,
-  telefonoHref: `tel:+34${telefonoEnv.replace(/\D/g, '')}`,
-  whatsapp: whatsappEnv,
-  whatsappHref: whatsappEnv
-    ? `https://wa.me/34${whatsappEnv.replace(/\D/g, '')}?text=${encodeURIComponent(
-        'Hola, quiero presupuesto para ',
-      )}`
-    : undefined,
-  direccion: direccionEnv,
-  municipio: 'Sollana',
-  codigoPostal: '46430',
-  provincia: 'Valencia',
-  pais: 'ES',
-  /** Una sola línea para pie, menú y legales. */
-  direccionCompleta: `${direccionEnv} · 46430 Sollana (Valencia)`,
-  redes: [
-    { nombre: 'Facebook', href: 'https://facebook.com/GabrielPavivasa' },
-    { nombre: 'Instagram', href: 'https://instagram.com/gabrielpavivasa.es' },
-    { nombre: 'X', href: 'https://x.com/GabrielPavivasa' },
-  ],
+  nombre: business.name,
+  gestor: business.manager,
+  email: resolved.email ?? business.email!,
+  telefono: resolved.phone,
+  telefonoInternacional: resolved.phoneInternational,
+  telefonoHref: resolved.phoneHref,
+  whatsapp: resolved.whatsapp,
+  whatsappHref: resolved.whatsappHref,
+  direccion: resolved.address,
+  municipio: business.town,
+  codigoPostal: business.postalCode,
+  provincia: business.province,
+  pais: business.country,
+  direccionCompleta: resolved.addressLine,
+  redes: business.socials.map((s) => ({ nombre: s.platform, href: s.href })),
 }
 
-/** Claims verificables en la web actual. Se usan en BarraConfianza, Empresa y Presupuesto. */
 export const claims = {
-  anios: 'Más de 15 años de oficio',
-  garantia: '10 años de garantía con mantenimiento',
-  repiten: 'Más del 30 % de clientes repiten',
-  /** Cobertura declarada en /empresa/; pendiente de confirmar con el cliente. */
-  provincias: ['Valencia', 'Castellón', 'Alicante', 'Murcia', 'Albacete', 'Almería'],
+  anios: business.claims.yearsExperience.es,
+  garantia: business.claims.warranty.es,
+  repiten: business.claims.repeatCustomers.es,
+  provincias: business.claims.declaredProvinces,
 }
 
 export const sitio = {
-  url: (clean(process.env.NEXT_PUBLIC_SITE_URL) ?? 'https://pavivasa.com').replace(/\/+$/, ''),
-  gaId: clean(process.env.NEXT_PUBLIC_GA_ID),
-  googleAdsId: clean(process.env.NEXT_PUBLIC_GOOGLE_ADS_ID),
-  googleAdsLeadLabel: clean(process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL),
-  metaPixelId: clean(process.env.NEXT_PUBLIC_META_PIXEL_ID),
+  url: site.url,
+  gaId: publicEnv.NEXT_PUBLIC_GA_ID,
+  googleAdsId: publicEnv.NEXT_PUBLIC_GOOGLE_ADS_ID,
+  googleAdsLeadLabel: publicEnv.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL,
+  metaPixelId: publicEnv.NEXT_PUBLIC_META_PIXEL_ID,
 }

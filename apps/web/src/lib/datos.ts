@@ -1,11 +1,19 @@
-import proyectosJson from '@/content/proyectos.json'
+/**
+ * legacy adapter, delete when the new design consumes @site/* directly
+ *
+ * Same exports and same behavior as before this migration. `proyectos.json`
+ * became `proyectos.ts` (see that file) since it now derives from
+ * `@site/content` instead of being static JSON; everything else is
+ * unchanged.
+ */
+import proyectosData from '@/content/proyectos'
 import { servicios } from '@/content/servicios'
 import { articulos } from '@/content/articulos'
 import type { Articulo, Proyecto, Servicio, ServicioId } from './tipos'
 import { ORDEN_SERVICIOS } from './tipos'
 
 /** Toda lectura de contenido pasa por aquí. Las páginas nunca importan JSON directamente. */
-export const proyectos = proyectosJson as Proyecto[]
+export const proyectos = proyectosData as Proyecto[]
 
 export function proyectoPorSlug(slug: string): Proyecto | undefined {
   return proyectos.find((p) => p.slug === slug)

@@ -4,6 +4,9 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   // Monorepo: la raíz de rastreo de ficheros es la raíz del repo, no apps/web.
   outputFileTracingRoot: path.join(__dirname, '../..'),
+  // Paquetes del workspace consumidos como fuente TS (sin build propio): que
+  // Next los transpile con su propio pipeline, como si fueran de apps/web.
+  transpilePackages: ['@site/content', '@site/config'],
   // Barra final fija: una sola URL canónica por página. No cambiar.
   trailingSlash: true,
   images: {

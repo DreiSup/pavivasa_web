@@ -7,12 +7,13 @@
  * value into the client bundle, but they also have no business being
  * reachable from that graph at all.
  *
- * In phase 2, nothing in `apps/web` imports this subpath yet: the legacy
- * adapter `lib/config.ts` still reads `process.env.EMAIL_DESTINO` directly,
- * exactly as `lib/config.ts` did before this migration, to avoid pulling
- * this module into the same import graph as the client-reachable `nap`
- * object. `app/presupuesto/actions.ts` and `lib/meta-capi.ts` are the
- * intended consumers, wired up in phase 3 (§12 of the architecture doc).
+ * `app/presupuesto/actions.ts` imports this subpath directly; `lib/meta-capi.ts`
+ * reaches it indirectly, through `@site/tracking/server` (its own only
+ * `@site/config/server` import). The legacy adapter `lib/config/nap.ts`
+ * deliberately does NOT: it still reads `process.env.EMAIL_DESTINO` directly,
+ * exactly as the pre-migration `lib/config.ts` did, to avoid pulling this
+ * module into the same import graph as the client-reachable `nap` object —
+ * see that file's own comment.
  */
 import type { ServerEnv } from './server-env.schema.ts'
 

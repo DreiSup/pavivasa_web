@@ -5,6 +5,7 @@
   "sideEffects": ["**/*.css"],
   "scripts": {
     "dev": "next dev",
+    "prebuild": "pnpm --filter @site/config run check-env",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

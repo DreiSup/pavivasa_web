@@ -1,7 +1,12 @@
 /**
  * See `env.schema.ts` for why the zod shape and the plain reads live in
- * separate files. This one additionally must never be imported from a
- * client-reachable module at all — see `server.ts`.
+ * separate files, and for `scripts/check-env.ts` (the only thing that
+ * actually parses this shape). This one additionally must never be
+ * imported from a client-reachable module at all — see `server.ts`.
+ *
+ * No format checks here (unlike `env.schema.ts`'s GA/Ads/Pixel regexes):
+ * these are opaque secrets this package can't see real values for: a wrong
+ * regex would reject a valid production secret and fail the build.
  */
 import { z } from 'zod'
 

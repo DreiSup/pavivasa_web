@@ -26,7 +26,7 @@ pnpm lint               # turbo run lint
 pnpm typecheck          # turbo run typecheck
 pnpm content:validate   # valida packages/content con Zod (referencias, formas)
 pnpm verify             # verificadores postbuild sobre apps/web/.next — ver scripts/verify/README.md
-pnpm verify:secrets     # comprueba que ningún secreto de servidor llega al bundle cliente
+pnpm verify:secrets     # comprueba que ningún secreto de servidor llega a la salida pública (bundle cliente + HTML/RSC)
 ```
 
 `verify` necesita un build previo (`pnpm --filter web build`); no construye

@@ -61,7 +61,7 @@ jobs:
           META_CAPI_ACCESS_TOKEN: sentinel-ci-meta-capi-access-token-000000
         run: pnpm --filter web build
 
-      - name: Check for secret leaks into client bundle
+      - name: Check for secret leaks into public output (bundle + HTML/RSC)
         env:
           EMAIL_DESTINO: sentinel-ci-email-destino@example.invalid
           RESEND_API_KEY: sentinel-ci-resend-api-key-000000

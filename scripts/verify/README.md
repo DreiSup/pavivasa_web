@@ -58,9 +58,11 @@ This is a **separate script**, not part of `pnpm verify`, because it needs
 its own build made with fake, CI-only sentinel values for the server-only
 env vars (`packages/config/src/server-env.schema.ts`) — never point it at a
 build made with real production secrets. It scans `apps/web/.next/static`
-(the client-shipped output) for both the sentinel **values** and the env
-var **names**, and never prints a value it finds, only the var name and the
-file. See the CI workflow (`.github/workflows/ci.yml`) for how it's wired.
+(the client-shipped JS/CSS bundle) **and** `apps/web/.next/server/app` (the
+prerendered HTML and RSC flight payloads Next.js serves to every visitor)
+for both the sentinel **values** and the env var **names**, and never
+prints a value it finds, only the var name and the file. See the CI
+workflow (`.github/workflows/ci.yml`) for how it's wired.
 
 ## What each check does
 
@@ -74,7 +76,7 @@ file. See the CI workflow (`.github/workflows/ci.yml`) for how it's wired.
 | f | `checks/robots.mjs` | `robots.txt` exists, references the sitemap, doesn't disallow GPTBot/OAI-SearchBot/ClaudeBot/PerplexityBot/Google-Extended/CCBot. |
 | g | `checks/images-cta.mjs` | Every `<img>` has an `alt` attribute (empty `alt=""` is reported as an informational "decorative" note, not a failure) and either `width`+`height` or a `fill` container (`data-nimg="fill"`). |
 | h | `checks/images-cta.mjs` | At least one `tel:` link and at least one `wa.me` link on every page. |
-| i | `secrets-scan.mjs` | No server secret names/values in `.next/static` — run separately, see above. |
+| i | `secrets-scan.mjs` | No server secret names/values in `.next/static` or `.next/server/app` — run separately, see above. |
 
 ## How pages and noindex are determined
 

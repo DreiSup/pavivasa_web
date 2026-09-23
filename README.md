@@ -248,10 +248,13 @@ piedra vista (original en rumano).
   usan los nombres en español actuales (entonces se corrige el documento) o
   los del documento en inglés (entonces se renombran, añadiendo `locale`) —
   renombrar sin esa confirmación rompería el Key Event/conversión ya
-  configurado, un contrato externo. No se toca aquí: son
-  `apps/web/src/components/**`, frontend congelado hasta el rediseño (un fix
-  real ahí no tiene issue de `scripts/verify` que lo detecte, así que no
-  encaja en `known-issues.json`; queda documentado aquí en su lugar). De
+  configurado, un contrato externo — el bloqueo real es esa decisión
+  pendiente, no el congelado de frontend en sí (`lib/eventos.ts` no está
+  congelado y podría llevar el rename/`locale` de forma centralizada una vez
+  decidido, aunque sigue atado a "mismos valores en español" de CLAUDE.md
+  hasta el rediseño). No se toca aquí sin esa confirmación (no hay issue de
+  `scripts/verify` que lo detecte, así que no encaja en `known-issues.json`;
+  queda documentado aquí en su lugar). De
   paso, si se renombra: `variante` en el `params` de `envio_formulario` hoy
   es la variante del formulario (`corto`/`completo`), no la `variante` de
   A/B del §5 — decidir el nombre de ese parámetro a la vez que el de los
@@ -264,7 +267,7 @@ piedra vista (original en rumano).
   que el cliente/usuario haga push (o abra PR) y confirme el job en verde
   ahí.
 - **Configuración de Vercel sin aplicar ni probar**: la sección "Vercel —
-  configuración del monorepo" de abajo es prescriptiva; nadie la ha
+  configuración del monorepo" de arriba es prescriptiva; nadie la ha
   aplicado todavía contra un proyecto Vercel real, y el Build Command exacto
   que Vercel ejecutaría (`cd ../.. && pnpm turbo run build --filter=web`,
   con Root Directory recortado) nunca se ha probado — solo se ha probado

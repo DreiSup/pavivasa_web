@@ -49,6 +49,10 @@ export function checkMetadata({ pages, siteUrl, reporter }) {
             check: 'metadata',
             code: 'duplicate-title',
             route: publicPath,
+            // `detail` keys the baseline match to this exact title text, not just
+            // this route — a future, DIFFERENT title colliding on the same route
+            // is a new, undocumented issue, not a match of this one's baseline entry.
+            detail: parsed.title,
             message: `title "${parsed.title}" duplicates ${owner}`,
           })
         } else {
@@ -62,6 +66,7 @@ export function checkMetadata({ pages, siteUrl, reporter }) {
             check: 'metadata',
             code: 'duplicate-description',
             route: publicPath,
+            detail: parsed.description,
             message: `meta description duplicates ${owner}`,
           })
         } else {

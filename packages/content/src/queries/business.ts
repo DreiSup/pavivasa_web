@@ -17,13 +17,18 @@ export type BusinessOverrides = {
   phone?: string
   whatsapp?: string
   address?: string
-  email?: string
 }
 
 export type ResolvedBusiness = {
   name: string
   manager: string
-  /** Always defined — `Business.email` is required (`business.email`, unless `overrides.email` replaces it). */
+  /**
+   * Always defined — `Business.email` is required (`business.email`).
+   * Deliberately has no override: this is the publicly-displayed NAP
+   * email (footer, `/presupuesto`, legal pages, `LocalBusiness` JSON-LD).
+   * The lead-form destination mailbox is a separate concern — see
+   * `apps/web/src/app/presupuesto/actions.ts`'s `serverEnv.EMAIL_DESTINO`.
+   */
   email: string
   phone: string
   whatsapp: string
@@ -54,7 +59,7 @@ export function resolveBusiness(overrides: BusinessOverrides, locale: Locale): R
   // The WhatsApp number defaults to the (already-overridden) phone, unless a WhatsApp-specific override is given.
   const whatsapp = overrides.whatsapp ?? phone
   const address = overrides.address ?? business.address ?? ''
-  const email = overrides.email ?? business.email
+  const email = business.email
 
   return {
     name: business.name,

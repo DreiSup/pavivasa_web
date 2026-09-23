@@ -9,17 +9,15 @@
 import { publicEnv, site } from '@site/config'
 import { resolveBusiness } from '@site/content'
 
-// EMAIL_DESTINO is read directly here (not via `@site/config/server`) on
-// purpose: this module is imported by several `'use client'` components
-// (Cabecera, MenuMovil, Consentimiento…) for `nap`/`sitio`. `@site/config`'s
-// server subpath must never be reachable from that graph — see its own
-// comment. Reading a non-`NEXT_PUBLIC_` var here is exactly what this file
-// did before the migration: Next.js never inlines its value into the client
-// bundle (no literal `NEXT_PUBLIC_` prefix to match), so on the client this
-// is always `undefined` and falls back to `business.email` below, same as
-// always. Only server components/Server Actions ever see the real value.
-const emailOverride = process.env.EMAIL_DESTINO?.trim() || undefined
-
+// `nap.email` below is the PUBLICLY-DISPLAYED business email (footer,
+// `/presupuesto`, legal pages, `LocalBusiness` JSON-LD) — it comes only from
+// `@site/content`'s business data, resolved for locale 'es', with no env
+// override. `EMAIL_DESTINO` (the lead-form's destination mailbox) is a
+// separate, server-only concern read directly in
+// `apps/web/src/app/presupuesto/actions.ts` via `@site/config/server` — it
+// must never reach this module, which several `'use client'` components
+// (Cabecera, MenuMovil, Consentimiento…) import for `nap`/`sitio`.
+//
 // `resolveBusiness` alone (no separate `getBusiness()` call) — it already
 // returns every NAP field, raw or derived, resolved for `locale`. Reading
 // the raw `Business` object directly here would bypass its `Localized<T>`
@@ -29,7 +27,6 @@ const resolved = resolveBusiness(
     phone: publicEnv.NEXT_PUBLIC_TELEFONO,
     whatsapp: publicEnv.NEXT_PUBLIC_WHATSAPP,
     address: publicEnv.NEXT_PUBLIC_DIRECCION,
-    email: emailOverride,
   },
   'es',
 )

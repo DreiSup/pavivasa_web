@@ -3,8 +3,11 @@ import type { Business } from '../schemas/business.ts'
 /**
  * Single NAP (name, address, phone) source for the whole site. Defaults are
  * what pavivasa.com publishes (Sept. 2026); `@site/config`'s public env
- * overrides `phone`/`whatsapp`/`address`/`email` at read time — see
- * `queries/business.ts`'s `resolveBusiness`. What the site doesn't give
+ * overrides `phone`/`whatsapp`/`address` at read time — see
+ * `queries/business.ts`'s `resolveBusiness`. `email` is never overridden by
+ * env: it's always the publicly-published address (the lead-form
+ * destination, `EMAIL_DESTINO`, is a separate server-only concern read in
+ * `apps/web/src/app/presupuesto/actions.ts`). What the site doesn't give
  * (schedule) stays `undefined` and is rendered as pending data.
  *
  * Deliberately does NOT include `claims` (years of experience, warranty,

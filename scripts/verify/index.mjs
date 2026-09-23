@@ -19,6 +19,7 @@ import { checkMetadata } from './checks/metadata.mjs'
 import { checkJsonLd } from './checks/jsonld.mjs'
 import { checkImagesAndCta } from './checks/images-cta.mjs'
 import { checkRobots } from './checks/robots.mjs'
+import { checkPageCount } from './checks/page-count.mjs'
 import { checkLive } from './checks/live.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -89,7 +90,8 @@ async function main() {
   checkMetadata({ pages, siteUrl, reporter })
   checkJsonLd({ pages, reporter })
   checkImagesAndCta({ pages, reporter })
-  await checkRobots({ nextDir, siteUrl, reporter })
+  await checkRobots({ nextDir, siteUrl, sitemapUrls, reporter })
+  checkPageCount({ pages, reporter })
 
   if (!args.skipServer) {
     const port = args.port ?? (await findFreePort(4173))

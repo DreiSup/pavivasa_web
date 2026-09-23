@@ -101,9 +101,10 @@ bundle rule")
   para el bundle cliente. Ver `packages/config/src/env.ts`.
 - Secretos de servidor, solo a través de `@site/config/server` — nunca
   `process.env` directo fuera de ese paquete, y nunca desde un módulo que un
-  componente `'use client'` pueda alcanzar (excepción documentada:
-  `lib/config/nap.ts` lee `EMAIL_DESTINO` directo a propósito, ver su propio
-  comentario).
+  componente `'use client'` pueda alcanzar. `EMAIL_DESTINO` (destino del
+  lead) se lee solo en `app/presupuesto/actions.ts`; el email público del
+  NAP (`lib/config/nap.ts`) sale solo de `@site/content`, sin override de
+  entorno — son dos cosas distintas a propósito.
 - Cualquier variable de entorno nueva que lea el código va también a
   `apps/web/.env.example` (con comentario) y a `globalEnv` en `turbo.json`.
 

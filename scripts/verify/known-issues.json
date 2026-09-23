@@ -1,29 +1,19 @@
 {
-  "$comment": "Baseline allowlist for scripts/verify. Public output must stay byte-identical during the current monorepo-migration phase — any pre-existing issue found here is NOT fixed by the verifier or by this file, only documented so CI stays green today. Any NEW issue (a different check/code/route triple) still fails the build. Every entry needs a self-contained `reason` (don't reference other entries or files outside this repo). Remove an entry once the underlying issue is actually fixed — a run that never re-triggers it is reported as 'stale' by the verifier.",
+  "$comment": "Baseline allowlist for scripts/verify. Public output must stay byte-identical during the current monorepo-migration phase — any pre-existing issue found here is NOT fixed by the verifier or by this file, only documented so CI stays green today. The matching key is (check, code, route, detail) — `detail` is optional (e.g. the exact duplicated title/description text) and an entry that omits it matches only an issue that itself has no `detail`, so a NEW, different collision on the same route is never silently hidden behind an old entry. Any issue whose key doesn't match an entry here still fails the build. Every entry needs a self-contained `reason` (don't reference other entries or files outside this repo). Remove an entry once the underlying issue is actually fixed — a run that never re-triggers it is reported as 'stale': index.mjs only prints this (informational), but secrets-scan.mjs fails the run on it.",
   "entries": [
     {
       "check": "metadata",
       "code": "duplicate-title",
       "route": "/proyectos/hormigon-impreso-calpe-2/",
-      "reason": "Pre-existing content data: packages/content/src/data/projects.ts has two distinct real projects in Calpe (slugs \"hormigon-impreso-calpe\" and \"hormigon-impreso-calpe-2\") whose title-building fields produce the exact same generated <title>. Public output must stay byte-identical during this migration phase, so not fixed here; belongs in a content-data task (disambiguate the title, e.g. by district)."
+      "detail": "Hormigón impreso en Calpe | Pavivasa",
+      "reason": "Pre-existing content data: packages/content/src/data/projects.ts has two distinct real projects in Calpe (slugs \"hormigon-impreso-calpe\" and \"hormigon-impreso-calpe-2\") whose title-building fields produce the exact same generated <title>. Public output must stay byte-identical during this migration phase, so not fixed here; belongs in a content-data task (disambiguate the title, e.g. by district). `detail` pins this entry to that exact generated title text — a future, different title collision on this same route is a new issue, not this one."
     },
     {
       "check": "metadata",
       "code": "duplicate-title",
       "route": "/proyectos/hormigon-pulido-benissa/",
-      "reason": "Pre-existing content data bug in packages/content/src/data/projects.ts: the project with slug \"hormigon-pulido-alicante\" has `town: 'Benissa'` (a different real job there, district \"Montemar la Viña\" vs. the other Benissa project's \"Monte Mar\"), so its generated title/description collide with the actual \"hormigon-pulido-benissa\" project. The \"-alicante\" slug itself is a public URL (a WordPress-era 301 in next.config.ts targets it), so it can't just be renamed to match the town — this needs a real content-data fix (retitle using the district, not the town), done separately; not fixed here since public output must stay byte-identical during this migration phase."
-    },
-    {
-      "check": "secrets",
-      "code": "name-leak",
-      "route": "EMAIL_DESTINO",
-      "reason": "apps/web/src/lib/config/nap.ts reads process.env.EMAIL_DESTINO directly (same as the pre-migration lib/config.ts), so the bare variable NAME appears as a property-access string in a client chunk — only the NAME, never the value: Next doesn't inline a non-NEXT_PUBLIC_ var into client code. Not fixed here: public output must stay byte-identical during this migration phase. Worth a later task to separate the publicly-displayed email (business.email) from the lead-form destination, and to move EMAIL_DESTINO out of ServerEnvSchema so it stops being treated as a server secret."
-    },
-    {
-      "check": "secrets",
-      "code": "rendered-value-leak",
-      "route": "EMAIL_DESTINO",
-      "reason": "Intentional, by design, not a leak of a secret: apps/web/src/lib/config/nap.ts's nap.email falls back to EMAIL_DESTINO when set, and that value is what apps/web/src/components/layout/Pie.tsx's footer, /presupuesto and the legal pages render as the business contact email, and what schema.tsx puts in the LocalBusiness JSON-LD — so it's expected to appear verbatim across every prerendered page under apps/web/.next/server/app (HTML and RSC payloads alike). If EMAIL_DESTINO is set to the lead-form's real destination address in production, that same address becomes the site's publicly-displayed NAP email too — a pre-existing content-data/config conflation, not something this check can or should flag differently. Not fixed here: public output must stay byte-identical during this migration phase. Worth a later task to separate the publicly-displayed email (business.email) from the lead-form destination, and to move EMAIL_DESTINO out of ServerEnvSchema so it stops being treated as a server secret."
+      "detail": "Hormigón pulido en Benissa | Pavivasa",
+      "reason": "Pre-existing content data bug in packages/content/src/data/projects.ts: the project with slug \"hormigon-pulido-alicante\" has `town: 'Benissa'` (a different real job there, district \"Montemar la Viña\" vs. the other Benissa project's \"Monte Mar\"), so its generated title/description collide with the actual \"hormigon-pulido-benissa\" project. The \"-alicante\" slug itself is a public URL (a WordPress-era 301 in next.config.ts targets it), so it can't just be renamed to match the town — this needs a real content-data fix (retitle using the district, not the town), done separately; not fixed here since public output must stay byte-identical during this migration phase. `detail` pins this entry to that exact generated title text — a future, different title collision on this same route is a new issue, not this one."
     }
   ]
 }

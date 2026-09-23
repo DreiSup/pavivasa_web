@@ -52,22 +52,11 @@ jobs:
       # sentinel values for the server-only env vars (never real secrets —
       # see scripts/verify/secrets-scan.mjs's own comment on why). This
       # build is intentionally separate from the one `verify` just checked.
-      - name: Build with sentinel secrets
-        env:
-          EMAIL_DESTINO: sentinel-ci-email-destino@example.invalid
-          RESEND_API_KEY: sentinel-ci-resend-api-key-000000
-          TELEGRAM_BOT_TOKEN: sentinel-ci-telegram-bot-token-000000
-          TELEGRAM_CHAT_ID: sentinel-ci-telegram-chat-id-000000
-          META_CAPI_ACCESS_TOKEN: sentinel-ci-meta-capi-access-token-000000
-        run: pnpm --filter web build
-
-      - name: Check for secret leaks into public output (bundle + HTML/RSC)
-        env:
-          EMAIL_DESTINO: sentinel-ci-email-destino@example.invalid
-          RESEND_API_KEY: sentinel-ci-resend-api-key-000000
-          TELEGRAM_BOT_TOKEN: sentinel-ci-telegram-bot-token-000000
-          TELEGRAM_CHAT_ID: sentinel-ci-telegram-chat-id-000000
-          META_CAPI_ACCESS_TOKEN: sentinel-ci-meta-capi-access-token-000000
+      # `verify:secrets` (scripts/verify/build-and-scan-secrets.mjs) does
+      # both the build and the scan itself, reading the sentinel values
+      # from scripts/verify/sentinels.mjs — the single source of truth —
+      # so they're never hand-copied into this workflow at all.
+      - name: Build with sentinel secrets and check for leaks into public output (bundle + HTML/RSC)
         run: pnpm run verify:secrets
 
 # No deploy step here on purpose — Vercel deploys itself from its own Git

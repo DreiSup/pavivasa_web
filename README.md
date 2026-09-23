@@ -30,9 +30,10 @@ pnpm verify:secrets     # comprueba que ningún secreto de servidor llega a la s
 ```
 
 `verify` necesita un build previo (`pnpm --filter web build`); no construye
-nada por sí mismo. `verify:secrets` necesita su propio build hecho con
-valores centinela para los secretos de servidor — ver
-`scripts/verify/README.md`.
+nada por sí mismo. `verify:secrets` sí construye por su cuenta: hace su
+propio build con valores centinela para los secretos de servidor (leídos de
+`scripts/verify/sentinels.mjs`, fuente única de esos valores) y luego
+escanea — ver `scripts/verify/README.md`.
 
 Gates antes de cada commit: `content:validate` → `lint` → `typecheck` →
 `build` → `verify` (y `verify:secrets` si se tocó algo de tracking/env).
@@ -98,7 +99,7 @@ Resumen:
 | `NEXT_PUBLIC_GOOGLE_ADS_ID` | pública | ID de conversión de Google Ads (`AW-…`). | igual |
 | `NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL` | pública | Label de conversión de Google Ads para el lead del formulario. | igual |
 | `NEXT_PUBLIC_META_PIXEL_ID` | pública | ID numérico del Meta Pixel. | igual |
-| `EMAIL_DESTINO` | servidor* | Destino del formulario de presupuesto. **No es un secreto puro**: si se define, también sustituye el email público del NAP (footer, `/presupuesto`, páginas legales y JSON-LD de `LocalBusiness`) — ver `lib/config/nap.ts` y `scripts/verify/known-issues.json` (`secrets`/`name-leak`). | igual, marcar como "sensitive" si se quiere ocultarlo en el dashboard, no como público |
+| `EMAIL_DESTINO` | servidor | Destino real del email del formulario de presupuesto (leído en `app/presupuesto/actions.ts`). Independiente del email público del NAP: si no se define, el envío cae a `nap.email` (el de `@site/content`), pero nunca al revés — el email público nunca cambia por esta variable. | igual, marcar "sensitive" |
 | `RESEND_API_KEY` | servidor | API key de Resend para enviar el email del formulario. | igual, marcar "sensitive" |
 | `TELEGRAM_BOT_TOKEN` | servidor | Token del bot de Telegram que recibe el aviso de lead. | igual, marcar "sensitive" |
 | `TELEGRAM_CHAT_ID` | servidor | Chat de Telegram que recibe el aviso. | igual |
@@ -117,6 +118,16 @@ fallback. Está así en espera de que el usuario decida si debe fallar el
 build en ese caso; el interruptor de una línea está documentado en
 `packages/config/scripts/check-env.ts` (`FAIL_IF_SITE_URL_MISSING_IN_PRODUCTION`).
 
+**Formato inválido en una variable pública** (`NEXT_PUBLIC_GA_ID`,
+`NEXT_PUBLIC_GOOGLE_ADS_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, o
+`NEXT_PUBLIC_SITE_URL` con una URL no absoluta): igual, **avisa por consola**
+por defecto y no rompe un deploy de producción — interruptor de una línea en
+`packages/config/scripts/check-env.ts` (`FAIL_ON_MALFORMED_PUBLIC_ENV`).
+`server-env.schema.ts` no valida formato en los secretos de servidor hoy
+(son opacos: este paquete no puede saber si un valor real es válido) — si
+alguna vez se le añade una comprobación de formato, esa sí rompería el
+build siempre, sin interruptor.
+
 ## Vercel — configuración del monorepo
 
 Al conectar (o revisar) el proyecto `pavivasa-web` en el dashboard de Vercel:
@@ -125,20 +136,34 @@ Al conectar (o revisar) el proyecto `pavivasa-web` en el dashboard de Vercel:
 2. **Include files outside the Root Directory** → activado (para que llegue
    `pnpm-lock.yaml`, `turbo.json`, `pnpm-workspace.yaml` y `tsconfig.base.json`
    de la raíz del monorepo).
-3. Vercel detecta pnpm por `pnpm-lock.yaml` en la raíz del repo (y respeta la
-   versión fijada en `packageManager` si Corepack está activo) — no debería
-   hacer falta tocar nada, pero **revisar que no queden overrides antiguos**
-   de Install Command / Build Command de cuando el repo era una app plana
-   con npm (p. ej. `npm install` / `npm run build`): si están fijados a mano,
-   sobreviven a este cambio de Root Directory y rompen el build. Deben
-   volver a "Framework Preset default" (Next.js) o, si hace falta un
-   override, usar `pnpm install` / `pnpm --filter web build`.
-4. **Node.js Version** del proyecto → 22.x o superior. `check-env` y
+3. **Build Command** → override manual a `cd ../.. && pnpm turbo run build --filter=web`
+   (con Root Directory en `apps/web`, el Build Command por defecto de Vercel
+   correría dentro de esa carpeta; hace falta subir a la raíz para invocar
+   turbo). Así el build pasa por `turbo.json`, cuya tarea `build` depende de
+   `content:validate` — con `pnpm --filter web build` a secas (sin turbo)
+   `content:validate` **no** corre antes del build, así que el override de
+   turbo es lo que hace que un dato de contenido inválido bloquee el deploy
+   igual que bloquea CI. (`check-env` sí corre en ambos casos sin necesitar
+   este override: está wireado como el `prebuild` de `apps/web`, y tanto
+   `pnpm run build` como `turbo run build` disparan ese hook — turbo invoca
+   cada tarea a través de `pnpm run`, no la reimplementa.) **Install
+   Command** puede quedarse en el default (`pnpm install`); revisar que no
+   queden overrides antiguos de cuando el repo era una app plana con npm
+   (`npm install`/`npm run build`) — si están fijados a mano sobreviven a
+   este cambio de Root Directory y rompen el build.
+4. **Ignored Build Step** → `npx turbo-ignore web`: salta el build en un
+   deploy cuyo commit no tocó `apps/web` ni ninguno de los `packages/*` de
+   los que depende (turbo calcula el grafo de dependencias solo, no hace
+   falta listar paths a mano).
+5. **Corepack / versión de pnpm** → activar la variable de entorno
+   `ENABLE_EXPERIMENTAL_COREPACK=1` en el proyecto para que Vercel use
+   Corepack y respete la versión fijada en `packageManager`
+   (`pnpm@9.15.9`) en vez de la que trae su imagen por defecto.
+6. **Node.js Version** del proyecto → 22.x (mínimo real: `>=22.6`, igual que
+   `engines.node` en el `package.json` raíz — `check-env` y
    `content:validate` corren con `node --experimental-strip-types`, una
-   flag de Node ≥ 22.6; el `engines.node` del `package.json` raíz dice
-   `>=20`, lo cual es más permisivo de lo que el build realmente soporta
-   (ver "Pendientes" más abajo).
-5. Variables de entorno: las mismas que en local (tabla de arriba), sin
+   flag de Node ≥ 22.6).
+7. Variables de entorno: las mismas que en local (tabla de arriba), sin
    cambios de nombre.
 
 ## CI
@@ -209,10 +234,7 @@ piedra vista (original en rumano).
   `pv-attribution-session`, ni las de GA/Meta una vez haya consentimiento).
   Cuando se redacte el texto legal definitivo, `pv-attribution` tiene que
   quedar listada.
-- **Títulos duplicados y `EMAIL_DESTINO` como NAP**: dos pares de proyectos
-  con títulos generados idénticos, y `EMAIL_DESTINO` haciendo doble función
-  (secreto de servidor + email público del NAP) — ambos documentados con su
-  `reason` en `scripts/verify/known-issues.json`, no corregidos aquí porque
-  la salida pública debe permanecer byte-idéntica durante esta fase.
-- **`engines.node` (`>=20`) vs. Node real necesario (`>=22.6`)**: ver
-  "Vercel" arriba.
+- **Títulos duplicados**: dos pares de proyectos con títulos generados
+  idénticos — documentados con su `reason` en `scripts/verify/known-issues.json`,
+  no corregidos aquí porque la salida pública debe permanecer byte-idéntica
+  durante esta fase.

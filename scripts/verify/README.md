@@ -8,9 +8,13 @@ links, redirects, images, conversion CTAs, and that no server secret leaks
 into the client bundle. See §11 of `arquitectura-plantilla-monorepo.md` and
 §14 of `SEO-Local-Contexto-Claude-Code.md`.
 
-Zero new runtime or build dependencies. Plain Node (>=20) ESM, no HTML
+Zero new runtime or build dependencies. Plain Node (>=22.6) ESM, no HTML
 parser library — see `lib/html.mjs`'s comment for why a small regex
-tokenizer is enough for React's SSR output specifically.
+tokenizer is enough for React's SSR output specifically. `>=22.6` (not
+`>=20`): `checks/page-count.mjs` imports `@site/content`'s query functions
+directly from their `.ts` source (same reasoning as `content:validate`/
+`check-env`), so `index.mjs` needs `--experimental-strip-types` — `pnpm
+verify` already passes it.
 
 ## Usage
 
@@ -21,7 +25,7 @@ pnpm --filter web build
 # 2. run every check
 pnpm verify
 # or directly:
-node scripts/verify/index.mjs apps/web
+node --experimental-strip-types scripts/verify/index.mjs apps/web
 ```
 
 Flags (all optional):
@@ -36,33 +40,48 @@ Flags (all optional):
 
 Exit code is non-zero if any **new** (non-baselined) issue is found.
 
-### `scripts/verify/secrets-scan.mjs` — run separately, with sentinel secrets
+### `pnpm verify:secrets` — its own build, with sentinel secrets
 
 ```bash
-EMAIL_DESTINO=sentinel@example.com \
-RESEND_API_KEY=sentinel_resend_key_000 \
-TELEGRAM_BOT_TOKEN=sentinel_tg_bot_000 \
-TELEGRAM_CHAT_ID=sentinel_tg_chat_000 \
-META_CAPI_ACCESS_TOKEN=sentinel_meta_capi_000 \
-  pnpm --filter web build
-
-EMAIL_DESTINO=sentinel@example.com \
-RESEND_API_KEY=sentinel_resend_key_000 \
-TELEGRAM_BOT_TOKEN=sentinel_tg_bot_000 \
-TELEGRAM_CHAT_ID=sentinel_tg_chat_000 \
-META_CAPI_ACCESS_TOKEN=sentinel_meta_capi_000 \
-  node scripts/verify/secrets-scan.mjs apps/web
+pnpm verify:secrets
+# == node scripts/verify/build-and-scan-secrets.mjs apps/web
 ```
 
-This is a **separate script**, not part of `pnpm verify`, because it needs
-its own build made with fake, CI-only sentinel values for the server-only
-env vars (`packages/config/src/server-env.schema.ts`) — never point it at a
-build made with real production secrets. It scans `apps/web/.next/static`
-(the client-shipped JS/CSS bundle) **and** `apps/web/.next/server/app` (the
-prerendered HTML and RSC flight payloads Next.js serves to every visitor)
-for both the sentinel **values** and the env var **names**, and never
-prints a value it finds, only the var name and the file. See the CI
-workflow (`.github/workflows/ci.yml`) for how it's wired.
+This runs `scripts/verify/build-and-scan-secrets.mjs`, which does two
+things in order, both with the sentinel values from `scripts/verify/
+sentinels.mjs` (never real secrets — see that file's own comment) injected
+into the environment:
+
+1. `pnpm --filter web build` — its **own** build, made with those sentinel
+   values baked into the server-only env vars
+   (`packages/config/src/server-env.schema.ts`); never point this at a
+   build made with real production secrets.
+2. `node scripts/verify/secrets-scan.mjs apps/web` — the actual scan.
+
+`sentinels.mjs` is the single source of truth for those values: both a
+local `pnpm verify:secrets` and CI (`.github/workflows/ci.yml`, which just
+calls that same pnpm script) read them from there, so a value can never
+drift out of sync between "what the build was made with" and "what the
+scan looks for" the way two hand-written `env:` blocks could. To run the
+scan alone against a build already made with sentinel values (skipping the
+rebuild), export the SAME values that build was made with (`sentinels.mjs`
+again, by hand or via a one-liner that imports it) and call `node
+scripts/verify/secrets-scan.mjs apps/web` directly — a shell's exported
+variables don't carry over from `pnpm verify:secrets`'s own child process,
+so simply running the two commands back to back does NOT reuse them; with
+none set, the scan just reports every var as `missing-sentinel-value`
+(its value-leak half didn't run) rather than silently looking for the
+wrong string.
+
+The scan itself covers `apps/web/.next/static` (the client-shipped JS/CSS
+bundle) **and** `apps/web/.next/server/app` (the prerendered HTML and RSC
+flight payloads Next.js serves to every visitor) for both the sentinel
+**values** and the env var **names**, and never prints a value it finds,
+only the var name and the file. It also fails (not just warns) if either of
+those two directories is missing or contains zero scannable files — a
+build that silently failed to produce one of them would otherwise look
+like "0 hits, scan passed" — and if any known-issues.json `secrets` entry
+goes stale (no longer reproduces): see "`known-issues.json`" below.
 
 ## What each check does
 
@@ -73,10 +92,11 @@ workflow (`.github/workflows/ci.yml`) for how it's wired.
 | c | `checks/live.mjs` | Every `next.config` redirect resolves to a 200 page in exactly one hop. |
 | d | `checks/jsonld.mjs` | Every `<script type="application/ld+json">` parses; no `AggregateRating`/`Review`; every `@id` reference resolves to a node defined on the page; required fields on LocalBusiness-type/Service/BreadcrumbList/BlogPosting nodes. |
 | e | `checks/metadata.mjs` | Exactly one `<h1>`; non-empty `<title>`/description, unique across indexable pages; absolute self canonical (trailing slash, per `trailingSlash: true`); `og:url` present. |
-| f | `checks/robots.mjs` | `robots.txt` exists, references the sitemap, doesn't disallow GPTBot/OAI-SearchBot/ClaudeBot/PerplexityBot/Google-Extended/CCBot. |
+| f | `checks/robots.mjs` | `robots.txt` exists, references the sitemap, and — checked against EVERY sitemap path, per crawler, with RFC 9309 longest-match Allow/Disallow semantics (wildcards, `$`, tie → Allow) — doesn't disallow GPTBot/OAI-SearchBot/ClaudeBot/PerplexityBot/Google-Extended/CCBot on any of them. |
 | g | `checks/images-cta.mjs` | Every `<img>` has an `alt` attribute (empty `alt=""` is reported as an informational "decorative" note, not a failure) and either `width`+`height` or a `fill` container (`data-nimg="fill"`). |
 | h | `checks/images-cta.mjs` | At least one `tel:` link and at least one `wa.me` link on every page. |
 | i | `secrets-scan.mjs` | No server secret names/values in `.next/static` or `.next/server/app` — run separately, see above. |
+| j | `checks/page-count.mjs` | The number of indexable prerendered pages is at least what `@site/content` should produce (static routes + services + projects + articles, minus documented noindex routes) and never zero — an independent cross-check against a second source of truth. |
 
 ## How pages and noindex are determined
 
@@ -107,7 +127,7 @@ touching the real build:
 ```bash
 cp -a apps/web/.next /tmp/scratch/defects-next
 # edit /tmp/scratch/defects-next/server/app/*.html or *.body files...
-node scripts/verify/index.mjs apps/web --next-dir /tmp/scratch/defects-next --skip-server
+node --experimental-strip-types scripts/verify/index.mjs apps/web --next-dir /tmp/scratch/defects-next --skip-server
 ```
 
 The live-server checks (b, c, and the other half of a) always start `next
@@ -125,8 +145,8 @@ frozen for the current migration phase (byte-identical output required).
 When this toolkit finds a genuine pre-existing issue there — or anywhere
 else out of scope for this task — it goes in `known-issues.json` with a
 `reason`, **not** a code fix. Any issue that doesn't match an entry there
-(different check, code, or route) still fails the build; this is not a
-blanket "ignore known failing tests" switch.
+still fails the build; this is not a blanket "ignore known failing tests"
+switch.
 
 Format (strict JSON — no comments; use the top-level `"$comment"` for the
 file-level note):
@@ -135,11 +155,25 @@ file-level note):
 {
   "$comment": "...",
   "entries": [
-    { "check": "metadata", "code": "duplicate-title", "route": "/proyectos/x/", "reason": "..." }
+    { "check": "metadata", "code": "duplicate-title", "route": "/proyectos/x/", "detail": "Título exacto duplicado", "reason": "..." }
   ]
 }
 ```
 
-`(check, code, route)` is the matching key. A report run also prints any
-baseline entry that **didn't** fire ("stale") as an informational note —
-safe to delete once the underlying issue is actually fixed.
+`(check, code, route, detail)` is the matching key. `detail` is **optional**
+— a free-text discriminator (the exact duplicated title/description text,
+an offending filename…) for a check whose `(check, code, route)` alone
+isn't specific enough to tell two different, unrelated collisions apart; an
+entry that omits it only matches an issue that itself carries no `detail`.
+This is what makes a baseline entry safe against a NEW, different issue
+that happens to land on the same route: without `detail`, a title collision
+fixed and immediately replaced by a different, unrelated title collision on
+that same route would silently keep matching the old entry.
+
+A report run also prints any baseline entry that **didn't** fire ("stale").
+`index.mjs` (`pnpm verify`) only prints it as an informational note, safe to
+delete once the underlying issue is actually fixed; `secrets-scan.mjs`
+(`pnpm verify:secrets`) additionally **fails** the run on a stale `secrets`
+entry — a stale secret-leak entry usually means the leak got fixed and
+nobody cleaned up its baseline entry, which is itself worth flagging before
+a future regression silently matches that stale entry again.

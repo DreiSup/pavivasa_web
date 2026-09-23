@@ -7,13 +7,15 @@
  * value into the client bundle, but they also have no business being
  * reachable from that graph at all.
  *
- * `app/presupuesto/actions.ts` imports this subpath directly; `lib/meta-capi.ts`
- * reaches it indirectly, through `@site/tracking/server` (its own only
+ * `app/presupuesto/actions.ts` imports this subpath directly (it reads
+ * `serverEnv.EMAIL_DESTINO` as the lead-form's destination mailbox, decoupled
+ * from the publicly-displayed NAP email — see that file and
+ * `lib/config/nap.ts`'s own comments); `lib/meta-capi.ts` reaches it
+ * indirectly, through `@site/tracking/server` (its own only
  * `@site/config/server` import). The legacy adapter `lib/config/nap.ts`
- * deliberately does NOT: it still reads `process.env.EMAIL_DESTINO` directly,
- * exactly as the pre-migration `lib/config.ts` did, to avoid pulling this
- * module into the same import graph as the client-reachable `nap` object —
- * see that file's own comment.
+ * never imports this subpath at all — it is reachable from
+ * `'use client'` components, so it must stay outside this module's import
+ * graph entirely.
  */
 import type { ServerEnv } from './server-env.schema.ts'
 

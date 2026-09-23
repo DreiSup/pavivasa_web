@@ -11,8 +11,19 @@
 // hit is reported by file path only, but the point of sentinels is that a
 // leak costs nothing to detect and log.
 //
-// Usage (CI): set sentinel values for the server-env vars, build, then:
+// Usage: `pnpm verify:secrets` (scripts/verify/build-and-scan-secrets.mjs)
+// builds AND runs this in one step, with sentinel values from
+// scripts/verify/sentinels.mjs — the single source of truth CI reads too.
+// To run the scan alone against an already-sentinel-built `.next`, export
+// those SAME values first (a shell's exported vars don't carry over from
+// `pnpm verify:secrets`'s own child process — running the two back to back
+// does NOT reuse them):
 //   node scripts/verify/secrets-scan.mjs apps/web
+// Flags: `--next-dir <path>` (default `<appDir>/.next`) and
+// `--known-issues <path>` (default this directory's known-issues.json) —
+// both exist mainly so this script's own hardening can be defect-tested
+// against a scratch `.next` copy and a scratch baseline file, never the
+// real ones (see scripts/verify/README.md's "Defect-planting").
 //
 // The var NAMES are read straight out of server-env.schema.ts (regex, not a
 // TS import — this script runs under plain `node`) so this list can't drift
@@ -61,11 +72,50 @@ async function walk(dir, extensions) {
   return out
 }
 
+/**
+ * Walks `dir` for `extensions`, but treats a missing directory or a 0-file
+ * result as a FAILURE, not a silent empty scan: `walk()` on its own returns
+ * `[]` for either case (a directory that doesn't exist yet, or one that's
+ * genuinely empty), and this script would otherwise report "0 hits" and
+ * exit 0 — indistinguishable from "scanned everything, found nothing" even
+ * though the scan never actually ran. A build that failed before writing
+ * `.next/static`, a `--next-dir` typo, or a future Next.js output-layout
+ * change moving these files elsewhere must all fail loudly here instead.
+ */
+async function scanSurface(dir, extensions, label, reporter) {
+  let stat
+  try {
+    stat = await fs.stat(dir)
+  } catch (err) {
+    if (err.code !== 'ENOENT') throw err
+  }
+  if (!stat) {
+    reporter.report({
+      check: 'secrets',
+      code: 'missing-surface',
+      route: label,
+      message: `${path.relative(repoRoot, dir)} does not exist — the ${label} scan did not run at all`,
+    })
+    return []
+  }
+  const files = await walk(dir, extensions)
+  if (files.length === 0) {
+    reporter.report({
+      check: 'secrets',
+      code: 'empty-surface',
+      route: label,
+      message: `${path.relative(repoRoot, dir)} exists but has 0 scannable file(s) — the ${label} scan did not run at all`,
+    })
+  }
+  return files
+}
+
 function parseArgs(argv) {
-  const args = { appDir: null, nextDir: null }
+  const args = { appDir: null, nextDir: null, knownIssues: null }
   const positional = []
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--next-dir') args.nextDir = argv[++i]
+    else if (argv[i] === '--known-issues') args.knownIssues = argv[++i]
     else positional.push(argv[i])
   }
   args.appDir = positional[0] ?? null
@@ -87,8 +137,12 @@ async function main() {
     if (value && value.length >= MIN_SECRET_LENGTH) needles.push({ kind: 'value', varName: name, text: value })
   }
 
-  const knownIssues = await loadKnownIssues(path.join(__dirname, 'known-issues.json'))
-  const reporter = new Reporter(knownIssues, ['secrets'])
+  const knownIssues = await loadKnownIssues(args.knownIssues ?? path.join(__dirname, 'known-issues.json'))
+  // `failOnStale`: a stale `secrets`-baseline entry here almost always means a
+  // leak got fixed (e.g. exactly this hardening pass) and nobody removed its
+  // baseline entry — worth catching now, before someone reintroduces the same
+  // leak and it silently matches the old (now-inaccurate) entry again.
+  const reporter = new Reporter(knownIssues, ['secrets'], { failOnStale: true })
 
   // Any server env var with no sentinel VALUE configured never gets its value-leak
   // scan run at all — only the much weaker NAME check below covers it. That must fail
@@ -108,8 +162,8 @@ async function main() {
   }
 
   const files = [
-    ...(await walk(staticDir, BUNDLE_EXTENSIONS)).map((file) => ({ file, surface: 'bundle' })),
-    ...(await walk(serverAppDir, RENDERED_EXTENSIONS)).map((file) => ({ file, surface: 'rendered' })),
+    ...(await scanSurface(staticDir, BUNDLE_EXTENSIONS, 'bundle', reporter)).map((file) => ({ file, surface: 'bundle' })),
+    ...(await scanSurface(serverAppDir, RENDERED_EXTENSIONS, 'rendered', reporter)).map((file) => ({ file, surface: 'rendered' })),
   ]
   console.log(`secrets-scan: scanning ${files.length} file(s) under ${staticDir} and ${serverAppDir}`)
 

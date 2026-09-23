@@ -1,6 +1,11 @@
 /**
  * `check-env` — parses `@site/config`'s public and server environment
- * shapes with Zod and reports malformed values before the app builds.
+ * shapes with Zod and reports malformed values before the app builds. A
+ * malformed `NEXT_PUBLIC_*` value only warns by default (never breaks a
+ * production deploy) — see `FAIL_ON_MALFORMED_PUBLIC_ENV` below for the
+ * one-line switch. `ServerEnvSchema` has no format checks today (see its
+ * own comment on why), so nothing there can fail this way yet; if a format
+ * check is ever added to it, that one always fails the build — no switch.
  * Companion to `packages/content/scripts/validate.ts`'s `content:validate`
  * (same reasoning: runs once, here, not on every `env.ts`/`server.ts`
  * import — see those files' and `env.schema.ts`'s comments for why the zod
@@ -34,17 +39,38 @@ import { serverEnv } from '../src/server.ts'
 const errors: string[] = []
 
 function zodIssues(label: string, result: z.SafeParseReturnType<unknown, unknown>) {
+  const messages: string[] = []
   if (!result.success) {
     for (const issue of result.error.issues) {
-      errors.push(`${label}: ${issue.path.join('.') || '(root)'} — ${issue.message}`)
+      messages.push(`${label}: ${issue.path.join('.') || '(root)'} — ${issue.message}`)
     }
   }
+  return messages
 }
 
-zodIssues('public env', PublicEnvSchema.safeParse(publicEnv))
+/**
+ * A malformed `NEXT_PUBLIC_*` value (a mistyped GA/Ads/Pixel id, a
+ * non-absolute `NEXT_PUBLIC_SITE_URL`…) must never break a production
+ * deploy on its own — the site still builds and serves visitors with that
+ * one value just not matching its expected shape. WARNS loudly by default.
+ * One-line switch to make it fail the build instead: flip this constant to
+ * `true`. Server-env issues (real secrets) are unaffected by this switch —
+ * see below, those always fail.
+ */
+const FAIL_ON_MALFORMED_PUBLIC_ENV = false
+
+const publicEnvIssues = zodIssues('public env', PublicEnvSchema.safeParse(publicEnv))
+if (publicEnvIssues.length > 0) {
+  if (FAIL_ON_MALFORMED_PUBLIC_ENV) errors.push(...publicEnvIssues)
+  else for (const m of publicEnvIssues) console.warn(`\n⚠ check-env — ${m}\n`)
+}
+
 // Never echoes a value here: these are secrets, and a malformed one is
-// still a secret.
-zodIssues('server env', ServerEnvSchema.safeParse(serverEnv))
+// still a secret. Unlike public env above, any server env issue always
+// fails the build, no switch — but `ServerEnvSchema` has no format checks
+// today (see its own comment: these are opaque secrets this package can't
+// validate the shape of), so this never actually reports anything yet.
+errors.push(...zodIssues('server env', ServerEnvSchema.safeParse(serverEnv)))
 
 /**
  * §9 of `arquitectura-plantilla-monorepo.md` asks for a production build to

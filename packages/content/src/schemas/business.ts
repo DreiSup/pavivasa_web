@@ -11,7 +11,12 @@ export type Business = {
   name: string
   /** Contact person's name — proper noun: plain. */
   manager: string
-  /** Required: the business always publishes one. Still overridable by `EMAIL_DESTINO` — see `resolveBusiness`. */
+  /**
+   * Required: the business always publishes one. This is the publicly-shown
+   * NAP email — never overridden by `EMAIL_DESTINO` (the lead-form
+   * destination is a separate, server-only concern; see
+   * `apps/web/src/app/presupuesto/actions.ts`).
+   */
   email: string
   phone?: string
   whatsapp?: string

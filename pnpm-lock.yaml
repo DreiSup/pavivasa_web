@@ -14,6 +14,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@site/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@site/content':
+        specifier: workspace:*
+        version: link:../../packages/content
       next:
         specifier: 15.5.22
         version: 15.5.22(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -51,6 +57,32 @@ importers:
       tailwindcss:
         specifier: 3.4.19
         version: 3.4.19
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  packages/config:
+    dependencies:
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: 22.20.1
+        version: 22.20.1
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  packages/content:
+    dependencies:
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: 22.20.1
+        version: 22.20.1
       typescript:
         specifier: 5.9.3
         version: 5.9.3

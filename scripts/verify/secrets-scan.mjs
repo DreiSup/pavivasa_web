@@ -87,11 +87,24 @@ async function main() {
     if (value && value.length >= MIN_SECRET_LENGTH) needles.push({ kind: 'value', varName: name, text: value })
   }
 
-  if (needles.filter((n) => n.kind === 'value').length === 0) {
-    console.warn(
-      `secrets-scan: none of [${names.join(', ')}] are set in the current environment with a value >= ${MIN_SECRET_LENGTH} chars.\n` +
-        'Set sentinel values for all of them before building, then run this scan — otherwise only the NAME check runs.',
-    )
+  const knownIssues = await loadKnownIssues(path.join(__dirname, 'known-issues.json'))
+  const reporter = new Reporter(knownIssues, ['secrets'])
+
+  // Any server env var with no sentinel VALUE configured never gets its value-leak
+  // scan run at all — only the much weaker NAME check below covers it. That must fail
+  // loudly per-variable, not just warn once for the all-missing case: a future edit to
+  // the CI workflow's `env:` block that drops or shortens even ONE var's sentinel would
+  // otherwise silently skip that one var's leak detection while this script still exits 0.
+  for (const name of names) {
+    const hasValueNeedle = needles.some((n) => n.kind === 'value' && n.varName === name)
+    if (!hasValueNeedle) {
+      reporter.report({
+        check: 'secrets',
+        code: 'missing-sentinel-value',
+        route: name,
+        message: `not set in the environment with a value >= ${MIN_SECRET_LENGTH} chars — its value-leak scan did not run, only the name-leak scan did`,
+      })
+    }
   }
 
   const files = [
@@ -110,8 +123,6 @@ async function main() {
     }
   }
 
-  const knownIssues = await loadKnownIssues(path.join(__dirname, 'known-issues.json'))
-  const reporter = new Reporter(knownIssues, ['secrets'])
   for (const h of hits) {
     // `route` is repurposed as "which var" here — secrets don't have a page route,
     // and the baseline key only needs to be a stable (check, code, identifier) triple.

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+html{scroll-behavior:smooth}
+::selection{background:#C1440E;color:#F6F1E8}
+</style>
+</helmet>
+
+<div style="background:#F3EFE7;color:#211D18;font-family:'Work Sans',system-ui,sans-serif" data-screen-label="02 · HOME">
+
+  <header style="position:sticky;top:0;z-index:30;background:#F3EFE7;border-bottom:1px solid rgba(33,29,24,.14)">
+    <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:72px;padding:0 20px;gap:16px">
+      <a href="/" style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:26px;color:#211D18;text-decoration:none;flex-shrink:0">PAVIVASA</a>
+      <nav style="display:{{navDisplay}};align-items:center;gap:28px">
+        <a href="/empresa/" style="font-size:14px;font-weight:600;color:#211D18;text-decoration:none">Empresa</a>
+        <a href="/#servicios" style="font-size:14px;font-weight:600;color:#211D18;text-decoration:none">Servicios</a>
+        <a href="/proyectos/" style="font-size:14px;font-weight:600;color:#211D18;text-decoration:none">Proyectos</a>
+        <a href="/contacto/" style="font-size:14px;font-weight:600;color:#211D18;text-decoration:none">Contacto</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+        <a href="tel:+34627663146" style="display:{{navDisplay}};font-size:14px;font-weight:700;color:#211D18;text-decoration:none">627 66 31 46</a>
+        <a href="#formulario" style="height:44px;padding:0 22px;background:#C1440E;color:#F6F1E8;display:inline-flex;align-items:center;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.03em;text-decoration:none">Presupuesto</a>
+        <button onClick="{{toggleMenu}}" style="display:{{burgerDisplay}};width:44px;height:44px;background:none;border:1px solid rgba(33,29,24,.3);flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;padding:0">
+          <span style="width:20px;height:2px;background:#211D18;display:block"></span>
+          <span style="width:20px;height:2px;background:#211D18;display:block"></span>
+        </button>
+      </div>
+    </div>
+    <div style="{{mobilePanelStyle}};flex-direction:column;background:#F3EFE7;border-top:1px solid rgba(33,29,24,.14);padding:8px 20px 16px">
+      <a onClick="{{closeMenu}}" href="/empresa/" style="padding:14px 0;font-weight:600;font-size:16px;color:#211D18;text-decoration:none;border-bottom:1px solid rgba(33,29,24,.1)">Empresa</a>
+      <a onClick="{{closeMenu}}" href="/#servicios" style="padding:14px 0;font-weight:600;font-size:16px;color:#211D18;text-decoration:none;border-bottom:1px solid rgba(33,29,24,.1)">Servicios</a>
+      <a onClick="{{closeMenu}}" href="/proyectos/" style="padding:14px 0;font-weight:600;font-size:16px;color:#211D18;text-decoration:none;border-bottom:1px solid rgba(33,29,24,.1)">Proyectos</a>
+      <a onClick="{{closeMenu}}" href="/contacto/" style="padding:14px 0;font-weight:600;font-size:16px;color:#211D18;text-decoration:none">Contacto</a>
+    </div>
+  </header>
+
+  <section style="position:relative;overflow:hidden;min-height:clamp(480px,64vw,620px);display:flex;flex-direction:column;justify-content:flex-end;color:#F6F1E8">
+    <sc-if value="{{heroActive.hasImg}}" hint-placeholder-val="{{true}}">
+      <img src="{{heroActive.img}}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"/>
+    </sc-if>
+    <sc-if value="{{heroActive.noImg}}" hint-placeholder-val="{{false}}">
+      <div style="position:absolute;inset:0;background-color:#5A645F;background-image:repeating-linear-gradient(135deg,rgba(246,241,232,.08) 0px,rgba(246,241,232,.08) 1px,transparent 1px,transparent 14px);z-index:0"></div>
+    </sc-if>
+    <div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(33,29,24,.9) 0%,rgba(33,29,24,.62) 45%,rgba(33,29,24,.22) 100%);z-index:1"></div>
+    <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;width:100%;padding:48px 20px 0">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+        <span style="font-family:'Space Mono',monospace;font-size:14px;text-transform:uppercase;letter-spacing:.1em;color:#F6F1E8;font-weight:700">{{heroActive.eyebrow}}</span>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;color:rgba(246,241,232,.65)">Expertos en pavimentos de hormigón</span>
+      </div>
+      <h1 style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:{{sizeH1}};line-height:0.98;letter-spacing:-.01em;max-width:16ch;margin-bottom:16px">{{heroActive.h1}}</h1>
+      <p style="font-size:20px;line-height:1.4;max-width:52ch;color:rgba(246,241,232,.92);margin-bottom:28px">{{heroActive.sub}}</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px">
+        <a href="#formulario" style="height:52px;padding:0 30px;background:#C1440E;color:#F6F1E8;display:inline-flex;align-items:center;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.03em;text-decoration:none">Pedir presupuesto</a>
+        <a href="/proyectos/" style="height:52px;padding:0 30px;background:transparent;border:2px solid #F6F1E8;color:#F6F1E8;display:inline-flex;align-items:center;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.03em;text-decoration:none">Ver proyectos</a>
+      </div>
+    </div>
+    <div style="position:relative;z-index:2;display:flex;border-top:1px solid rgba(246,241,232,.2);max-width:1280px;margin:32px auto 0;width:100%;padding:0 20px">
+      <sc-for list="{{heroTabsView}}" as="tab" hint-placeholder-count="3">
+        <button onClick="{{tab.select}}" style="{{tab.tabStyle}}">{{tab.nombre}}</button>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="background:#2F4A52;padding:32px 20px">
+    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;color:#F6F1E8">
+      <div>
+        <div style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:26px">+15 AÑOS</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:rgba(246,241,232,.75);margin-top:4px">De oficio</div>
+      </div>
+      <div>
+        <div style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:26px">10 AÑOS</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:rgba(246,241,232,.75);margin-top:4px">De garantía con mantenimiento</div>
+      </div>
+      <div>
+        <div style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:26px;font-style:italic;opacity:.75">[Zona a confirmar]</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:rgba(246,241,232,.75);margin-top:4px">Cobertura declarada</div>
+      </div>
+      <div>
+        <div style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:26px">+30%</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:rgba(246,241,232,.75);margin-top:4px">De clientes repiten</div>
+      </div>
+    </div>
+  </div>
+
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(48px,8vw,80px) 20px">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#2F4A52;font-weight:700;margin-bottom:10px">¿Por dónde empezamos?</div>
+    <h2 style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:700;font-size:{{sizeH2}};margin-bottom:28px">¿Qué quieres pavimentar?</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+      <sc-for list="{{espacios}}" as="esp" hint-placeholder-count="6">
+        <a href="#formulario" style="position:relative;display:block;aspect-ratio:4/3;overflow:hidden;text-decoration:none">
+          <img src="{{esp.img}}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,29,24,0) 45%,rgba(33,29,24,.85) 100%)"></div>
+          <span style="position:absolute;left:16px;right:16px;bottom:14px;color:#F6F1E8;font-weight:700;font-size:16px">{{esp.nombre}}</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="servicios" style="background:#E7E0D3;padding:clamp(48px,8vw,80px) 20px">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#2F4A52;font-weight:700;margin-bottom:10px">Lo que hacemos</div>
+      <h2 style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:700;font-size:{{sizeH2}};margin-bottom:28px">Servicios</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+        <sc-for list="{{servicios}}" as="s" hint-placeholder-count="7">
+          <a href="{{s.href}}" style="{{s.cardStyle}}">
+            <div style="font-weight:700;font-size:20px;margin-bottom:8px">{{s.nombre}}</div>
+            <p style="font-size:14px;color:#6B6255;line-height:1.5;margin-bottom:14px">{{s.resumen}}</p>
+            <span style="font-size:14px;font-weight:700">Ver servicio →</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(48px,8vw,80px) 20px">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#2F4A52;font-weight:700;margin-bottom:10px">Obra real</div>
+    <h2 style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:700;font-size:{{sizeH2}};margin-bottom:28px">Obras destacadas</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px">
+      <sc-for list="{{obras}}" as="o" hint-placeholder-count="3">
+        <div>
+          <div style="aspect-ratio:4/3;background-color:#E7E0D3;background-image:repeating-linear-gradient(135deg,rgba(33,29,24,.1) 0px,rgba(33,29,24,.1) 1px,transparent 1px,transparent 14px);display:flex;align-items:center;justify-content:center">
+            <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#6B6255;text-align:center;padding:0 20px">Pendiente · original a 2400 px</span>
+          </div>
+          <div style="padding:16px 0">
+            <div style="font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#6B6255;margin-bottom:6px">{{o.municipio}} · <span style="font-style:italic">[pendiente]</span></div>
+            <div style="font-weight:700;font-size:20px;margin-bottom:8px">{{o.tecnica}} — {{o.modelo}}</div>
+            <p style="font-size:14px;color:#6B6255;line-height:1.5;margin-bottom:10px">{{o.teaser}}</p>
+            <div style="font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.02em;color:#2F4A52;margin-bottom:14px">{{o.ficha}}</div>
+            <span style="font-size:14px;font-weight:700">Ver obra →</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#E7E0D3;padding:clamp(48px,8vw,80px) 20px">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#2F4A52;font-weight:700;margin-bottom:10px">Catálogo</div>
+      <h2 style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:700;font-size:{{sizeH2}};margin-bottom:28px">Modelos y colores</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px">
+        <sc-for list="{{modelos}}" as="m" hint-placeholder-count="5">
+          <span style="height:36px;display:flex;align-items:center;padding:0 16px;border:1px solid rgba(33,29,24,.3);font-size:14px;font-weight:600;background:#F3EFE7">{{m.nombre}}</span>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:2px">
+        <sc-for list="{{muestrario}}" as="c" hint-placeholder-count="10">
+          <div>
+            <div style="aspect-ratio:1/1;background:{{c.hex}}"></div>
+            <div style="font-size:12px;padding:8px 0;color:#6B6255">{{c.nombre}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#2F4A52;color:#F6F1E8;padding:clamp(48px,8vw,80px) 20px;text-align:center">
+    <div style="max-width:680px;margin:0 auto">
+      <div style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:{{sizeH2}};margin-bottom:16px">10 años de garantía en todos nuestros trabajos</div>
+      <p style="font-size:16px;color:rgba(246,241,232,.85);margin-bottom:28px;line-height:1.5">Le proporcionamos también el mantenimiento y la reparación de su pavimento en caso de que lo necesite.</p>
+      <a href="#formulario" style="height:52px;padding:0 30px;border:2px solid #F6F1E8;color:#F6F1E8;display:inline-flex;align-items:center;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.03em;text-decoration:none">Pedir presupuesto</a>
+    </div>
+  </section>
+
+  <section style="max-width:800px;margin:0 auto;padding:clamp(48px,8vw,80px) 20px">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#2F4A52;font-weight:700;margin-bottom:10px">Preguntas frecuentes</div>
+    <h2 style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:700;font-size:{{sizeH2}};margin-bottom:20px">¿Tienes dudas?</h2>
+    <sc-for list="{{faqView}}" as="f" hint-placeholder-count="5">
+      <div style="border-bottom:1px solid rgba(33,29,24,.16)">
+        <button onClick="{{f.toggle}}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 0;background:none;border:none;font-size:16px;font-weight:600;color:#211D18;cursor:pointer;text-align:left;font-family:'Work Sans',sans-serif">
+          <span>{{f.pregunta}}</span>
+          <span style="font-family:'Space Mono',monospace;font-size:20px;flex-shrink:0">{{f.iconLabel}}</span>
+        </button>
+        <div style="{{f.bodyStyle}}">
+          <p style="font-size:14px;color:#6B6255;font-style:italic">[Respuesta pendiente de confirmar]</p>
+        </div>
+      </div>
+    </sc-for>
+  </section>
+
+  <section id="formulario" style="background:#E7E0D3;padding:clamp(48px,8vw,80px) 20px">
+    <div style="max-width:640px;margin:0 auto">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#2F4A52;font-weight:700;margin-bottom:10px">Sin compromiso</div>
+      <h2 style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:700;font-size:{{sizeH2}};margin-bottom:12px">Pide tu presupuesto</h2>
+      <p style="font-size:16px;color:#6B6255;margin-bottom:28px">Te llamamos para concretar los detalles de tu pavimento.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">Nombre y apellidos</label>
+          <input placeholder="Tu nombre" style="width:100%;height:48px;padding:0 14px;background:#F3EFE7;border:1.5px solid rgba(33,29,24,.3);font-size:16px;box-sizing:border-box;font-family:'Work Sans',sans-serif"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">Teléfono</label>
+          <input placeholder="627 66 31 46" style="width:100%;height:48px;padding:0 14px;background:#F3EFE7;border:1.5px solid rgba(33,29,24,.3);font-size:16px;box-sizing:border-box;font-family:'Work Sans',sans-serif"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">Municipio</label>
+          <input placeholder="Sollana" style="width:100%;height:48px;padding:0 14px;background:#F3EFE7;border:1.5px solid rgba(33,29,24,.3);font-size:16px;box-sizing:border-box;font-family:'Work Sans',sans-serif"/>
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">¿Qué quieres pavimentar?</label>
+          <select style="width:100%;height:48px;padding:0 14px;background:#F3EFE7;border:1.5px solid rgba(33,29,24,.3);font-size:16px;box-sizing:border-box;font-family:'Work Sans',sans-serif">
+            <option>Entrada de garaje</option>
+            <option>Porche o terraza</option>
+            <option>Contorno de piscina</option>
+            <option>Interior de vivienda</option>
+            <option>Patio o jardín</option>
+            <option>Nave, parking o local</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div style="grid-column:1/-1;display:flex;align-items:flex-start;gap:10px">
+          <div style="width:20px;height:20px;border:2px solid #211D18;background:transparent;flex-shrink:0;margin-top:2px"></div>
+          <span style="font-size:14px;line-height:1.4">Acepto la política de privacidad</span>
+        </div>
+        <div style="grid-column:1/-1">
+          <button style="height:52px;width:100%;background:#211D18;color:#F6F1E8;border:none;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;font-family:'Work Sans',sans-serif">Enviar y que me llamen</button>
+        </div>
+      </div>
+      <p style="margin-top:16px;font-size:12px;color:#6B6255">Plazo de respuesta: <span style="font-style:italic">[pendiente de confirmar]</span></p>
+    </div>
+  </section>
+
+  <footer style="background:#211D18;color:#F6F1E8;padding:clamp(48px,8vw,64px) 20px 32px">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;margin-bottom:40px">
+        <div>
+          <div style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;font-size:24px;margin-bottom:14px">PAVIVASA</div>
+          <p style="font-size:14px;color:rgba(246,241,232,.7);line-height:1.6">Calle Blasco Ibáñez 16, Sollana (46430) Valencia</p>
+          <p style="font-size:14px;color:rgba(246,241,232,.7);margin-top:8px">627 66 31 46 · gabriel.pavivasa@gmail.com</p>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(246,241,232,.5);margin-bottom:12px">Servicios</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:14px">
+            <a href="/hormigon-impreso/" style="color:#F6F1E8;text-decoration:none">Hormigón impreso</a>
+            <a href="/hormigon-pulido/" style="color:#F6F1E8;text-decoration:none">Hormigón pulido</a>
+            <a href="/hormigon-lavado/" style="color:#F6F1E8;text-decoration:none">Hormigón lavado</a>
+            <a href="/microcemento/" style="color:#F6F1E8;text-decoration:none">Microcemento</a>
+            <a href="/autonivelantes/" style="color:#F6F1E8;text-decoration:none">Autonivelantes</a>
+            <a href="/pavimentos-de-caucho/" style="color:#F6F1E8;text-decoration:none">Caucho</a>
+            <a href="/alicatados/" style="color:#F6F1E8;text-decoration:none">Alicatados</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(246,241,232,.5);margin-bottom:12px">Legal</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:14px">
+            <a href="/aviso-legal/" style="color:#F6F1E8;text-decoration:none">Aviso legal</a>
+            <a href="/politica-de-privacidad/" style="color:#F6F1E8;text-decoration:none">Política de privacidad</a>
+            <a href="/politica-de-cookies/" style="color:#F6F1E8;text-decoration:none">Política de cookies</a>
+          </div>
+        </div>
+        <div>
+          <div style="width:160px;height:48px;background-color:rgba(246,241,232,.08);background-image:repeating-linear-gradient(135deg,rgba(246,241,232,.08) 0px,rgba(246,241,232,.08) 1px,transparent 1px,transparent 12px);display:flex;align-items:center;justify-content:center">
+            <span style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(246,241,232,.5);text-align:center">Logos Kit Digital · pendiente</span>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(246,241,232,.14);padding-top:20px;font-size:12px;color:rgba(246,241,232,.5)">© 2026 Pavivasa</div>
+    </div>
+  </footer>
+
+  <div style="{{cookiesStyle}};position:fixed;bottom:0;left:0;right:0;z-index:40;background:#211D18;color:#F6F1E8;padding:16px 20px;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <p style="font-size:14px;max-width:520px;margin:0">Usamos cookies para analítica y contacto. Puedes aceptarlas o rechazarlas.</p>
+    <div style="display:flex;gap:10px">
+      <button style="height:40px;padding:0 16px;background:transparent;border:1.5px solid #F6F1E8;color:#F6F1E8;font-size:12px;font-weight:700;text-transform:uppercase;cursor:pointer;font-family:'Work Sans',sans-serif">Rechazar</button>
+      <button onClick="{{acceptCookies}}" style="height:40px;padding:0 16px;background:#211D18;border:1.5px solid #F6F1E8;color:#F6F1E8;font-size:12px;font-weight:700;text-transform:uppercase;cursor:pointer;font-family:'Work Sans',sans-serif">Aceptar</button>
+    </div>
+  </div>
+
+  <div style="{{barraMovilStyle}};position:fixed;bottom:0;left:0;right:0;z-index:35;height:64px;box-shadow:0 -6px 20px rgba(33,29,24,.35)">
+    <a href="tel:+34627663146" style="flex:1;display:flex;align-items:center;justify-content:center;background:#211D18;color:#F6F1E8;font-weight:700;font-size:14px;text-decoration:none">Llamar</a>
+    <a href="#formulario" style="flex:1;display:flex;align-items:center;justify-content:center;background:rgba(33,29,24,.55);color:rgba(246,241,232,.75);font-weight:700;font-size:14px;font-style:italic;text-decoration:none">WhatsApp [pendiente]</a>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { heroTab: 0, faqOpen: 0, menuOpen: false, isMobile: false, cookiesVisible: true };
+
+  heroTabsData = [
+    { nombre: 'Impreso', eyebrow: 'Hormigón impreso', h1: 'Suelos de hormigón impreso a tu medida', sub: 'Revestimiento de fachadas y muros, recubrimiento de piscinas, patios, terrazas y jardines.', img: 'public/img/impreso-piscina-madera2.jpg', href: '/hormigon-impreso/' },
+    { nombre: 'Pulido', eyebrow: 'Hormigón pulido', h1: 'Suelos de hormigón pulido, dentro y fuera', sub: 'Naves industriales, garajes, terrazas, piscinas e interiores. Durabilidad, impermeabilidad y bajo mantenimiento.', img: 'public/img/pulido-interior-loft1.jpg', href: '/hormigon-pulido/' },
+    { nombre: 'Microcemento', eyebrow: 'Microcemento decorativo', h1: 'Microcemento decorativo, sin retirar lo que ya tienes', sub: 'Renueva suelos, paredes, baños y cocinas con un acabado elegante y un ahorro de tiempo importante.', img: '', href: '/microcemento/' },
+  ];
+
+  espaciosData = [
+    { nombre: 'Entrada de garaje', img: 'public/img/impreso-camino-oscuro.jpg' },
+    { nombre: 'Porche o terraza', img: 'public/img/impreso-porche-rojo.jpg' },
+    { nombre: 'Contorno de piscina', img: 'public/img/impreso-piscina-madera1.jpg' },
+    { nombre: 'Interior de vivienda', img: 'public/img/pulido-interior-loft1.jpg' },
+    { nombre: 'Patio o jardín', img: 'public/img/impreso-jardin-sombrilla.jpg' },
+    { nombre: 'Nave, parking o local', img: 'public/img/pulido-explanada-gris.jpg' },
+  ];
+
+  serviciosData = [
+    { nombre: 'Hormigón impreso', resumen: 'Fachadas, muros, piscinas, patios y terrazas con la textura de piedra, adoquín o baldosa.', href: '/hormigon-impreso/', fuerte: true },
+    { nombre: 'Hormigón pulido', resumen: 'Naves, garajes e interiores de vivienda: duradero, impermeable y de bajo mantenimiento.', href: '/hormigon-pulido/', fuerte: true },
+    { nombre: 'Microcemento decorativo', resumen: 'Renueva suelos, paredes, baños y cocinas sin retirar el material existente.', href: '/microcemento/', fuerte: true },
+    { nombre: 'Hormigón lavado', resumen: 'Acabado de árido visto, antideslizante, para zonas peatonales, piscinas y viales.', href: '/hormigon-lavado/', fuerte: false },
+    { nombre: 'Autonivelantes', resumen: 'Morteros decorativos con acabados lisos o antideslizantes, industriales o de diseño.', href: '/autonivelantes/', fuerte: false },
+    { nombre: 'Pavimentos de caucho', resumen: 'Pavimento continuo y seguro para parques infantiles y zonas deportivas.', href: '/pavimentos-de-caucho/', fuerte: false },
+    { nombre: 'Alicatados', resumen: 'Alicatados en toda la provincia de Valencia: baños, cocinas, piscinas y terrazas.', href: '/alicatados/', fuerte: false },
+  ];
+
+  obrasData = [
+    { municipio: 'Dénia (Alicante)', tecnica: 'Hormigón impreso', modelo: 'Piedra inglesa', teaser: 'Vivienda en urbanización, dos acabados en la misma parcela.', ficha: 'HM20 · 10cm · árido 12mm · mallazo 20×30' },
+    { municipio: 'Calpe (Alicante)', tecnica: 'Hormigón impreso', modelo: 'Sillería grande', teaser: 'Urbanización junto a la costa, acabado sillería a gran formato.', ficha: 'HM25 · 10cm · árido 12mm · juntas 5×5' },
+    { municipio: 'Daimús (Valencia)', tecnica: 'Hormigón pulido', modelo: 'Nave industrial', teaser: 'Nave industrial de 2000 m² con muelle de carga y descarga.', ficha: '2000 m² · nave industrial' },
+  ];
+
+  muestrarioData = [
+    { nombre: 'Gris medio', hex: '#8B8B83' },
+    { nombre: 'Gris oscuro', hex: '#5C5C55' },
+    { nombre: 'Gris muy oscuro', hex: '#3B3B36' },
+    { nombre: 'Marrón', hex: '#6B4A34' },
+    { nombre: 'Crema', hex: '#E7DBBE' },
+    { nombre: 'Arena', hex: '#D6C596' },
+    { nombre: 'Natural', hex: '#BDAD8B' },
+    { nombre: 'Color 107', hex: '#A69A7C' },
+    { nombre: '117 · marfil', hex: '#EEE4CE' },
+    { nombre: 'Gris mate', hex: '#77766D' },
+  ];
+
+  modelosData = [{ nombre: 'Piedra inglesa' }, { nombre: 'Sillería' }, { nombre: 'Sillería grande' }, { nombre: 'Adoquín belga' }, { nombre: 'Manteado' }];
+
+  faqData = [
+    { pregunta: '¿Cuánto tarda una obra de hormigón impreso?' },
+    { pregunta: '¿Se puede pavimentar sobre una solera existente?' },
+    { pregunta: '¿Qué mantenimiento necesita el hormigón impreso?' },
+    { pregunta: '¿Cubrís mi municipio?' },
+    { pregunta: '¿Qué incluye la garantía de 10 años?' },
+  ];
+
+  componentDidMount() {
+    this.checkMobile();
+    this._onResize = () => this.checkMobile();
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+  }
+  checkMobile() {
+    const m = window.innerWidth <= 860;
+    if (m !== this.state.isMobile) this.setState({ isMobile: m });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const activeStyle = "flex:1;margin-top:-1px;padding:14px 8px 4px;background:transparent;border:none;border-top:2px solid #C1440E;color:#F6F1E8;font-family:'Work Sans',sans-serif;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.02em;cursor:pointer;text-align:left";
+    const inactiveStyle = "flex:1;margin-top:-1px;padding:14px 8px 4px;background:transparent;border:none;border-top:2px solid transparent;color:rgba(246,241,232,.65);font-family:'Work Sans',sans-serif;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.02em;cursor:pointer;text-align:left";
+
+    const heroTabsView = this.heroTabsData.map((t, i) => ({
+      ...t,
+      hasImg: !!t.img,
+      noImg: !t.img,
+      tabStyle: i === s.heroTab ? activeStyle : inactiveStyle,
+      select: () => this.setState({ heroTab: i }),
+    }));
+    const heroActive = heroTabsView[s.heroTab];
+
+    const fuerteStyle = 'display:block;padding:24px;border:2px solid #211D18;text-decoration:none;color:#211D18;background:#F3EFE7';
+    const normalStyle = 'display:block;padding:24px;border:1px solid rgba(33,29,24,.25);text-decoration:none;color:#211D18;background:#F3EFE7';
+    const servicios = this.serviciosData.map(sv => ({ ...sv, cardStyle: sv.fuerte ? fuerteStyle : normalStyle }));
+
+    const faqView = this.faqData.map((f, i) => ({
+      ...f,
+      bodyStyle: s.faqOpen === i ? 'display:block;padding:0 0 18px' : 'display:none',
+      iconLabel: s.faqOpen === i ? '−' : '+',
+      toggle: () => this.setState(st => ({ faqOpen: st.faqOpen === i ? null : i })),
+    }));
+
+    return {
+      heroTabsView, heroActive,
+      espacios: this.espaciosData,
+      servicios,
+      obras: this.obrasData,
+      muestrario: this.muestrarioData,
+      modelos: this.modelosData,
+      faqView,
+      sizeH1: s.isMobile ? '46px' : '64px',
+      sizeH2: s.isMobile ? '26px' : '34px',
+      navDisplay: s.isMobile ? 'none' : 'flex',
+      burgerDisplay: s.isMobile ? 'flex' : 'none',
+      mobilePanelStyle: (s.isMobile && s.menuOpen) ? 'display:flex' : 'display:none',
+      toggleMenu: () => this.setState(st => ({ menuOpen: !st.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      barraMovilStyle: s.isMobile ? 'display:flex' : 'display:none',
+      cookiesStyle: s.cookiesVisible ? 'display:flex' : 'display:none',
+      acceptCookies: () => this.setState({ cookiesVisible: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

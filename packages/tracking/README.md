@@ -14,6 +14,9 @@ src/
   attribution.ts        createAttributionTracker — click-id/UTM capture,
                          first-touch cookie promotion, submit-time read
   tracker-cookies.ts    createTrackerCookieCleanup — GA/Meta cookie wipe
+  click-ids.ts           isClickIdParam / redactClickIdsUnlessConsented —
+                         GDPR consent gate for click ids, shared by the
+                         client form and the server action
   server.ts             ("@site/tracking/server") Meta CAPI — secrets only
                          via @site/config/server
 ```

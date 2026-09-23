@@ -2,6 +2,7 @@
 
 import { startTransition, useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
 import Link from 'next/link'
+import { isClickIdParam } from '@site/tracking'
 import { enviarPresupuesto, type EstadoEnvio } from '@/app/presupuesto/actions'
 import { readConsentStatus } from '@/lib/consent-status'
 import { ATTRIBUTION_PARAMS, CLICK_ID_PARAMS, getAttributionForSubmit } from '@/lib/attribution'
@@ -81,7 +82,7 @@ export default function FormularioPresupuesto({
       // GDPR: click identifiers (gclid/gbraid/wbraid/fbclid) never leave the browser
       // without marketing consent. utm_* is non-identifying campaign info and is
       // still sent (see the matching server-side drop in app/presupuesto/actions.ts).
-      if (marketingConsent !== 'aceptado' && (CLICK_ID_PARAMS as readonly string[]).includes(key)) continue
+      if (marketingConsent !== 'aceptado' && isClickIdParam(key, CLICK_ID_PARAMS)) continue
       const value = attribution[key]
       if (value) datos.set(key, value)
     }

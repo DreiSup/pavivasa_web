@@ -2,11 +2,11 @@
  * legacy adapter, delete when the new design consumes @site/* directly
  *
  * Same Spanish API and same call semantics as before this migration, now
- * delegating to `@site/tracking`'s `trackEvent`. This module keeps the
- * `Window.gtag`/`Window.fbq` ambient typing so components that call
- * `window.gtag?.`/`window.fbq?.` directly (`Consentimiento.tsx`) keep
- * typechecking without importing `@site/tracking` themselves — see
- * `@site/tracking`'s `events.ts` for the same `declare global`.
+ * delegating to `@site/tracking`'s `trackEvent` — see its `events.ts` for
+ * the `Window.gtag`/`Window.fbq` ambient typing (no component here calls
+ * `window.gtag`/`window.fbq` directly any more; the one that used to,
+ * `Consentimiento.tsx`, now calls `@site/tracking`'s own
+ * `denyConsentUpdate`/script builders instead).
  */
 import { trackEvent } from '@site/tracking'
 import { sitio } from './config'

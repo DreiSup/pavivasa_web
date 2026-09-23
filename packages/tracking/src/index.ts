@@ -17,3 +17,5 @@ export { createAttributionTracker, DEFAULT_ATTRIBUTION_COOKIE, DEFAULT_ATTRIBUTI
 export type { AttributionData, AttributionTrackerConfig } from './attribution.ts'
 
 export { createTrackerCookieCleanup, DEFAULT_TRACKER_COOKIE_PREFIXES } from './tracker-cookies.ts'
+
+export { isClickIdParam, redactClickIdsUnlessConsented } from './click-ids.ts'

@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { cookies, headers } from 'next/headers'
 import { serverEnv } from '@site/config/server'
+import { redactClickIdsUnlessConsented } from '@site/tracking'
 import { enviarEventoCAPI } from '@/lib/meta-capi'
 import { nap, sitio } from '@/lib/config'
 import { NOMBRES_ESPACIOS } from '@/content/home'
@@ -184,10 +185,12 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
   // a tampered client request submits them anyway (the primary gate is client-side,
   // see FormularioPresupuesto.tsx).
   const marketingConsentGranted = marketingConsent === 'aceptado'
-  const gclidSeguro = marketingConsentGranted ? gclid : ''
-  const gbraidSeguro = marketingConsentGranted ? gbraid : ''
-  const wbraidSeguro = marketingConsentGranted ? wbraid : ''
-  const fbclidSeguro = marketingConsentGranted ? fbclid : ''
+  const {
+    gclid: gclidSeguro,
+    gbraid: gbraidSeguro,
+    wbraid: wbraidSeguro,
+    fbclid: fbclidSeguro,
+  } = redactClickIdsUnlessConsented({ gclid, gbraid, wbraid, fbclid }, marketingConsentGranted)
 
   // "Origen" block for the email/Telegram notice: only the attribution fields present.
   const attributionLine = [

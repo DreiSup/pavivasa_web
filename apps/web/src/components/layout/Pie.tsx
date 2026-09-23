@@ -34,7 +34,7 @@ export default function Pie() {
         <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-8 md:gap-12 md:pb-12 md:border-b md:border-sobre-tinta/[.16]">
           <div className="flex flex-col gap-4 md:gap-5">
             <Logo className="!text-26" />
-            <address className="not-italic flex flex-col gap-2 font-mono text-14 tracking-[0.02em] text-sobre-tinta/70">
+            <address className="not-italic flex flex-col gap-2 font-sans text-14 text-sobre-tinta/70">
               <span>{nap.direccionCompleta}</span>
               <a href={nap.telefonoHref} className={enlacePie}>
                 {nap.telefonoInternacional}
@@ -68,18 +68,6 @@ export default function Pie() {
             </button>
           </nav>
 
-          <div className="flex flex-col items-center justify-center">
-            <div
-              role="img"
-              aria-label="Logotipos pendientes: Kit Digital"
-              className="w-40 h-12 bg-sobre-tinta/8 bg-[repeating-linear-gradient(135deg,rgba(246,241,232,.08)_0px,rgba(246,241,232,.08)_1px,transparent_1px,transparent_12px)] flex items-center justify-center"
-            >
-              <span className="font-mono text-d-10 uppercase text-sobre-tinta/50 text-center px-2">
-                Logos Kit Digital · pendiente
-              </span>
-            </div>
-          </div>
-
           <nav aria-label="Empresa" className="flex flex-col gap-[10px] md:gap-3">
             <Rotulo className="md:mb-1">Empresa</Rotulo>
             {empresa.map((e) => (
@@ -94,6 +82,18 @@ export default function Pie() {
               </a>
             ))}
           </nav>
+
+          <div className="flex flex-col items-center justify-center">
+            <div
+              role="img"
+              aria-label="Logotipos pendientes: Kit Digital"
+              className="w-40 h-12 bg-sobre-tinta/8 bg-[repeating-linear-gradient(135deg,rgba(246,241,232,.08)_0px,rgba(246,241,232,.08)_1px,transparent_1px,transparent_12px)] flex items-center justify-center"
+            >
+              <span className="font-mono text-d-10 uppercase text-sobre-tinta/50 text-center px-2">
+                Logos Kit Digital · pendiente
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col gap-[10px] pt-6 border-t border-sobre-tinta/[.16] font-mono text-12 tracking-[0.02em] text-sobre-tinta/60">

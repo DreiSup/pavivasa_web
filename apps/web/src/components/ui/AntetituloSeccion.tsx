@@ -1,24 +1,27 @@
-/** Antetítulo de sección: mono en versalitas con una línea de 20 px delante. */
+/** Antetítulo de sección: mono en versalitas. Por defecto sin línea; agregar conLinea para mostrarla. */
 export default function AntetituloSeccion({
   children,
   sobreOscuro,
   sinLinea,
+  conLinea,
   className = '',
 }: {
   children: React.ReactNode
   sobreOscuro?: boolean
-  /** Sin la línea de 20 px (en fondos oscuros y en fichas). */
+  /** No-op: mantenido por compatibilidad hacia atrás. */
   sinLinea?: boolean
+  /** Mostrar la línea de 20 px delante. */
+  conLinea?: boolean
   className?: string
 }) {
-  const conLinea = !sinLinea && !sobreOscuro
+  const mostrarLinea = conLinea
   return (
     <p
       className={`inline-flex items-center gap-[10px] font-mono text-d-12 font-bold tracking-[0.12em] uppercase mb-2.5 ${
         sobreOscuro ? 'text-sobre-tinta/60' : 'text-acero'
       } ${className}`}
     >
-      {conLinea ? <span aria-hidden="true" className="block w-5 h-[2px] bg-acero shrink-0" /> : null}
+      {mostrarLinea ? <span aria-hidden="true" className="block w-5 h-[2px] bg-acero shrink-0" /> : null}
       <span>{children}</span>
     </p>
   )

@@ -8,18 +8,20 @@ import FormularioPresupuesto from '@/components/secciones/FormularioPresupuesto'
  */
 export default function SeccionFormularioHome() {
   return (
-    <Seccion id="formulario" className="bg-fondo-alt" interior="flex flex-col max-w-[640px]">
-      <div className="flex flex-col gap-3 md:gap-4 mb-6">
-        <AntetituloSeccion>Sin compromiso</AntetituloSeccion>
-        <h2 className="font-display font-bold text-34 md:text-64 leading-[1.05] md:leading-none">
-          Pide tu presupuesto
-        </h2>
-        <p className="text-16 text-tinta-media">
-          Te llamamos para concretar los detalles de tu pavimento.
-        </p>
-      </div>
+    <Seccion id="formulario" className="bg-fondo-alt" interior="flex flex-col">
+      <div className="w-full max-w-[640px] mx-auto flex flex-col">
+        <div className="flex flex-col gap-3 md:gap-4 mb-6">
+          <AntetituloSeccion>Sin compromiso</AntetituloSeccion>
+          <h2 className="font-display font-bold text-26 md:text-34 leading-[1.1]">
+            Pide tu presupuesto
+          </h2>
+          <p className="text-16 text-tinta-media">
+            Te llamamos para concretar los detalles de tu pavimento.
+          </p>
+        </div>
 
-      <FormularioPresupuesto variante="corto" />
+        <FormularioPresupuesto variante="corto" sinCaja />
+      </div>
     </Seccion>
   )
 }

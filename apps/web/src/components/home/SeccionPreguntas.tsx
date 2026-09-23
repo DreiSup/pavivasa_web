@@ -9,15 +9,16 @@ import { FAQ_HOME } from '@/content/home'
  */
 export default function SeccionPreguntas() {
   return (
-    <Seccion interior="flex flex-col max-w-[800px]">
-      <div className="flex flex-col gap-3 md:gap-4 mb-6">
-        <AntetituloSeccion>Preguntas frecuentes</AntetituloSeccion>
-        <h2 className="font-display font-bold text-34 md:text-64 leading-[1.05] md:leading-none">
-          ¿Tienes dudas?
-        </h2>
-      </div>
+    <Seccion interior="flex flex-col">
+      <div className="w-full max-w-[800px] mx-auto flex flex-col">
+        <div className="flex flex-col gap-3 md:gap-4 mb-6">
+          <AntetituloSeccion>Preguntas frecuentes</AntetituloSeccion>
+          <h2 className="font-display font-bold text-26 md:text-34 leading-[1.1]">
+            ¿Tienes dudas?
+          </h2>
+        </div>
 
-      <div className="flex flex-col">
+        <div className="flex flex-col">
         {FAQ_HOME.map((item, index) => (
           <details
             key={index}
@@ -54,6 +55,7 @@ export default function SeccionPreguntas() {
             </div>
           </details>
         ))}
+        </div>
       </div>
     </Seccion>
   )

@@ -62,7 +62,7 @@ export default function HeroPestanas({ pestanas }: { pestanas: ResolvedHomeConte
             <span className="font-mono text-12 tracking-[0.08em] text-sobre-tinta/65">Expertos en pavimentos de hormigón</span>
           </div>
 
-          <h1 className="font-display font-extrabold text-46 md:text-64 leading-[0.98] md:leading-[0.95] text-balance max-w-[16ch] md:max-w-none">
+          <h1 className="font-display font-extrabold text-46 md:text-64 leading-[0.98] md:leading-[0.95] text-balance max-w-[16ch]">
             {tabActual.title}
           </h1>
 

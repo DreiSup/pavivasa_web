@@ -5,16 +5,20 @@ import Seccion from '@/components/ui/Seccion'
 
 export default function SeccionServicios() {
   const servicios = getServices('es')
+  const serviciosOrdenados = [...servicios].sort((a, b) => {
+    if (a.flagship === b.flagship) return 0
+    return a.flagship ? -1 : 1
+  })
 
   return (
     <Seccion id="servicios" className="bg-fondo-alt" interior="flex flex-col gap-5 md:gap-10">
       <div className="flex flex-col gap-3 md:gap-4">
         <AntetituloSeccion>Lo que hacemos</AntetituloSeccion>
-        <h2 className="font-display font-bold text-34 md:text-64 leading-[1.05] md:leading-none">Servicios</h2>
+        <h2 className="font-display font-bold text-26 md:text-34 leading-[1.1]">Servicios</h2>
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-        {servicios.map((servicio) => (
+        {serviciosOrdenados.map((servicio) => (
           <Link
             key={servicio.id}
             href={`/${servicio.slug}/`}
@@ -24,7 +28,7 @@ export default function SeccionServicios() {
                 : 'bg-fondo border border-tinta/[.25] hover:border-pigmento hover:text-pigmento'
             }`}
           >
-            <div className="font-display font-bold text-20 leading-[1.2] group-hover:inherit">
+            <div className="font-sans font-bold text-20 leading-[1.2] group-hover:inherit">
               {servicio.name}
             </div>
             <p className="text-14 text-tinta-media leading-[1.5] flex-1 group-hover:text-inherit">

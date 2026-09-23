@@ -98,30 +98,32 @@ export default function Consentimiento() {
       {bannerOpen ? (
         <section
           aria-label="Aviso de cookies"
-          className="fixed z-[25] left-0 right-0 bottom-barra-movil md:left-lat-desktop md:right-auto md:bottom-6 md:w-[640px] bg-tinta text-sobre-tinta px-lat-movil py-4 md:px-6 md:py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-6"
+          className="fixed z-[25] left-0 right-0 bottom-barra-movil md:bottom-0 md:left-0 md:right-0 md:w-auto bg-tinta text-sobre-tinta px-lat-movil py-4 md:px-[20px] md:py-4"
         >
-          <p className="text-14 text-sobre-tinta">
-            Usamos cookies propias para que la web funcione y, si aceptas, cookies de medición y publicidad de
-            Google y Meta.{' '}
-            <Link href="/politica-de-cookies/" className="text-sobre-tinta">
-              Política de cookies
-            </Link>
-          </p>
-          <div className="grid grid-cols-2 gap-2 md:flex md:shrink-0">
-            <button
-              type="button"
-              onClick={() => decidir('rechazado')}
-              className={`${boton} border border-sobre-tinta text-sobre-tinta hover:border-pigmento hover:text-pigmento`}
-            >
-              Rechazar
-            </button>
-            <button
-              type="button"
-              onClick={() => decidir('aceptado')}
-              className={`${boton} bg-pigmento text-sobre-tinta hover:bg-pigmento-hover`}
-            >
-              Aceptar
-            </button>
+          <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
+            <p className="text-14 text-sobre-tinta">
+              Usamos cookies propias para que la web funcione y, si aceptas, cookies de medición y publicidad de
+              Google y Meta.{' '}
+              <Link href="/politica-de-cookies/" className="text-sobre-tinta">
+                Política de cookies
+              </Link>
+            </p>
+            <div className="grid grid-cols-2 gap-2 md:flex md:shrink-0">
+              <button
+                type="button"
+                onClick={() => decidir('rechazado')}
+                className={`${boton} border border-sobre-tinta text-sobre-tinta hover:border-pigmento hover:text-pigmento`}
+              >
+                Rechazar
+              </button>
+              <button
+                type="button"
+                onClick={() => decidir('aceptado')}
+                className={`${boton} bg-pigmento text-sobre-tinta hover:bg-pigmento-hover`}
+              >
+                Aceptar
+              </button>
+            </div>
           </div>
         </section>
       ) : null}

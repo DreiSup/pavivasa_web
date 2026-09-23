@@ -11,7 +11,7 @@ export default function SeccionEspacios() {
     <Seccion interior="flex flex-col gap-6 md:gap-10">
       <div className="flex flex-col gap-3 md:gap-4">
         <AntetituloSeccion>¿Por dónde empezamos?</AntetituloSeccion>
-        <h2 className="font-display font-bold text-34 md:text-64 leading-[1.05] md:leading-none">¿Qué quieres pavimentar?</h2>
+        <h2 className="font-display font-bold text-26 md:text-34 leading-[1.1]">¿Qué quieres pavimentar?</h2>
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">

@@ -83,13 +83,14 @@ export default function Cabecera() {
           <a href={nap.telefonoHref} className="font-sans text-14 font-bold text-tinta no-underline hover:text-pigmento">
             {nap.telefono}
           </a>
-          <Link
-            href="/presupuesto/"
-            className="h-11 px-[22px] bg-pigmento hover:bg-pigmento-hover text-sobre-tinta text-14 font-bold uppercase tracking-[.03em] inline-flex items-center no-underline whitespace-nowrap motion-reduce:transition-none"
-          >
-            Presupuesto
-          </Link>
         </div>
+
+        <Link
+          href="/presupuesto/"
+          className="h-11 px-[22px] bg-pigmento hover:bg-pigmento-hover text-sobre-tinta text-14 font-bold uppercase tracking-[.03em] inline-flex items-center no-underline whitespace-nowrap motion-reduce:transition-none shrink-0"
+        >
+          Presupuesto
+        </Link>
 
         <button
           ref={burgerRef}

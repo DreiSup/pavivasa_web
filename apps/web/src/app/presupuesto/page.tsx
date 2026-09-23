@@ -90,9 +90,15 @@ export default function Presupuesto() {
                 claims.anios,
                 '10 años de garantía',
                 'Más del 30 % repiten',
-                <span key="wa" className="opacity-70">
-                  WhatsApp · [pendiente]
-                </span>,
+                nap.whatsappHref ? (
+                  <a key="wa" href={nap.whatsappHref} className="text-tinta">
+                    WhatsApp
+                  </a>
+                ) : (
+                  <span key="wa" className="opacity-70">
+                    WhatsApp · [pendiente]
+                  </span>
+                ),
               ]}
             />
           </div>

@@ -38,10 +38,13 @@ const claseChip =
 export default function FormularioPresupuesto({
   variante = 'completo',
   espacioInicial,
+  sinCaja = false,
 }: {
   variante?: 'completo' | 'corto'
   /** Viene de las tarjetas "¿Qué quieres pavimentar?" (/presupuesto/?espacio=…). */
   espacioInicial?: string
+  /** Si true, no envuelve el formulario en card (bg/border/padding). */
+  sinCaja?: boolean
 }) {
   const [estado, accion, enviando] = useActionState(enviarPresupuesto, estadoInicial)
   const telefonoRef = useRef<HTMLInputElement>(null)
@@ -117,10 +120,14 @@ export default function FormularioPresupuesto({
       r?.nombre ? `Contacto · ${r.nombre}` : null,
     ].filter((l): l is string => Boolean(l))
 
+    const claseSuccess = sinCaja
+      ? 'flex flex-col gap-4 md:gap-5'
+      : `flex flex-col ${completo ? 'gap-5 md:gap-6 p-5 md:p-10 bg-fondo-alt' : 'gap-4 p-5 md:p-8 bg-fondo'}`
+
     return (
       <div
         role="status"
-        className={`flex flex-col ${completo ? 'gap-5 md:gap-6 p-5 md:p-10 bg-fondo-alt' : 'gap-4 p-5 md:p-8 bg-fondo'}`}
+        className={claseSuccess}
       >
         <AntetituloSeccion>Solicitud enviada</AntetituloSeccion>
         <h2 className={`font-display font-extrabold leading-[0.98] ${completo ? 'text-46 md:text-64' : 'text-46'}`}>
@@ -173,17 +180,19 @@ export default function FormularioPresupuesto({
     </div>
   )
 
+  const claseFormulario = sinCaja
+    ? 'grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-6 md:gap-y-5'
+    : completo
+      ? 'grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-6 md:gap-y-5 p-5 md:p-10 bg-fondo-alt'
+      : 'grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-6 md:gap-y-5 p-5 md:p-8 bg-fondo'
+
   return (
     <form
       action={accion}
       onSubmit={alEnviar}
       aria-busy={enviando}
       noValidate
-      className={
-        completo
-          ? 'grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-6 md:gap-y-5 p-5 md:p-10 bg-fondo-alt'
-          : 'flex flex-col gap-4 md:gap-5 p-5 md:p-8 bg-fondo'
-      }
+      className={claseFormulario}
     >
       {estado.errores.form ? (
         <p className="md:col-span-2 font-sans text-14 font-semibold text-error" role="alert">
@@ -196,7 +205,7 @@ export default function FormularioPresupuesto({
       <input type="hidden" name="evento_id" value={eventoId} />
       <input type="hidden" name="variante" value={variante} />
 
-      <Campo etiqueta="Nombre y apellidos" htmlFor={`${variante}-nombre`} obligatorio error={estado.errores.nombre}>
+      <Campo etiqueta="Nombre y apellidos" htmlFor={`${variante}-nombre`} obligatorio error={estado.errores.nombre} className={!completo ? 'md:col-span-2' : ''}>
         <input
           id={`${variante}-nombre`}
           name="nombre"
@@ -223,6 +232,20 @@ export default function FormularioPresupuesto({
           className={claseInputMono}
         />
       </Campo>
+      {!completo ? (
+        <Campo etiqueta="Municipio" htmlFor={`${variante}-municipio`} error={estado.errores.municipio}>
+          <input
+            id={`${variante}-municipio`}
+            name="municipio"
+            type="text"
+            autoComplete="address-level2"
+            placeholder="Sollana"
+            readOnly={enviando}
+            aria-invalid={Boolean(estado.errores.municipio)}
+            className={claseInput}
+          />
+        </Campo>
+      ) : null}
 
       {completo ? (
         <>

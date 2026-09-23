@@ -1,8 +1,8 @@
 import DatoPendiente from '../datos/DatoPendiente'
 
 const datos = [
-  { cifra: '+15', texto: 'De oficio', textoMovil: 'De oficio' },
-  { cifra: '10', texto: 'De garantía con mantenimiento', textoMovil: 'De garantía' },
+  { cifra: '+15 AÑOS', texto: 'De oficio', textoMovil: 'De oficio' },
+  { cifra: '10 AÑOS', texto: 'De garantía con mantenimiento', textoMovil: 'De garantía' },
   { cifra: null, texto: 'Cobertura declarada', textoMovil: 'Cobertura' },
   { cifra: '+30%', texto: 'De clientes repiten', textoMovil: 'De clientes repiten' },
 ]
@@ -12,7 +12,7 @@ export default function BarraConfianza() {
   return (
     <ul
       aria-label="Datos de la empresa"
-      className="list-none m-0 p-0 grid grid-cols-2 md:grid-cols-4 md:auto-cols-fr bg-acero text-sobre-tinta"
+      className="list-none m-0 p-0 grid grid-cols-1 md:grid-cols-4 md:auto-cols-fr bg-acero text-sobre-tinta"
     >
       {datos.map((d) => (
         <li key={d.cifra ?? d.texto} className="flex flex-col gap-1 md:gap-[6px] px-lat-movil py-8 md:px-8 md:py-8">
@@ -24,8 +24,7 @@ export default function BarraConfianza() {
             </span>
           )}
           <span className="font-mono text-d-10 md:text-d-12 uppercase text-sobre-tinta/75">
-            <span className="md:hidden">{d.textoMovil}</span>
-            <span className="hidden md:inline">{d.texto}</span>
+            {d.texto}
           </span>
         </li>
       ))}

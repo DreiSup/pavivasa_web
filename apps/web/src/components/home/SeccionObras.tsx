@@ -14,7 +14,7 @@ export default function SeccionObras() {
     <Seccion interior="flex flex-col gap-6 md:gap-10">
       <div className="flex flex-col gap-3 md:gap-4">
         <AntetituloSeccion>Obra real</AntetituloSeccion>
-        <h2 className="font-display font-bold text-34 md:text-64 leading-[1.05] md:leading-none">
+        <h2 className="font-display font-bold text-26 md:text-34 leading-[1.1]">
           Obras destacadas
         </h2>
       </div>

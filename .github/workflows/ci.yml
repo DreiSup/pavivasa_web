@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  NEXT_TELEMETRY_DISABLED: '1'
+  COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
+  NEXT_PUBLIC_SITE_URL: https://pavivasa.com
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # No `version:` input on purpose — this reads the pinned version from
+      # this repo's own `packageManager` field (pnpm@9.15.9). Passing both
+      # and letting them disagree is a hard error on pnpm/action-setup.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate content (Zod)
+        run: pnpm content:validate
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm --filter web build
+
+      # Postbuild verifiers — sitemap/links/redirects/JSON-LD/metadata/
+      # robots/images/CTAs against the build above. See scripts/verify/README.md.
+      - name: Run postbuild verifiers
+        run: pnpm verify
+
+      # Secrets-leak check needs its OWN build made with fake, CI-only
+      # sentinel values for the server-only env vars (never real secrets —
+      # see scripts/verify/secrets-scan.mjs's own comment on why). This
+      # build is intentionally separate from the one `verify` just checked.
+      - name: Build with sentinel secrets
+        env:
+          EMAIL_DESTINO: sentinel-ci-email-destino@example.invalid
+          RESEND_API_KEY: sentinel-ci-resend-api-key-000000
+          TELEGRAM_BOT_TOKEN: sentinel-ci-telegram-bot-token-000000
+          TELEGRAM_CHAT_ID: sentinel-ci-telegram-chat-id-000000
+          META_CAPI_ACCESS_TOKEN: sentinel-ci-meta-capi-access-token-000000
+        run: pnpm --filter web build
+
+      - name: Check for secret leaks into client bundle
+        env:
+          EMAIL_DESTINO: sentinel-ci-email-destino@example.invalid
+          RESEND_API_KEY: sentinel-ci-resend-api-key-000000
+          TELEGRAM_BOT_TOKEN: sentinel-ci-telegram-bot-token-000000
+          TELEGRAM_CHAT_ID: sentinel-ci-telegram-chat-id-000000
+          META_CAPI_ACCESS_TOKEN: sentinel-ci-meta-capi-access-token-000000
+        run: pnpm run verify:secrets
+
+# No deploy step here on purpose — Vercel deploys itself from its own Git
+# integration (§9 of arquitectura-plantilla-monorepo.md). This workflow only
+# REPORTS a pass/fail status on the commit; Vercel's Git integration does not
+# wait for it by default. To make a red run here actually block promotion,
+# either enable "Wait for CI to pass before deploying" in the Vercel
+# project's Git settings, or require this job as a GitHub branch-protection
+# check on the deploy branch. See the phase report's questions.

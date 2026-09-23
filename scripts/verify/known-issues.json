@@ -1,0 +1,23 @@
+{
+  "$comment": "Baseline allowlist for scripts/verify. Public output must stay byte-identical during the current monorepo-migration phase — any pre-existing issue found here is NOT fixed by the verifier or by this file, only documented so CI stays green today. Any NEW issue (a different check/code/route triple) still fails the build. Every entry needs a self-contained `reason` (don't reference other entries or files outside this repo). Remove an entry once the underlying issue is actually fixed — a run that never re-triggers it is reported as 'stale' by the verifier.",
+  "entries": [
+    {
+      "check": "metadata",
+      "code": "duplicate-title",
+      "route": "/proyectos/hormigon-impreso-calpe-2/",
+      "reason": "Pre-existing content data: packages/content/src/data/projects.ts has two distinct real projects in Calpe (slugs \"hormigon-impreso-calpe\" and \"hormigon-impreso-calpe-2\") whose title-building fields produce the exact same generated <title>. Public output must stay byte-identical during this migration phase, so not fixed here; belongs in a content-data task (disambiguate the title, e.g. by district)."
+    },
+    {
+      "check": "metadata",
+      "code": "duplicate-title",
+      "route": "/proyectos/hormigon-pulido-benissa/",
+      "reason": "Pre-existing content data bug in packages/content/src/data/projects.ts: the project with slug \"hormigon-pulido-alicante\" has `town: 'Benissa'` (a different real job there, district \"Montemar la Viña\" vs. the other Benissa project's \"Monte Mar\"), so its generated title/description collide with the actual \"hormigon-pulido-benissa\" project. The \"-alicante\" slug itself is a public URL (a WordPress-era 301 in next.config.ts targets it), so it can't just be renamed to match the town — this needs a real content-data fix (retitle using the district, not the town), done separately; not fixed here since public output must stay byte-identical during this migration phase."
+    },
+    {
+      "check": "secrets",
+      "code": "name-leak",
+      "route": "EMAIL_DESTINO",
+      "reason": "apps/web/src/lib/config/nap.ts (legacy adapter, client-reachable) reads process.env.EMAIL_DESTINO directly, so the bare variable NAME appears as a property-access string in a client chunk. Not a real confidentiality issue: EMAIL_DESTINO's value already renders as plain, visible contact info on every page (apps/web/src/components/layout/Pie.tsx's footer, /presupuesto, the legal pages) and in the LocalBusiness JSON-LD by design (arquitectura-plantilla-monorepo.md §9) — it is the site's own public contact address, not a secret, even though it's grouped with the real secrets (RESEND_API_KEY etc.) in packages/config/src/server-env.schema.ts. Only the NAME leaks into .next/static, never a value. Worth splitting EMAIL_DESTINO out of ServerEnvSchema in a later task so this check reflects that; not done here (frontend/lib frozen for this migration phase)."
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # CLAUDE.md — Pavivasa
 
+**Lee primero `ARCHITECTURE.md`** para el contexto general del repo (mapa, capas, paquetes, rutas, flujos, contratos externos) antes de tocar nada aquí.
+
 Monorepo pnpm + Turborepo. Web de Pavivasa en Next.js 15 (App Router) +
 Tailwind, en `apps/web`, sobre paquetes `@site/*` (`content`, `seo`,
 `tracking`, `config`). Ver `README.md` para estructura y comandos, y

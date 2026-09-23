@@ -1,11 +1,15 @@
+/**
+ * legacy adapter, delete when the new design consumes @site/* directly
+ *
+ * Same Spanish API and same call semantics as before this migration, now
+ * delegating to `@site/tracking`'s `trackEvent`. This module keeps the
+ * `Window.gtag`/`Window.fbq` ambient typing so components that call
+ * `window.gtag?.`/`window.fbq?.` directly (`Consentimiento.tsx`) keep
+ * typechecking without importing `@site/tracking` themselves — see
+ * `@site/tracking`'s `events.ts` for the same `declare global`.
+ */
+import { trackEvent } from '@site/tracking'
 import { sitio } from './config'
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void
-    fbq?: (...args: unknown[]) => void
-  }
-}
 
 type OpcionesEvento = {
   params?: Record<string, unknown>
@@ -22,21 +26,13 @@ type OpcionesEvento = {
  * No-op seguro si el script no cargó (sin consentimiento o sin ID).
  */
 export function registrarEvento(nombre: string, opciones?: OpcionesEvento) {
-  if (typeof window === 'undefined') return
-
-  window.gtag?.('event', nombre, opciones?.params)
-
-  if (opciones?.conversionAds && sitio.googleAdsId && sitio.googleAdsLeadLabel) {
-    window.gtag?.('event', 'conversion', {
-      send_to: `${sitio.googleAdsId}/${sitio.googleAdsLeadLabel}`,
-    })
-  }
-
-  const evento = opciones?.metaEstandar ?? nombre
-  const metodo = opciones?.metaEstandar ? 'track' : 'trackCustom'
-  if (opciones?.metaEventId) {
-    window.fbq?.(metodo, evento, opciones?.params ?? {}, { eventID: opciones.metaEventId })
-  } else {
-    window.fbq?.(metodo, evento, opciones?.params)
-  }
+  trackEvent(nombre, {
+    params: opciones?.params,
+    metaStandardEvent: opciones?.metaEstandar,
+    metaEventId: opciones?.metaEventId,
+    adsConversion:
+      opciones?.conversionAds && sitio.googleAdsId && sitio.googleAdsLeadLabel
+        ? { id: sitio.googleAdsId, label: sitio.googleAdsLeadLabel }
+        : undefined,
+  })
 }

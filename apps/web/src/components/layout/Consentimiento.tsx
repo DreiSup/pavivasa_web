@@ -3,8 +3,9 @@
 import Link from 'next/link'
 import Script from 'next/script'
 import { useEffect, useState } from 'react'
+import { buildConsentBootstrapScript, buildMetaPixelScript, denyConsentUpdate } from '@site/tracking'
 import { sitio } from '@/lib/config'
-import { CONSENT_STORAGE_KEY, readConsentStatus } from '@/lib/consent-status'
+import { readConsentStatus, writeConsentStatus } from '@/lib/consent-status'
 import {
   clearAttributionCookie,
   deleteTrackerCookies,
@@ -45,11 +46,7 @@ export default function Consentimiento() {
     // storage: storage can already hold a different value (another tab withdrew, or
     // this tab's own `setItem` never landed) while these scripts keep running granted.
     const wasAccepted = estado === 'aceptado'
-    try {
-      window.localStorage.setItem(CONSENT_STORAGE_KEY, valor)
-    } catch {
-      // Sin almacenamiento: la decisión vale para esta visita.
-    }
+    writeConsentStatus(valor)
     setEstado(valor)
     setBannerOpen(false)
 
@@ -67,13 +64,7 @@ export default function Consentimiento() {
       // Real withdrawal: gtag.js/fbevents.js are already loaded in this tab and
       // can't be "un-injected", so tell them to stop, drop the cookies they already
       // wrote, and reload to drop everything else.
-      window.gtag?.('consent', 'update', {
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-        analytics_storage: 'denied',
-      })
-      window.fbq?.('consent', 'revoke')
+      denyConsentUpdate()
       deleteTrackerCookies()
       window.location.reload()
     }
@@ -92,23 +83,7 @@ export default function Consentimiento() {
           {/* Stub (consent default/update + gtag('js'/'config')) must run before the external
               gtag/js library loads, so it appears first here. */}
           <Script id="gtag-init" strategy="afterInteractive">
-            {`window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('consent', 'default', {
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied',
-                analytics_storage: 'denied',
-                wait_for_update: 500
-              });
-              gtag('consent', 'update', {
-                ad_storage: 'granted',
-                ad_user_data: 'granted',
-                ad_personalization: 'granted',
-                analytics_storage: 'granted'
-              });
-              gtag('js', new Date());
-              ${configs.map((id) => `gtag('config', '${id}');`).join('\n')}`}
+            {buildConsentBootstrapScript(configs)}
           </Script>
           <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`} strategy="afterInteractive" />
         </>
@@ -116,16 +91,7 @@ export default function Consentimiento() {
 
       {estado === 'aceptado' && sitio.metaPixelId ? (
         <Script id="meta-pixel" strategy="afterInteractive">
-          {`!function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${sitio.metaPixelId}');
-            fbq('track', 'PageView');`}
+          {buildMetaPixelScript(sitio.metaPixelId)}
         </Script>
       ) : null}
 

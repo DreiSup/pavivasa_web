@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { buildSitemapEntries } from '@site/seo'
 import { sitio } from '@/lib/config'
 import { articulos, proyectos } from '@/lib/datos'
 import { ORDEN_SERVICIOS, RUTA_SERVICIO } from '@/lib/tipos'
@@ -15,12 +16,12 @@ const rutasEstaticas = ['/', '/proyectos/', '/empresa/', '/presupuesto/', '/blog
 const SIN_INDEXAR = ['hormigon-desactivado-piedra-vista']
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    ...rutasEstaticas.map((ruta) => ({ url: `${sitio.url}${ruta}` })),
-    ...ORDEN_SERVICIOS.map((id) => ({ url: `${sitio.url}${RUTA_SERVICIO[id]}` })),
-    ...proyectos.map((p) => ({ url: `${sitio.url}/proyectos/${p.slug}/` })),
-    ...articulos
-      .filter((a) => !SIN_INDEXAR.includes(a.slug))
-      .map((a) => ({ url: `${sitio.url}/blog/${a.slug}/`, lastModified: a.fechaIso })),
-  ]
+  return buildSitemapEntries({
+    siteUrl: sitio.url,
+    staticRoutes: rutasEstaticas,
+    serviceRoutes: ORDEN_SERVICIOS.map((id) => RUTA_SERVICIO[id]),
+    projectSlugs: proyectos.map((p) => p.slug),
+    articles: articulos.map((a) => ({ slug: a.slug, dateIso: a.fechaIso })),
+    noindexSlugs: SIN_INDEXAR,
+  })
 }

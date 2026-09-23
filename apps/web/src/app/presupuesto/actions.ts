@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { cookies, headers } from 'next/headers'
+import { serverEnv } from '@site/config/server'
 import { enviarEventoCAPI } from '@/lib/meta-capi'
 import { nap, sitio } from '@/lib/config'
 import { NOMBRES_ESPACIOS } from '@/content/home'
@@ -109,17 +110,6 @@ function limitePorIp(ip: string) {
 
 function formatearTelefono(t: string) {
   return `${t.slice(0, 3)} ${t.slice(3, 5)} ${t.slice(5, 7)} ${t.slice(7)}`
-}
-
-/**
- * Fallback for `_fbc` when there's no cookie (Meta Pixel blocked, third-party
- * cookies restricted...): rebuilds the same format from the `fbclid` captured
- * on landing. Meta's official format: `fb.<subdomain>.<timestamp_ms>.<fbclid>`.
- */
-function buildFbc(fbclid: string, ts: string): string | undefined {
-  if (!fbclid) return undefined
-  const timestamp = /^\d+$/.test(ts) ? ts : Date.now().toString()
-  return `fb.1.${timestamp}.${fbclid}`
 }
 
 const TELEGRAM_MAX_CHARS = 4096
@@ -242,7 +232,7 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
   // perdido: se devuelve error para que la persona pueda llamar en vez de darlo por hecho.
   let entregado = false
 
-  const apiKey = process.env.RESEND_API_KEY?.trim()
+  const apiKey = serverEnv.RESEND_API_KEY
   if (apiKey) {
     try {
       const respuesta = await fetch('https://api.resend.com/emails', {
@@ -280,8 +270,8 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
   // 6. Aviso por Telegram (si hay credenciales). Cuenta como entrega solo si Telegram
   // confirma con 2xx. La foto solo viaja por email: si el email no salió, el aviso
   // lo dice en vez de dar a entender que está en algún sitio.
-  const telegramToken = process.env.TELEGRAM_BOT_TOKEN?.trim()
-  const telegramChat = process.env.TELEGRAM_CHAT_ID?.trim()
+  const telegramToken = serverEnv.TELEGRAM_BOT_TOKEN
+  const telegramChat = serverEnv.TELEGRAM_CHAT_ID
   if (telegramToken && telegramChat) {
     try {
       const respuesta = await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
@@ -333,9 +323,11 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
       userAgent: listaCabeceras.get('user-agent') ?? '',
       url: `${sitio.url}${sourcePage}`,
       fbp: listaCookies.get('_fbp')?.value,
+      fbc: listaCookies.get('_fbc')?.value,
       // No _fbc cookie (Pixel blocked, third-party cookies restricted...):
-      // rebuild it from the fbclid captured on landing.
-      fbc: listaCookies.get('_fbc')?.value ?? buildFbc(fbclidSeguro, attributionTs),
+      // @site/tracking/server rebuilds it from these two instead.
+      fbclid: fbclidSeguro,
+      atribucionTs: attributionTs,
     })
   }
 

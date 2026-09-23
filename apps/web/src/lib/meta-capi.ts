@@ -1,20 +1,13 @@
-import { createHash } from 'crypto'
-
-import { sitio } from './config'
-
-function hash(valor: string) {
-  return createHash('sha256').update(valor.trim().toLowerCase()).digest('hex')
-}
-
 /**
- * Meta empareja el teléfono en formato E.164 sin el `+` (34 + 9 cifras en España).
- * El formulario guarda solo las 9 cifras nacionales: hashearlas tal cual da un hash
- * que no coincide con ningún usuario, así que el emparejamiento sería del 0 %.
+ * legacy adapter, delete when the new design consumes @site/* directly
+ *
+ * Same Spanish API as before this migration, now delegating to
+ * `@site/tracking/server`'s `sendMetaConversionEvent` (hashing, +34 prefix
+ * rule, `_fbc` fallback and the CAPI request itself all live there now).
+ * Server-only — see `@site/tracking/server`'s own comment.
  */
-function normalizarTelefono(valor: string) {
-  const digitos = valor.replace(/\D/g, '').replace(/^00/, '')
-  return digitos.length === 9 ? `34${digitos}` : digitos
-}
+import { sendMetaConversionEvent } from '@site/tracking/server'
+import { sitio } from './config'
 
 type EventoCAPI = {
   eventoId: string
@@ -25,49 +18,32 @@ type EventoCAPI = {
   url: string
   fbp?: string
   fbc?: string
+  /** Used only when `fbc` is absent, to rebuild it — see `app/presupuesto/actions.ts`. */
+  fbclid?: string
+  atribucionTs?: string
 }
 
 /**
  * Manda el evento Lead a Meta Conversions API, deduplicado con el Pixel del
  * navegador vía el mismo event_id. Sin credenciales, no hace nada y no falla.
+ *
+ * El gate de consentimiento real vive en la llamada (`app/presupuesto/actions.ts`
+ * solo llama a esta función con consentimiento de marketing concedido); aquí se
+ * pasa `consentGranted: true` en consecuencia.
  */
 export async function enviarEventoCAPI(evento: EventoCAPI) {
-  // Reuses lib/config.ts's already-cleaned value (empty/whitespace treated as
-  // unset) instead of reading process.env directly again. This module is
-  // server-only, so a dynamic vs. literal env read makes no difference here —
-  // it's just one source of truth for the pixel id.
-  const pixelId = sitio.metaPixelId
-  const token = process.env.META_CAPI_ACCESS_TOKEN?.trim() || undefined
-  if (!pixelId || !token) return
-
-  const userData: Record<string, unknown> = {
-    ph: [hash(normalizarTelefono(evento.telefono))],
-    client_ip_address: evento.ip,
-    client_user_agent: evento.userAgent,
-  }
-  if (evento.email) userData.em = [hash(evento.email)]
-  if (evento.fbp) userData.fbp = evento.fbp
-  if (evento.fbc) userData.fbc = evento.fbc
-
-  try {
-    await fetch(`https://graph.facebook.com/v21.0/${pixelId}/events?access_token=${token}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        data: [
-          {
-            event_name: 'Lead',
-            event_time: Math.floor(Date.now() / 1000),
-            event_id: evento.eventoId,
-            action_source: 'website',
-            event_source_url: evento.url,
-            user_data: userData,
-          },
-        ],
-      }),
-      signal: AbortSignal.timeout(8000),
-    })
-  } catch {
-    // No bloquea el envío del presupuesto por un fallo de Meta.
-  }
+  await sendMetaConversionEvent({
+    eventId: evento.eventoId,
+    phone: evento.telefono,
+    email: evento.email,
+    ip: evento.ip,
+    userAgent: evento.userAgent,
+    url: evento.url,
+    fbp: evento.fbp,
+    fbc: evento.fbc,
+    fbclid: evento.fbclid,
+    fbclidTimestamp: evento.atribucionTs,
+    pixelId: sitio.metaPixelId,
+    consentGranted: true,
+  })
 }

@@ -13,6 +13,8 @@
   "dependencies": {
     "@site/config": "workspace:*",
     "@site/content": "workspace:*",
+    "@site/seo": "workspace:*",
+    "@site/tracking": "workspace:*",
     "next": "15.5.22",
     "react": "19.0.0",
     "react-dom": "19.0.0",

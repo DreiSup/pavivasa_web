@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname, '../..'),
   // Paquetes del workspace consumidos como fuente TS (sin build propio): que
   // Next los transpile con su propio pipeline, como si fueran de apps/web.
-  transpilePackages: ['@site/content', '@site/config'],
+  transpilePackages: ['@site/content', '@site/config', '@site/seo', '@site/tracking'],
   // Barra final fija: una sola URL canónica por página. No cambiar.
   trailingSlash: true,
   images: {

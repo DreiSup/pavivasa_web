@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react'
 
 /**
- * Clases del control: 48 px, borde tinta-media sobre fondo sobre-tinta, foco 2 px acero,
- * error 2 px rojo (aria-invalid), deshabilitado en fondo-alt.
+ * Clases del control: 48 px, borde 1.5px tinta/30 sobre fondo,
+ * foco pigmento + ring, error rojo (aria-invalid), deshabilitado en tinta/6.
  */
 export const claseInput =
-  'min-h-campo w-full px-[14px] bg-sobre-tinta border border-tinta-media font-sans text-16 text-tinta placeholder:text-tinta-media ' +
-  'focus-visible:outline-none focus-visible:border-2 focus-visible:border-acero focus-visible:px-[13px] ' +
-  'aria-[invalid=true]:border-2 aria-[invalid=true]:border-error aria-[invalid=true]:px-[13px] ' +
-  'disabled:bg-fondo-alt disabled:border-fondo-alt disabled:text-tinta-media read-only:text-tinta-media'
+  'min-h-campo w-full px-[14px] bg-fondo border-[1.5px] border-tinta/30 font-sans text-16 text-tinta placeholder:text-tinta-media ' +
+  'focus-visible:outline-none focus-visible:border-[1.5px] focus-visible:border-pigmento focus-visible:shadow-[0_0_0_3px_rgba(193,68,14,0.18)] focus-visible:px-[14px] ' +
+  'aria-[invalid=true]:border-[1.5px] aria-[invalid=true]:border-error aria-[invalid=true]:px-[14px] ' +
+  'disabled:bg-tinta/6 disabled:border-tinta/14 disabled:text-tinta-media read-only:text-tinta-media'
 
 /** Teléfono, m² y demás datos van en mono. */
 export const claseInputMono = `${claseInput} font-mono text-d-14`
@@ -54,7 +54,7 @@ export default function Campo({
       {children}
       {ayuda ? <p className="font-sans text-12 text-tinta-media">{ayuda}</p> : null}
       {error ? (
-        <p id={`${htmlFor}-error`} className="font-sans text-14 text-error" aria-live="polite">
+        <p id={`${htmlFor}-error`} className="font-mono text-d-12 text-error" aria-live="polite">
           {error}
         </p>
       ) : null}

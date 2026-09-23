@@ -14,7 +14,7 @@ export default function AntetituloSeccion({
   const conLinea = !sinLinea && !sobreOscuro
   return (
     <p
-      className={`inline-flex items-center gap-[10px] font-mono text-d-12 tracking-[0.12em] uppercase ${
+      className={`inline-flex items-center gap-[10px] font-mono text-d-12 font-bold tracking-[0.12em] uppercase mb-2.5 ${
         sobreOscuro ? 'text-sobre-tinta/60' : 'text-acero'
       } ${className}`}
     >

@@ -4,15 +4,15 @@
 
 /* Pavivasa — tokens. Mismos valores que tailwind.config.ts: cambiar en los dos sitios. */
 :root {
-  --fondo: #edefec;
-  --fondo-alt: #dce0db;
-  --tinta: #141a18;
-  --tinta-media: #5a645f;
-  --pigmento: #b2462a;
-  --pigmento-hover: #8f3620;
-  --acero: #45606e;
-  --sobre-tinta: #f2f4f0;
-  --error: #c4161c;
+  --fondo: #f3efe7;
+  --fondo-alt: #e7e0d3;
+  --tinta: #211d18;
+  --tinta-media: #6b6255;
+  --pigmento: #c1440e;
+  --pigmento-hover: #9a3609;
+  --acero: #2f4a52;
+  --sobre-tinta: #f6f1e8;
+  --error: #b3261e;
 
   --cabecera: 72px;
   --cabecera-scroll: 56px;
@@ -95,18 +95,18 @@ button {
 
 /* Casilla de privacidad: cuadrado de 20 px, marca en sobre-tinta */
 .casilla:checked {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M5 10l3.5 3.5L15 7' fill='none' stroke='%23F2F4F0' stroke-width='2'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M5 10l3.5 3.5L15 7' fill='none' stroke='%23F6F1E8' stroke-width='2'/></svg>");
   background-size: 100% 100%;
 }
 
 /* Desplegables de filtro con aspecto de chip: flecha propia, sin la del navegador */
 .selector-chip {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23141A18' stroke-width='1.5'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23211D18' stroke-width='1.5'/></svg>");
   background-repeat: no-repeat;
   background-position: right 14px center;
 }
 .selector-chip:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23F2F4F0' stroke-width='1.5'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23F6F1E8' stroke-width='1.5'/></svg>");
 }
 
 /* Spinner del estado "enviando": borde sin radio, giro lento */

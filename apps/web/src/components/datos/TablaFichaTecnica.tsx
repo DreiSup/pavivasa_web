@@ -41,12 +41,12 @@ export default function TablaFichaTecnica({ columnas, filas }: { columnas: strin
 
       {/* Escritorio: tabla completa */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="w-full border-collapse text-16">
+        <table className="w-full border-collapse text-14">
           <thead>
-            <tr className="border-b border-sobre-tinta/40">
+            <tr className="border-b-2 border-sobre-tinta">
               <th
                 scope="col"
-                className="text-left py-3 pr-4 font-mono text-d-10 tracking-[0.12em] uppercase font-medium text-sobre-tinta/60"
+                className="text-left py-3 pr-4 font-mono text-d-10 tracking-[0.12em] uppercase font-bold text-sobre-tinta/60"
               >
                 Parámetro
               </th>
@@ -54,7 +54,7 @@ export default function TablaFichaTecnica({ columnas, filas }: { columnas: strin
                 <th
                   scope="col"
                   key={c}
-                  className="text-left py-3 px-4 font-mono text-d-10 tracking-[0.12em] uppercase font-medium text-sobre-tinta/60"
+                  className="text-left py-3 px-4 font-mono text-d-10 tracking-[0.12em] uppercase font-bold text-sobre-tinta/60"
                 >
                   {c}
                 </th>
@@ -63,8 +63,8 @@ export default function TablaFichaTecnica({ columnas, filas }: { columnas: strin
           </thead>
           <tbody className="font-mono text-d-12 uppercase">
             {filas.map((f, i) => (
-              <tr key={f.parametro} className={i < filas.length - 1 ? 'border-b border-sobre-tinta/[.16]' : ''}>
-                <th scope="row" className="text-left font-normal font-sans text-16 normal-case tracking-normal py-[14px] pr-4 text-sobre-tinta/70">
+              <tr key={f.parametro} className={i < filas.length - 1 ? 'border-b border-sobre-tinta/[.14]' : ''}>
+                <th scope="row" className="text-left font-normal font-sans text-14 normal-case tracking-normal py-[14px] pr-4 text-sobre-tinta/70">
                   {f.parametro}
                 </th>
                 {f.valores.map((v, j) => (

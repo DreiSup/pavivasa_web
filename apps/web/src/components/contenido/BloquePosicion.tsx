@@ -30,7 +30,7 @@ export default function BloquePosicion({
   className?: string
 }) {
   const texto = imagen?.etiqueta ?? etiqueta
-  const borde = activo ? 'border-2 border-pigmento' : 'border border-tinta/[.12]'
+  const borde = activo ? 'border-2 border-pigmento' : 'border border-tinta/[.2]'
 
   if (imagen?.src) {
     return (
@@ -40,23 +40,16 @@ export default function BloquePosicion({
     )
   }
 
-  const pos = compacto ? 'left-[10px]' : 'left-4'
+  const etiquetaCompleta = compacto && texto ? texto : aviso
   return (
     <figure
       role="img"
       aria-label={texto ? `Foto pendiente: ${texto}` : 'Foto pendiente'}
-      className={`relative bg-fondo-alt bg-trama ${borde} ${className}`}
+      className={`relative flex items-center justify-center bg-fondo-alt bg-trama ${borde} ${className}`}
     >
-      {texto && !compacto ? (
-        <span className="absolute left-4 top-[14px] font-mono text-d-10 uppercase text-tinta-media">{texto}</span>
-      ) : null}
       {!sinAviso ? (
-        <span
-          className={`absolute ${pos} ${
-            compacto ? 'bottom-2' : 'bottom-[14px]'
-          } font-mono text-d-10 uppercase text-tinta bg-sobre-tinta px-[6px] py-[3px]`}
-        >
-          {compacto && texto ? texto : aviso}
+        <span className="font-mono text-[11px] leading-[1.6] tracking-[0.06em] uppercase text-center text-tinta-media px-5">
+          {etiquetaCompleta}
         </span>
       ) : null}
     </figure>

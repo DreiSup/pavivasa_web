@@ -1,35 +1,31 @@
-import { Big_Shoulders, Barlow, Overpass_Mono } from 'next/font/google'
+import { Big_Shoulders, Work_Sans, Space_Mono } from 'next/font/google'
 
 /**
  * Tres familias de obra, no de software:
- * - Big Shoulders (titulares): condensada, de cartel industrial. Google Fonts ha
+ * - Big Shoulders Display (titulares): condensada, de cartel industrial. Google Fonts ha
  *   fundido "Big Shoulders Display" en esta variable con eje óptico (opsz): a los
  *   tamaños de titular se sirve el corte Display.
- * - Barlow (texto): heredera de la DIN de señalización.
- * - Overpass Mono (datos de obra): derivada de la Highway Gothic de carretera.
+ * - Work Sans (texto): humanista, geométrica y accesible.
+ * - Space Mono (datos de obra): monoespaciada, en versalitas; suelo 10 px.
  * Los componentes usan las variables CSS; cambiar aquí si cambia la familia.
  */
 export const display = Big_Shoulders({
   subsets: ['latin'],
-  weight: 'variable',
-  axes: ['opsz'],
+  weight: ['500', '700', '800', '900'],
   display: 'swap',
   variable: '--font-display',
-  // next/font aún no tiene métricas de esta familia para calcular el fallback.
-  adjustFontFallback: false,
-  fallback: ['Impact', 'Arial Narrow', 'sans-serif'],
 })
 
-export const texto = Barlow({
+export const texto = Work_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
   variable: '--font-sans',
 })
 
-export const mono = Overpass_Mono({
+export const mono = Space_Mono({
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['400', '700'],
   display: 'swap',
   variable: '--font-mono',
 })

@@ -24,26 +24,26 @@ export default function FichaObra({
   className?: string
 }) {
   return (
-    <div className={`flex flex-col border border-tinta ${className}`}>
+    <div className={`flex flex-col border border-tinta/20 ${className}`}>
       {titulo ? (
-        <div className="px-5 py-4 bg-tinta text-sobre-tinta font-mono text-d-10 tracking-[0.14em] uppercase">
+        <div className="px-5 py-4 bg-tinta text-sobre-tinta font-mono text-d-10 uppercase">
           {titulo}
         </div>
       ) : null}
-      <dl className="m-0 flex flex-col">
+      <dl className="m-0 flex flex-col text-14">
         {filas.map((fila, i) => (
           <div
             key={fila.etiqueta}
-            className={`grid ${
-              compacto ? 'grid-cols-[100px_1fr] px-4 py-[10px] text-14' : 'grid-cols-[120px_1fr] px-5 py-3 text-16'
-            } ${i < filas.length - 1 || pie ? 'border-b border-tinta/[.12]' : ''}`}
+            className={`grid grid-cols-[120px_1fr] px-4 py-3 ${
+              i < filas.length - 1 || pie ? 'border-b border-tinta/[.14]' : ''
+            }`}
           >
-            <dt className="font-mono text-d-10 uppercase text-tinta-media pt-[3px]">{fila.etiqueta}</dt>
-            <dd className={`m-0 ${fila.mono ? 'font-mono text-d-12 uppercase' : ''}`}>{fila.valor}</dd>
+            <dt className="text-tinta-media">{fila.etiqueta}</dt>
+            <dd className={`m-0 ${fila.mono ? 'font-mono text-d-12 uppercase' : 'font-semibold'}`}>{fila.valor}</dd>
           </div>
         ))}
       </dl>
-      {pie ? <div className="flex flex-col gap-2 p-5 border-t border-tinta">{pie}</div> : null}
+      {pie ? <div className="flex flex-col gap-2 p-5 border-t border-tinta/20">{pie}</div> : null}
     </div>
   )
 }

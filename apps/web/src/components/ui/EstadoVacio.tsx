@@ -15,10 +15,10 @@ export default function EstadoVacio({
   return (
     <div
       role="status"
-      className="flex flex-col items-start gap-3 p-6 md:p-10 border border-dashed border-tinta/30"
+      className="flex flex-col items-start gap-3 p-6 border border-dashed border-tinta/20"
     >
-      <p className="font-display font-bold text-26 leading-[1.1]">{titulo}</p>
-      <p className="text-16 text-tinta-media">{texto}</p>
+      <p className="font-sans font-semibold text-16">{titulo}</p>
+      <p className="text-14 text-tinta-media">{texto}</p>
       {onAccion ? <EnlaceEtiqueta onClick={onAccion}>{accion}</EnlaceEtiqueta> : null}
     </div>
   )

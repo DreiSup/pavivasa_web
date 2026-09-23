@@ -17,12 +17,10 @@ export default function EnlaceEtiqueta({
   className?: string
   onClick?: () => void
 }) {
-  const clases = `inline-block self-start font-sans font-semibold no-underline border-b-2 pb-[2px] transition-colors duration-cabecera ${
-    pequeno ? 'text-14' : 'text-16'
-  } ${
+  const clases = `inline-block self-start font-sans font-bold text-14 uppercase tracking-[0.04em] no-underline border-b-2 pb-[2px] transition-colors duration-cabecera ${
     sobreOscuro
       ? 'text-sobre-tinta border-sobre-tinta hover:text-fondo-alt hover:border-fondo-alt'
-      : 'text-tinta border-tinta hover:text-pigmento hover:border-pigmento'
+      : 'text-acero border-acero hover:text-pigmento hover:border-pigmento'
   } ${className}`
 
   if (!href) {

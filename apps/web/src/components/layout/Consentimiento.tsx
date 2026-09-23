@@ -74,7 +74,7 @@ export default function Consentimiento() {
   const configs = [sitio.gaId, sitio.googleAdsId].filter(Boolean) as string[]
 
   const boton =
-    'inline-flex items-center justify-center min-h-tactil px-[18px] font-sans text-14 font-semibold no-underline cursor-pointer transition-colors duration-cabecera'
+    'inline-flex items-center justify-center min-h-tactil px-[18px] font-sans text-12 font-bold uppercase tracking-[.04em] no-underline cursor-pointer transition-colors duration-cabecera'
 
   return (
     <>
@@ -111,14 +111,14 @@ export default function Consentimiento() {
             <button
               type="button"
               onClick={() => decidir('rechazado')}
-              className={`${boton} bg-transparent border border-sobre-tinta text-sobre-tinta hover:bg-sobre-tinta hover:text-tinta`}
+              className={`${boton} border border-sobre-tinta text-sobre-tinta hover:border-pigmento hover:text-pigmento`}
             >
               Rechazar
             </button>
             <button
               type="button"
               onClick={() => decidir('aceptado')}
-              className={`${boton} bg-sobre-tinta border border-sobre-tinta text-tinta hover:bg-fondo-alt`}
+              className={`${boton} bg-pigmento text-sobre-tinta hover:bg-pigmento-hover`}
             >
               Aceptar
             </button>

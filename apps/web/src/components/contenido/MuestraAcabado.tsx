@@ -17,13 +17,13 @@ export default function MuestraAcabado({
       <div
         role="img"
         aria-label={`Muestra pendiente: ${tipo} ${nombre}`}
-        className={`aspect-square bg-fondo-alt bg-trama ${activo ? 'border-2 border-pigmento' : 'border border-tinta/[.12]'}`}
+        className={`aspect-square bg-fondo-alt bg-trama ${activo ? 'border-2 border-pigmento' : 'border border-tinta/[.2]'}`}
       />
       {conTipo ? <span className="font-mono text-d-10 uppercase text-tinta-media">{tipo}</span> : null}
       {tipo === 'modelo' ? (
-        <span className="text-14 font-semibold">{nombre}</span>
+        <span className="text-d-12">{nombre}</span>
       ) : (
-        <span className="font-mono text-d-10 uppercase tracking-[0.06em] text-tinta-media">{nombre}</span>
+        <span className="text-d-12 text-tinta-media">{nombre}</span>
       )}
     </div>
   )

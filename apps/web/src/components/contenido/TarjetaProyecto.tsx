@@ -14,23 +14,34 @@ export function EtiquetaProyecto({ proyecto, pequena }: { proyecto: Proyecto; pe
   )
 }
 
-/** Tarjeta de obra: foto 4:3, etiqueta técnica, titular, tipo de espacio. */
+/**
+ * Tarjeta de obra: foto 4:3, etiqueta técnica, titular, tipo de espacio.
+ * Opcionalmente muestra una línea de teaser y/o ficha técnica.
+ */
 export default function TarjetaProyecto({
   proyecto,
   tamano = 'medio',
   conFicha,
+  teaser,
+  ficha,
 }: {
   proyecto: Proyecto
   /** grande: rejilla de 3 en escritorio · medio: rejilla de 4 · pequeno: rejilla de 2 en móvil. */
   tamano?: 'grande' | 'medio' | 'pequeno'
   /** Añade la línea de ejecución (home, obras destacadas). */
   conFicha?: boolean
+  /** Sobrescribe proyecto.tipo como teaser (14px, tinta-media). */
+  teaser?: string
+  /** Sobrescribe la ficha técnica construida desde proyecto.ficha (Space Mono 12, acero). */
+  ficha?: string
 }) {
   const titulo =
     tamano === 'grande' ? 'text-26' : tamano === 'medio' ? 'text-20' : 'text-16'
-  const ficha = [proyecto.ficha.hormigon, proyecto.ficha.espesor, proyecto.ficha.arido && `árido ${proyecto.ficha.arido}`]
-    .filter(Boolean)
-    .join(' · ')
+  const fichaMontada =
+    ficha ??
+    ([proyecto.ficha.hormigon, proyecto.ficha.espesor, proyecto.ficha.arido && `árido ${proyecto.ficha.arido}`]
+      .filter(Boolean)
+      .join(' · ') || null)
 
   return (
     <Link
@@ -45,15 +56,16 @@ export default function TarjetaProyecto({
         className="aspect-[4/3]"
       />
       <EtiquetaProyecto proyecto={proyecto} pequena={tamano === 'pequeno'} />
-      <span
-        className={`font-display font-bold leading-[1.15] ${titulo} transition-colors duration-cabecera group-hover:text-pigmento`}
-      >
+      <span className={`font-bold leading-[1.15] ${titulo} transition-colors duration-cabecera group-hover:text-pigmento`}>
         {proyecto.titulo}
       </span>
       {tamano !== 'pequeno' ? (
-        <span className={`text-tinta-media ${tamano === 'grande' ? 'text-16' : 'text-14'}`}>{proyecto.tipo}</span>
+        <span className="text-14 text-tinta-media">{teaser ?? proyecto.tipo}</span>
       ) : null}
-      {conFicha && ficha ? <span className="font-mono text-d-12 uppercase text-tinta">{ficha}</span> : null}
+      {(conFicha || ficha) && fichaMontada ? (
+        <span className="font-mono text-d-12 uppercase text-acero">{fichaMontada}</span>
+      ) : null}
+      <span className="text-14 font-bold">Ver obra →</span>
     </Link>
   )
 }

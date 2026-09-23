@@ -16,16 +16,16 @@ type ComoBoton = Comun & ButtonHTMLAttributes<HTMLButtonElement> & { href?: unde
 type ComoEnlace = Comun & AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }
 
 function clases({ activo, sinObra, mono, className = '' }: Comun) {
-  const base = `inline-flex items-center gap-[10px] min-h-tactil px-4 border no-underline transition-colors duration-cabecera ${
+  const base = `inline-flex items-center gap-[10px] h-34 px-4 border no-underline transition-colors duration-cabecera ${
     mono ? 'font-mono text-d-12 uppercase' : 'font-sans text-14 font-semibold'
   }`
   if (sinObra) return `${base} border-fondo-alt text-tinta-media cursor-default ${className}`
   if (activo) {
-    return `${base} ${
+    return `${base} font-bold ${
       mono ? 'bg-tinta border-tinta text-sobre-tinta' : 'bg-pigmento border-pigmento text-sobre-tinta'
     } ${className}`
   }
-  return `${base} border-tinta text-tinta hover:bg-tinta hover:text-sobre-tinta ${className}`
+  return `${base} border-tinta/30 text-tinta hover:border-acero hover:text-acero ${className}`
 }
 
 /** Chip de filtro (44 px). Con `href` es un enlace; sin él, un <button>. */

@@ -1,6 +1,6 @@
 import { nap } from '@/lib/config'
 
-/** Wordmark tipográfico hasta recibir el logo vectorial. */
+/** Wordmark PAVIVASA: Big Shoulders Display 800 26px */
 export function Logo({
   tamano = 'grande',
   className = '',
@@ -8,8 +8,7 @@ export function Logo({
   tamano?: 'grande' | 'medio' | 'pequeno'
   className?: string
 }) {
-  const clase = tamano === 'grande' ? 'text-26' : 'text-20'
   return (
-    <span className={`font-display font-extrabold ${clase} leading-none uppercase block ${className}`}>{nap.nombre}</span>
+    <span className={`font-display font-extrabold text-26 leading-none uppercase block ${className}`}>{nap.nombre}</span>
   )
 }

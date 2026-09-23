@@ -19,11 +19,9 @@ export default function EtiquetaTecnica({
 }) {
   return (
     <div
-      className={`flex flex-col bg-tinta text-sobre-tinta font-mono text-d-12 uppercase leading-[2] ${
-        compacto ? 'px-5 py-4' : 'px-6 py-6 md:px-7'
-      } ${className}`}
+      className={`flex flex-col bg-tinta text-sobre-tinta font-mono text-d-12 uppercase leading-[2] p-5 ${className}`}
     >
-      <span className="text-d-10 tracking-[0.14em] text-sobre-tinta/60 mb-[6px]">{titulo}</span>
+      <span className="text-d-10 text-sobre-tinta/60 mb-[6px]">{titulo}</span>
       {lineas.map((linea, i) => (
         <span key={i}>{linea}</span>
       ))}

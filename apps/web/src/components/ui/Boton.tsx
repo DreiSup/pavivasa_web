@@ -2,9 +2,11 @@ import Link from 'next/link'
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
 
 type Variante = 'primario' | 'contorno' | 'tinta'
+type Tamaño = 'normal' | 'lg'
 
 type Comun = {
   variante?: Variante
+  tamaño?: Tamaño
   sobreOscuro?: boolean
   anchoCompleto?: boolean
   /** Estado "enviando": fondo pigmento-hover, spinner y sin doble clic. */
@@ -13,13 +15,13 @@ type Comun = {
   className?: string
 }
 
-/** 48 px de alto, sin radio, foco 2 px acero desplazado (regla global). */
+/** 48 px de alto (52 si tamaño="lg"), sin radio, foco 2 px acero desplazado (regla global). */
 const base =
-  'inline-flex items-center justify-center gap-3 min-h-boton px-6 font-sans font-semibold text-16 no-underline transition-colors duration-cabecera'
+  'inline-flex items-center justify-center gap-3 px-7 font-sans font-bold text-14 uppercase tracking-[0.04em] no-underline transition-colors duration-cabecera'
 
 function clasesVariante(variante: Variante, sobreOscuro?: boolean) {
   if (variante === 'primario') {
-    return 'btn-primario bg-pigmento text-sobre-tinta hover:bg-pigmento-hover'
+    return 'bg-pigmento text-sobre-tinta hover:bg-pigmento-hover active:bg-pigmento-hover'
   }
   if (variante === 'tinta') {
     return sobreOscuro
@@ -27,8 +29,12 @@ function clasesVariante(variante: Variante, sobreOscuro?: boolean) {
       : 'bg-tinta text-sobre-tinta hover:bg-acero'
   }
   return sobreOscuro
-    ? 'bg-transparent text-sobre-tinta border border-sobre-tinta hover:bg-sobre-tinta hover:text-tinta'
-    : 'bg-transparent text-tinta border border-tinta hover:bg-tinta hover:text-sobre-tinta'
+    ? 'bg-transparent text-sobre-tinta border-2 border-sobre-tinta hover:bg-sobre-tinta hover:text-tinta active:bg-sobre-tinta active:text-tinta'
+    : 'bg-transparent text-tinta border-2 border-tinta hover:border-pigmento hover:text-pigmento active:bg-tinta active:text-sobre-tinta'
+}
+
+function clasesTamaño(tamaño?: Tamaño) {
+  return tamaño === 'lg' ? 'min-h-[52px]' : 'min-h-boton'
 }
 
 type ComoBoton = Comun & ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined }
@@ -36,9 +42,9 @@ type ComoEnlace = Comun & AnchorHTMLAttributes<HTMLAnchorElement> & { href: stri
 
 /** Un solo botón para todo el sitio. Con `href` es un enlace; sin él, un <button>. */
 export default function Boton(props: ComoBoton | ComoEnlace) {
-  const { variante = 'primario', sobreOscuro, anchoCompleto, cargando, children, className = '', ...resto } = props
-  const clases = `${base} ${clasesVariante(variante, sobreOscuro)} ${anchoCompleto ? 'w-full' : ''} ${
-    resto.disabled && !cargando ? '!bg-fondo-alt !text-tinta-media !border-fondo-alt !cursor-not-allowed' : ''
+  const { variante = 'primario', tamaño, sobreOscuro, anchoCompleto, cargando, children, className = '', ...resto } = props
+  const clases = `${base} ${clasesTamaño(tamaño)} ${clasesVariante(variante, sobreOscuro)} ${anchoCompleto ? 'w-full' : ''} ${
+    resto.disabled && !cargando ? '!bg-tinta/14 !text-tinta-media !border-tinta/14 !cursor-not-allowed' : ''
   } ${cargando ? '!bg-pigmento-hover !text-sobre-tinta !border-pigmento-hover cursor-wait' : ''} ${className}`
 
   const contenido = cargando ? (

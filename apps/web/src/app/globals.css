@@ -69,8 +69,14 @@ figure {
   color: var(--sobre-tinta);
 }
 
-/* Foco visible en todo elemento interactivo: 2 px acero desplazado. Nunca outline: none. */
-:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+/* Foco visible en todo elemento interactivo. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(193, 68, 14, 0.18);
+}
+:where(a, button, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--acero);
   outline-offset: 3px;
 }

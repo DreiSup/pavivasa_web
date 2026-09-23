@@ -106,7 +106,7 @@ export default function Cabecera() {
         </button>
       </div>
 
-      <MenuMovil id="menu-movil" isOpen={menuAbierto} onCerrar={cerrarMenu} navegacion={navegacion} />
+      <MenuMovil id="menu-movil" isOpen={menuAbierto} onCerrar={cerrarMenu} />
     </header>
   )
 }

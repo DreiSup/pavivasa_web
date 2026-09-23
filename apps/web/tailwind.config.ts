@@ -22,6 +22,7 @@ const config: Config = {
       acero: '#2F4A52',
       'sobre-tinta': '#F6F1E8',
       error: '#B3261E',
+      whatsapp: '#25D366',
     },
     borderRadius: { none: '0', DEFAULT: '0' },
     boxShadow: {

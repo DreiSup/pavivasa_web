@@ -347,7 +347,11 @@ export const services = [
       es: 'Morteros autonivelantes decorativos. Una apuesta por la arquitectura creativa, inspirada en acabados cromáticos naturales: lisos o antideslizantes, industriales o decorativos, flexibles, conductores y alimentarios.',
     },
     introMobile: { es: 'Morteros decorativos lisos o antideslizantes, industriales o decorativos, con bomba propia.' },
-    heroImage: { label: { es: 'Foto · autonivelante · sin obra documentada' } },
+    heroImage: {
+      label: { es: 'Foto · solera industrial en proceso de alisado · sin obra de autonivelante documentada' },
+      src: '/img/solera-industrial-mallazo1.jpg',
+      alt: { es: 'Solera industrial en fase de alisado a máquina, con mallazo metálico visible en primer plano y nave industrial al fondo' },
+    },
     about: {
       title: { es: 'Un mortero que se bombea y se alisa a mano' },
       paragraphs: [
@@ -450,7 +454,11 @@ export const services = [
       es: 'Servicio de alicatados en toda la provincia de Valencia, tanto en proyectos de renovación residencial como en grandes obras comerciales: desde baños y cocinas hasta espacios exteriores como piscinas y terrazas.',
     },
     introMobile: { es: 'Baños, cocinas, piscinas y terrazas en toda la provincia de Valencia.' },
-    heroImage: { label: { es: 'Foto · alicatado · sin obra documentada' } },
+    heroImage: {
+      label: { es: 'Foto · banco revestido en mosaico de azulejo · sin obra de alicatado documentada' },
+      src: '/img/pulido-interior-loft2.jpg',
+      alt: { es: 'Suelo pulido reflectante junto a un banco y un muro revestidos en mosaico de azulejo blanco y negro, con un horno de obra al fondo' },
+    },
     about: {
       title: { es: 'Cerámica, porcelana y azulejo de diseño' },
       paragraphs: [

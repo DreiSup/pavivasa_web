@@ -22,4 +22,6 @@ export type Business = {
   province: string
   country: string
   socials: SocialLink[]
+  /** Prefilled text of the WhatsApp CTA's `?text=` param — visitor-facing copy: `Localized`. */
+  whatsappMessage: Localized<string>
 }

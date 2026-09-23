@@ -7,9 +7,7 @@
  * `claims.ts` — see `./index.ts`'s comment.
  */
 import { publicEnv, site } from '@site/config'
-import { getBusiness, resolveBusiness } from '@site/content'
-
-const business = getBusiness()
+import { resolveBusiness } from '@site/content'
 
 // EMAIL_DESTINO is read directly here (not via `@site/config/server`) on
 // purpose: this module is imported by several `'use client'` components
@@ -22,29 +20,36 @@ const business = getBusiness()
 // always. Only server components/Server Actions ever see the real value.
 const emailOverride = process.env.EMAIL_DESTINO?.trim() || undefined
 
-const resolved = resolveBusiness({
-  phone: publicEnv.NEXT_PUBLIC_TELEFONO,
-  whatsapp: publicEnv.NEXT_PUBLIC_WHATSAPP,
-  address: publicEnv.NEXT_PUBLIC_DIRECCION,
-  email: emailOverride,
-})
+// `resolveBusiness` alone (no separate `getBusiness()` call) — it already
+// returns every NAP field, raw or derived, resolved for `locale`. Reading
+// the raw `Business` object directly here would bypass its `Localized<T>`
+// fields (see `queries/business.ts`'s `Localized<T>` rule comment).
+const resolved = resolveBusiness(
+  {
+    phone: publicEnv.NEXT_PUBLIC_TELEFONO,
+    whatsapp: publicEnv.NEXT_PUBLIC_WHATSAPP,
+    address: publicEnv.NEXT_PUBLIC_DIRECCION,
+    email: emailOverride,
+  },
+  'es',
+)
 
 export const nap = {
-  nombre: business.name,
-  gestor: business.manager,
-  email: resolved.email ?? business.email!,
+  nombre: resolved.name,
+  gestor: resolved.manager,
+  email: resolved.email!,
   telefono: resolved.phone,
   telefonoInternacional: resolved.phoneInternational,
   telefonoHref: resolved.phoneHref,
   whatsapp: resolved.whatsapp,
   whatsappHref: resolved.whatsappHref,
   direccion: resolved.address,
-  municipio: business.town,
-  codigoPostal: business.postalCode,
-  provincia: business.province,
-  pais: business.country,
+  municipio: resolved.town,
+  codigoPostal: resolved.postalCode,
+  provincia: resolved.province,
+  pais: resolved.country,
   direccionCompleta: resolved.addressLine,
-  redes: business.socials.map((s) => ({ nombre: s.platform, href: s.href })),
+  redes: resolved.socials.map((s) => ({ nombre: s.platform, href: s.href })),
 }
 
 export const sitio = {

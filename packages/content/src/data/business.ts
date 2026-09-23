@@ -9,7 +9,7 @@ import type { Business } from '../schemas/business.ts'
  *
  * Deliberately does NOT include `claims` (years of experience, warranty,
  * declared provinces…) — see `data/claims.ts`'s comment for why: this
- * object is read (via `getBusiness()`) by the legacy adapter
+ * object is read (via `resolveBusiness()`) by the legacy adapter
  * `apps/web/src/lib/config.ts` to build `nap`, which several `'use client'`
  * components import. A plain JS object literal can't be partially
  * evaluated: if `claims` lived on this same object, its text would be
@@ -33,4 +33,5 @@ export const business = {
     { platform: 'Instagram', href: 'https://instagram.com/gabrielpavivasa.es' },
     { platform: 'X', href: 'https://x.com/GabrielPavivasa' },
   ],
+  whatsappMessage: { es: 'Hola, quiero presupuesto para ' },
 } satisfies Business

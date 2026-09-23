@@ -12,8 +12,8 @@ export type ResolvedClaims = {
 /**
  * Verifiable claims, resolved for `locale`. Its own module, separate from
  * `business.ts` — confirmed empirically while building phase 2 (see the
- * phase report): keeping `getClaims` in the same file as `getBusiness`
- * meant importing `getBusiness`/`resolveBusiness` (needed for `nap`, which
+ * phase report): keeping `getClaims` in the same file as `resolveBusiness`
+ * meant importing `resolveBusiness` (needed for `nap`, which
  * several `'use client'` components read) also pulled in `data/claims.ts`'s
  * text, even though nothing in the client bundle ever calls `getClaims`.
  */

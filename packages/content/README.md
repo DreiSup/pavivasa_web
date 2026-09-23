@@ -82,7 +82,7 @@ the same pattern.
 `nap`), while the same adapter also exports other values only server
 components need (e.g. `claims`, `HERO_HOME`). It's tempting to think
 splitting those into separate *functions* — `getClaims()` apart from
-`getBusiness()`, each reading its own data — is enough to keep the unused
+`resolveBusiness()`, each reading its own data — is enough to keep the unused
 one out of the client bundle. **It isn't.** Confirmed with real builds while
 building phase 2: as long as both functions live in the same **file** (or
 are re-exported through a barrel using `export * from`), the unused one's

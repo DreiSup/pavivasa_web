@@ -13,7 +13,7 @@
 // in README.md's "Client-bundle rule" section, but not re-tested in
 // isolation — see that section for what WAS confirmed.
 
-export { getBusiness, resolveBusiness } from './queries/business.ts'
+export { resolveBusiness } from './queries/business.ts'
 export type { BusinessOverrides, ResolvedBusiness } from './queries/business.ts'
 export { getClaims } from './queries/claims.ts'
 export type { ResolvedClaims } from './queries/claims.ts'

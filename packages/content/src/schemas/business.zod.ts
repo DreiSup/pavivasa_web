@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { localizedText } from './localized.zod.ts'
+
 export const socialLinkSchema = z.object({
   platform: z.string().min(1),
   href: z.string().url(),
@@ -17,4 +19,5 @@ export const businessSchema = z.object({
   province: z.string().min(1),
   country: z.string().min(1),
   socials: z.array(socialLinkSchema),
+  whatsappMessage: localizedText,
 })

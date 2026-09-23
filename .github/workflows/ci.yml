@@ -72,8 +72,9 @@ jobs:
 
 # No deploy step here on purpose — Vercel deploys itself from its own Git
 # integration (§9 of arquitectura-plantilla-monorepo.md). This workflow only
-# REPORTS a pass/fail status on the commit; Vercel's Git integration does not
-# wait for it by default. To make a red run here actually block promotion,
-# either enable "Wait for CI to pass before deploying" in the Vercel
-# project's Git settings, or require this job as a GitHub branch-protection
-# check on the deploy branch. See the phase report's questions.
+# REPORTS a pass/fail status on the commit; by default Vercel's Git
+# integration does not wait for that status before deploying. To make a red
+# run here actually block promotion, configure that in the Vercel project's
+# dashboard (a deployment-gating / "wait for checks" style setting) or
+# require this job as a GitHub branch-protection check on the deploy
+# branch — whichever the account's current Vercel plan/UI offers.

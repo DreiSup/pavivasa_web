@@ -238,3 +238,42 @@ piedra vista (original en rumano).
   idénticos — documentados con su `reason` en `scripts/verify/known-issues.json`,
   no corregidos aquí porque la salida pública debe permanecer byte-idéntica
   durante esta fase.
+- **Nombres de evento en español, sin `locale`** (`clic_llamar`,
+  `clic_whatsapp`, `envio_formulario` en `apps/web/src/lib/eventos.ts`,
+  `components/layout/EventosGlobales.tsx` y
+  `components/secciones/FormularioPresupuesto.tsx`): §8 de
+  `arquitectura-plantilla-monorepo.md` pide los mínimos `phone_call`,
+  `whatsapp_click`, `form_submit`, todos con `locale`. **Pendiente de que el
+  cliente confirme** si los Key Events ya dados de alta en GA4/Google Ads
+  usan los nombres en español actuales (entonces se corrige el documento) o
+  los del documento en inglés (entonces se renombran, añadiendo `locale`) —
+  renombrar sin esa confirmación rompería el Key Event/conversión ya
+  configurado, un contrato externo. No se toca aquí: son
+  `apps/web/src/components/**`, frontend congelado hasta el rediseño (un fix
+  real ahí no tiene issue de `scripts/verify` que lo detecte, así que no
+  encaja en `known-issues.json`; queda documentado aquí en su lugar). De
+  paso, si se renombra: `variante` en el `params` de `envio_formulario` hoy
+  es la variante del formulario (`corto`/`completo`), no la `variante` de
+  A/B del §5 — decidir el nombre de ese parámetro a la vez que el de los
+  eventos, para no colisionar cuando el A/B (§5) se implemente.
+- **CI nunca ejecutado en un runner real**: `.github/workflows/ci.yml` no
+  existe en `origin/main` y la rama de esta migración no está en `origin`
+  todavía — todo lo que aquí se documenta como "verde" (`content:validate`,
+  `lint`, `typecheck`, `build`, `verify`, `verify:secrets`) se ha probado en
+  local, nunca dentro de la infraestructura real de Actions. Pendiente de
+  que el cliente/usuario haga push (o abra PR) y confirme el job en verde
+  ahí.
+- **Configuración de Vercel sin aplicar ni probar**: la sección "Vercel —
+  configuración del monorepo" de abajo es prescriptiva; nadie la ha
+  aplicado todavía contra un proyecto Vercel real, y el Build Command exacto
+  que Vercel ejecutaría (`cd ../.. && pnpm turbo run build --filter=web`,
+  con Root Directory recortado) nunca se ha probado — solo se ha probado
+  `pnpm --filter web build` directo. Pendiente de que el cliente/usuario lo
+  aplique en el dashboard y dispare un deploy (o Preview) real.
+- **Entrega real de Resend/Telegram sin probar**: `verify:secrets` usa
+  valores centinela (`scripts/verify/sentinels.mjs`) precisamente para que
+  la petición a Resend/Telegram falle (401/403) sin llegar al camino de
+  éxito — comprueba que no hay fuga de secretos, no que el email o el
+  aviso de Telegram lleguen de verdad. Pendiente de que el cliente/usuario
+  rellene credenciales reales en un entorno de prueba y envíe el formulario
+  una vez para confirmarlo end-to-end.

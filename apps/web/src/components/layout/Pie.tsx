@@ -33,7 +33,7 @@ export default function Pie() {
       <div className="max-w-contenido mx-auto flex flex-col gap-8 md:gap-0">
         <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-8 md:gap-12 md:pb-12 md:border-b md:border-sobre-tinta/[.16]">
           <div className="flex flex-col gap-4 md:gap-5">
-            <Logo className="!text-26" />
+            <Logo tono="claro" tamano="grande" className="h-28 self-start" />
             <address className="not-italic flex flex-col gap-2 font-sans text-14 text-sobre-tinta/70">
               <span>{nap.direccionCompleta}</span>
               <a href={nap.telefonoHref} className={enlacePie}>

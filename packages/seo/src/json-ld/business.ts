@@ -32,6 +32,7 @@ export function buildLocalBusinessJsonLd(input: LocalBusinessInput) {
     '@id': businessJsonLdId(input.siteUrl),
     name: input.name,
     url: input.siteUrl,
+    logo: `${input.siteUrl}/brand/pavivasa-logo.png`,
     email: input.email,
     telephone: input.phoneHref.replace('tel:', ''),
     address: {

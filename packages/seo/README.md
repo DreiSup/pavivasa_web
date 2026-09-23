@@ -8,7 +8,7 @@ No React, no Next — see §3/§4 of `arquitectura-plantilla-monorepo.md`.
 ```
 src/
   json-ld/
-    business.ts     Local-business graph node (stable `#negocio` @id)
+    business.ts     Local-business graph node (stable `#negocio` @id, `logo` = <siteUrl>/brand/pavivasa-logo.png)
     service.ts       Service node
     faq.ts           FAQPage (only with real answers)
     article.ts       BlogPosting
@@ -66,4 +66,5 @@ The JSON-LD builders' key order matters: the build snapshot toolkit
 byte-for-byte, not just a key-sorted digest. Keep every builder's key
 insertion order exactly as written (e.g. `item` after `name` in
 breadcrumbs, `telephone` derived via `.replace('tel:', '')`) — don't
-"tidy" it.
+"tidy" it. `business.ts`'s `logo` field (added for the PNG-logo rollout) is
+an intentional new key, right after `url` — not a byte-identity regression.

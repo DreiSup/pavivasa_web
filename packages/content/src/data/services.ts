@@ -347,7 +347,11 @@ export const services = [
       es: 'Morteros autonivelantes decorativos. Una apuesta por la arquitectura creativa, inspirada en acabados cromáticos naturales: lisos o antideslizantes, industriales o decorativos, flexibles, conductores y alimentarios.',
     },
     introMobile: { es: 'Morteros decorativos lisos o antideslizantes, industriales o decorativos, con bomba propia.' },
-    heroImage: { label: { es: 'Foto · autonivelante · sin obra documentada' } },
+    heroImage: {
+      label: { es: 'Foto · suelo continuo pulido junto a cerramiento acristalado' },
+      src: '/img/pulido-interior-acristalado.jpg',
+      alt: { es: 'Suelo continuo liso y brillante en un interior con grandes ventanales acristalados' },
+    },
     about: {
       title: { es: 'Un mortero que se bombea y se alisa a mano' },
       paragraphs: [
@@ -450,7 +454,13 @@ export const services = [
       es: 'Servicio de alicatados en toda la provincia de Valencia, tanto en proyectos de renovación residencial como en grandes obras comerciales: desde baños y cocinas hasta espacios exteriores como piscinas y terrazas.',
     },
     introMobile: { es: 'Baños, cocinas, piscinas y terrazas en toda la provincia de Valencia.' },
-    heroImage: { label: { es: 'Foto · alicatado · sin obra documentada' } },
+    heroImage: {
+      label: { es: 'Foto · revestimiento en mosaico de piezas cerámicas' },
+      src: '/img/pulido-interior-loft2.jpg',
+      alt: {
+        es: 'Banco y peto revestidos con mosaico de piezas cerámicas blancas con junta oscura, sobre un suelo continuo brillante',
+      },
+    },
     about: {
       title: { es: 'Cerámica, porcelana y azulejo de diseño' },
       paragraphs: [

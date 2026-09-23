@@ -55,9 +55,15 @@ export default function Cabecera() {
         conScroll ? 'md:h-cabecera-scroll' : 'md:h-cabecera'
       }`}
     >
-      <div className="flex items-center justify-between w-full h-cabecera-movil md:h-auto px-5 shrink-0 motion-reduce:transition-none">
+      <div className="flex items-center justify-between w-full h-cabecera-movil md:h-full px-5 shrink-0 motion-reduce:transition-none">
         <Link href="/" className="no-underline text-tinta shrink-0" aria-label={`${nap.nombre}, inicio`}>
-          <Logo tamano="grande" />
+          <Logo
+            tamano="grande"
+            eager
+            className={`h-11 transition-[height] duration-cabecera ease-out motion-reduce:transition-none ${
+              conScroll ? 'md:h-11' : 'md:h-14'
+            }`}
+          />
         </Link>
 
         <nav aria-label="Principal" className="hidden md:block">

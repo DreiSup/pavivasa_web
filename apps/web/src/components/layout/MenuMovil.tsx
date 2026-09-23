@@ -71,7 +71,7 @@ export default function MenuMovil({
       className="fixed inset-0 z-40 bg-tinta text-sobre-tinta flex flex-col overflow-y-auto md:hidden"
     >
       <div className="flex items-center justify-between h-cabecera-movil pl-lat-movil pr-2 border-b border-sobre-tinta/[.16] shrink-0">
-        <Logo tamano="pequeno" className="text-sobre-tinta" />
+        <Logo tono="claro" tamano="pequeno" className="h-12" />
         <button
           type="button"
           aria-label="Cerrar menú"

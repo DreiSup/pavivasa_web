@@ -150,7 +150,7 @@ export default function FormularioPresupuesto({
 
   // I4: misma casilla, mismo texto y mismo enlace en las dos variantes.
   const casillaPrivacidad = (
-    <div className={`flex flex-col gap-[6px] ${completo ? 'md:col-span-2' : ''}`}>
+    <div className="flex flex-col gap-[6px] md:col-span-2">
       <label className="flex items-start gap-3 text-14 leading-[1.5] cursor-pointer">
         <input
           type="checkbox"
@@ -378,7 +378,7 @@ export default function FormularioPresupuesto({
         </>
       ) : (
         <>
-          <Campo etiqueta="¿Qué quieres pavimentar?" htmlFor="corto-espacio" obligatorio error={estado.errores.espacio}>
+          <Campo etiqueta="¿Qué quieres pavimentar?" htmlFor="corto-espacio" obligatorio error={estado.errores.espacio} className="md:col-span-2">
             <select
               id="corto-espacio"
               name="espacio"
@@ -395,10 +395,10 @@ export default function FormularioPresupuesto({
             </select>
           </Campo>
           {casillaPrivacidad}
-          <Boton type="submit" variante="tinta" anchoCompleto cargando={enviando}>
+          <Boton type="submit" variante="tinta" anchoCompleto cargando={enviando} className="md:col-span-2">
             Enviar y que me llamen
           </Boton>
-          <span className="hidden md:inline text-12 text-tinta-media">
+          <span className="md:col-span-2 hidden md:inline text-12 text-tinta-media">
             Plazo de respuesta: <DatoPendiente>pendiente</DatoPendiente>
           </span>
         </>

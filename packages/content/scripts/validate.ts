@@ -119,6 +119,10 @@ if (JSON.stringify(expectedSpaceNames) !== JSON.stringify(actualSpaceNames)) {
 
 // ---- 3. Referential integrity ----------------------------------------------
 
+for (const tab of home.heroTabs) {
+  if (!serviceIds.has(tab.serviceId)) fail(`home.heroTabs: unknown service "${tab.serviceId}"`)
+}
+
 for (const project of projects) {
   if (!serviceIds.has(project.service)) fail(`project "${project.slug.es}": unknown service "${project.service}"`)
 }
@@ -161,6 +165,9 @@ function checkImageSrc(label: string, src: string | undefined) {
 }
 
 checkImageSrc('home.hero', home.hero.src)
+for (const tab of home.heroTabs) {
+  if (tab.image) checkImageSrc(`home.heroTabs (${tab.serviceId})`, tab.image.src)
+}
 for (const space of home.spaces) checkImageSrc(`home.spaces (${space.name.es})`, space.image.src)
 for (const service of services as readonly Service[]) checkImageSrc(`service "${service.id}".heroImage`, service.heroImage.src)
 for (const project of projects) {

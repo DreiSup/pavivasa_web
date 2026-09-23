@@ -4,8 +4,18 @@ import type { Question } from './faq.ts'
 
 export type Space = { name: Localized<string>; image: ImageContent }
 
+export type HeroTab = {
+  serviceId: 'hormigon-impreso' | 'hormigon-pulido' | 'microcemento'
+  tabLabel: Localized<string>
+  eyebrow: Localized<string>
+  title: Localized<string>
+  subtitle: Localized<string>
+  image?: ImageContent
+}
+
 export type HomeContent = {
   hero: ImageContent
+  heroTabs: HeroTab[]
   /** "¿Qué quieres pavimentar?" — same order as the quote form's dropdown. */
   spaces: Space[]
   /** Appended to `spaces` names to build the quote form's dropdown (`NOMBRES_ESPACIOS`). */

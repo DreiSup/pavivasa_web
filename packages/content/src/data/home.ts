@@ -8,6 +8,46 @@ export const home = {
       es: 'Contorno de piscina pavimentado en hormigón impreso con acabado madera en tono terracota, junto a un seto de cipreses',
     },
   },
+  heroTabs: [
+    {
+      serviceId: 'hormigon-impreso',
+      tabLabel: { es: 'Impreso' },
+      eyebrow: { es: 'Hormigón impreso' },
+      title: { es: 'Suelos de hormigón impreso a tu medida' },
+      subtitle: { es: 'Revestimiento de fachadas y muros, recubrimiento de piscinas, patios, terrazas y jardines.' },
+      image: {
+        label: { es: 'Foto hero · contorno de piscina · piedra inglesa crema (Dénia)' },
+        src: '/img/impreso-piscina-madera2.jpg',
+        alt: {
+          es: 'Contorno de piscina pavimentado en hormigón impreso con acabado madera en tono terracota, junto a un seto de cipreses',
+        },
+      },
+    },
+    {
+      serviceId: 'hormigon-pulido',
+      tabLabel: { es: 'Pulido' },
+      eyebrow: { es: 'Hormigón pulido' },
+      title: { es: 'Suelos de hormigón pulido, dentro y fuera' },
+      subtitle: { es: 'Naves industriales, garajes, terrazas, piscinas e interiores. Durabilidad, impermeabilidad y bajo mantenimiento.' },
+      image: {
+        label: { es: 'Foto · interior · pulido o microcemento' },
+        src: '/img/pulido-interior-loft1.jpg',
+        alt: { es: 'Interior de vivienda tipo loft con suelo de hormigón pulido continuo' },
+      },
+    },
+    {
+      serviceId: 'microcemento',
+      tabLabel: { es: 'Microcemento' },
+      eyebrow: { es: 'Microcemento decorativo' },
+      title: { es: 'Microcemento decorativo, sin retirar lo que ya tienes' },
+      subtitle: { es: 'Renueva suelos, paredes, baños y cocinas con un acabado elegante y un ahorro de tiempo importante.' },
+      image: {
+        label: { es: 'Foto · baño en microcemento gris claro · Moraira' },
+        src: '/img/microcemento-bano-lavabos2.jpg',
+        alt: { es: 'Baño revestido en microcemento gris claro con encimera continua y dos lavabos' },
+      },
+    },
+  ],
   /** "¿Qué quieres pavimentar?" — same order as the quote form's dropdown. */
   spaces: [
     {

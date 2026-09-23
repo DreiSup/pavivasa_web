@@ -47,6 +47,9 @@ which is exactly what "missing translation" should look like.
 
 ## Adding content
 
+- **Home heroTabs**: edit `src/data/home.ts` — add or update entries in the
+  `heroTabs` array. Each tab's `serviceId` must match a real service. Image
+  `src` paths are validated by `content:validate`.
 - **A new service**: add an entry to `src/data/services.ts` (in menu order)
   and a matching one to `src/data/service-catalog.ts` (kept in sync by
   `content:validate`, not derived from `services.ts` at runtime — see that

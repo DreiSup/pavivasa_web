@@ -12,7 +12,7 @@ export type ServiceId =
   | 'pavimentos-de-caucho'
   | 'alicatados'
 
-export type ExecutionSpecSheet = {
+export type SpecSheet = {
   title: Localized<string>
   text: Localized<string>
   columns: Localized<string>[]
@@ -23,7 +23,7 @@ export type ExecutionSpecSheet = {
   }[]
 }
 
-export type ExecutionSpecList = {
+export type SpecList = {
   title: Localized<string>
   text: Localized<string>
   lines: { label: Localized<string>; value: Localized<string> }[]
@@ -50,9 +50,9 @@ export type Service = {
   advantages: Localized<string>[]
   models: Localized<string>[]
   colors: Localized<string>[]
-  specSheet?: ExecutionSpecSheet
+  specSheet?: SpecSheet
   /** Alternative to specSheet when there's no comparative table (lavado, microcemento…). */
-  specList?: ExecutionSpecList
+  specList?: SpecList
   faq: Question[]
   cta: Localized<string>
   /** Whether this is one of the 3 techniques promoted as the site's flagship offer. */

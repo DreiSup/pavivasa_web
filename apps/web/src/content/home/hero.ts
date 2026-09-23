@@ -2,7 +2,8 @@
  * legacy adapter, delete when the new design consumes @site/* directly
  *
  * Same Spanish shape and same values as before this migration, now built
- * from `@site/content`'s `getHome('es')`.
+ * from `@site/content`'s `getHome('es')`. Deliberately its own module, split
+ * out of `space-names.ts` — see `../home/index.ts`'s comment.
  */
 import { getHome } from '@site/content'
 import type { Imagen, Pregunta } from '@/lib/tipos'
@@ -25,8 +26,6 @@ export const ESPACIOS: readonly { nombre: string; imagen: Imagen }[] = home.spac
   nombre: s.name,
   imagen: imagen(s.image),
 }))
-
-export const NOMBRES_ESPACIOS = home.spaceNames
 
 /** Preguntas de la home. Las respuestas las redacta Gabriel: hasta entonces, DatoPendiente. */
 export const FAQ_HOME: Pregunta[] = home.faq.map((q) => ({

@@ -6,6 +6,17 @@ import type { Business } from '../schemas/business.ts'
  * overrides `phone`/`whatsapp`/`address`/`email` at read time — see
  * `queries/business.ts`'s `resolveBusiness`. What the site doesn't give
  * (schedule) stays `undefined` and is rendered as pending data.
+ *
+ * Deliberately does NOT include `claims` (years of experience, warranty,
+ * declared provinces…) — see `data/claims.ts`'s comment for why: this
+ * object is read (via `getBusiness()`) by the legacy adapter
+ * `apps/web/src/lib/config.ts` to build `nap`, which several `'use client'`
+ * components import. A plain JS object literal can't be partially
+ * evaluated: if `claims` lived on this same object, its text would be
+ * constructed — and bundled — every time anything here is used, even by
+ * code that only reads `.town` or `.phone`. Keeping `claims` as its own
+ * independent top-level export lets a bundle that only needs `nap` (no
+ * `'claims'` import anywhere in its module graph) drop that text entirely.
  */
 export const business = {
   name: 'Pavivasa',
@@ -22,11 +33,4 @@ export const business = {
     { platform: 'Instagram', href: 'https://instagram.com/gabrielpavivasa.es' },
     { platform: 'X', href: 'https://x.com/GabrielPavivasa' },
   ],
-  claims: {
-    yearsExperience: { es: 'Más de 15 años de oficio' },
-    warranty: { es: '10 años de garantía con mantenimiento' },
-    repeatCustomers: { es: 'Más del 30 % de clientes repiten' },
-    /** Coverage declared on /empresa/; pending confirmation from the client (see lib/schema.tsx's areaServed for the subset backed by real project photos). */
-    declaredProvinces: ['Valencia', 'Castellón', 'Alicante', 'Murcia', 'Albacete', 'Almería'],
-  },
 } satisfies Business

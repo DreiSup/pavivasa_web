@@ -3,8 +3,8 @@
  *
  * Same exports, same Spanish shapes, same values as before this migration —
  * now sourced from `@site/content` (business facts, locale 'es') and
- * `@site/config` (env). See `apps/web/src/lib/tipos.ts` for the kept
- * Spanish types.
+ * `@site/config` (env). Deliberately its own module, apart from
+ * `claims.ts` — see `./index.ts`'s comment.
  */
 import { publicEnv, site } from '@site/config'
 import { getBusiness, resolveBusiness } from '@site/content'
@@ -45,13 +45,6 @@ export const nap = {
   pais: business.country,
   direccionCompleta: resolved.addressLine,
   redes: business.socials.map((s) => ({ nombre: s.platform, href: s.href })),
-}
-
-export const claims = {
-  anios: business.claims.yearsExperience.es,
-  garantia: business.claims.warranty.es,
-  repiten: business.claims.repeatCustomers.es,
-  provincias: business.claims.declaredProvinces,
 }
 
 export const sitio = {

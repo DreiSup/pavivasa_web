@@ -1,7 +1,10 @@
 import { business } from '../data/business.ts'
 import type { Business, SocialLink } from '../schemas/business.ts'
 
-/** Raw business facts, as declared in `data/business.ts` (claims text stays `Localized`; resolve it with `pickLocalized` where needed). */
+/**
+ * Deliberately its own module, apart from `claims.ts` — see that file's
+ * comment. This file's only top-level data import is `data/business.ts`.
+ */
 export function getBusiness(): Business {
   return business
 }

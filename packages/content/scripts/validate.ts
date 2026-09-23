@@ -21,6 +21,7 @@ import { z } from 'zod'
 
 import type { Service } from '../src/schemas/service.ts'
 import { businessSchema } from '../src/schemas/business.zod.ts'
+import { claimsSchema } from '../src/schemas/claims.zod.ts'
 import { serviceSchema } from '../src/schemas/service.zod.ts'
 import { projectSchema } from '../src/schemas/project.zod.ts'
 import { articleSchema } from '../src/schemas/article.zod.ts'
@@ -28,8 +29,10 @@ import { homeContentSchema } from '../src/schemas/home.zod.ts'
 import { localizedText } from '../src/schemas/localized.zod.ts'
 
 import { business } from '../src/data/business.ts'
+import { claims } from '../src/data/claims.ts'
 import { services } from '../src/data/services.ts'
 import { serviceCatalog } from '../src/data/service-catalog.ts'
+import { spaceNames } from '../src/data/space-names.ts'
 import { projects } from '../src/data/projects.ts'
 import { articles } from '../src/data/articles.ts'
 import { home } from '../src/data/home.ts'
@@ -51,6 +54,7 @@ function zodIssues(label: string, result: z.SafeParseReturnType<unknown, unknown
 // ---- 1. Shape validation ---------------------------------------------------
 
 zodIssues('business', businessSchema.safeParse(business))
+zodIssues('claims', claimsSchema.safeParse(claims))
 
 for (const service of services) {
   zodIssues(`service "${service.id}"`, serviceSchema.safeParse(service))
@@ -98,6 +102,20 @@ for (const service of services) {
   if (entry.flagship !== service.flagship) fail(`service catalog: "${service.id}" flagship out of sync (${entry.flagship} vs ${service.flagship})`)
 }
 if (serviceCatalog.length !== services.length) fail(`service catalog has ${serviceCatalog.length} entries, services.ts has ${services.length}`)
+
+// ---- 2b. spaceNames must stay in sync with home.spaces + otherSpaceLabel --
+// (data/space-names.ts intentionally duplicates this out of data/home.ts —
+// see its own comment: apps/web/src/content/home.ts's NOMBRES_ESPACIOS is
+// read by a 'use client' component and must not drag hero/FAQ/showcase text
+// along with it.)
+
+const expectedSpaceNames = [...home.spaces.map((s) => s.name.es), home.otherSpaceLabel.es]
+const actualSpaceNames = spaceNames.map((s) => s.name.es)
+if (JSON.stringify(expectedSpaceNames) !== JSON.stringify(actualSpaceNames)) {
+  fail(
+    `space-names.ts out of sync with home.ts: expected [${expectedSpaceNames.join(', ')}], got [${actualSpaceNames.join(', ')}]`,
+  )
+}
 
 // ---- 3. Referential integrity ----------------------------------------------
 

@@ -6,7 +6,33 @@
  * `scripts/validate.ts` (the `content:validate` task) — see this package's
  * README.
  */
-export * from './queries/index.ts'
+// Explicit named re-exports, not `export * from './queries/index.ts'`: a
+// star export forces bundlers to treat the whole re-exported surface as one
+// opaque unit in some configurations, defeating the point of the file
+// splits in `queries/` (confirmed empirically while building this phase —
+// see the phase report).
+export { getBusiness, resolveBusiness } from './queries/business.ts'
+export type { BusinessOverrides, ResolvedBusiness } from './queries/business.ts'
+export { getClaims } from './queries/claims.ts'
+export type { ResolvedClaims } from './queries/claims.ts'
+export { getServices, getService, getServiceCatalog, getServiceSlugMap } from './queries/services.ts'
+export type { ResolvedService, ResolvedServiceCatalogEntry } from './queries/services.ts'
+export {
+  getProjects,
+  getProject,
+  getProjectsByService,
+  getFeaturedProjects,
+  getSimilarProjects,
+  getTownsWithProjects,
+} from './queries/projects.ts'
+export type { ResolvedProject, ResolvedExecutionSpecs } from './queries/projects.ts'
+export { getArticles, getArticle } from './queries/articles.ts'
+export type { ResolvedArticle, ResolvedArticleBlock } from './queries/articles.ts'
+export { getHome } from './queries/home.ts'
+export type { ResolvedHomeContent } from './queries/home.ts'
+export { getSpaceNames } from './queries/space-names.ts'
+export type { ResolvedImage, ResolvedQuestion, Locale } from './queries/resolve.ts'
+
 export { pickLocalized, pickLocalizedList, LOCALES } from './schemas/localized.ts'
 export type {
   Localized,
@@ -17,8 +43,8 @@ export type {
   Question,
   ServiceId,
   Service,
-  ExecutionSpecSheet,
-  ExecutionSpecList,
+  SpecSheet,
+  SpecList,
   Project,
   ExecutionSpecs,
   Article,

@@ -6,14 +6,6 @@ export type SocialLink = {
   href: string
 }
 
-export type Claims = {
-  yearsExperience: Localized<string>
-  warranty: Localized<string>
-  repeatCustomers: Localized<string>
-  /** Provinces claimed as coverage in the copy; only some have real project photos (see lib/schema.tsx's areaServed). Plain: proper nouns. */
-  declaredProvinces: string[]
-}
-
 export type Business = {
   /** Proper noun: plain. */
   name: string
@@ -30,5 +22,4 @@ export type Business = {
   province: string
   country: string
   socials: SocialLink[]
-  claims: Claims
 }

@@ -40,6 +40,8 @@ Gates antes de cada commit: `content:validate` → `lint` → `typecheck` →
 
 ## Estructura
 
+Ver [`ARCHITECTURE.md`](./ARCHITECTURE.md) para el mapa completo, capas, paquetes, rutas, flujos y contratos externos — pensado para que una IA lo lea primero.
+
 ```
 apps/web/                  Next.js — única app
   src/app/                 rutas: home, [servicio] (7), proyectos + [slug] (15), empresa,

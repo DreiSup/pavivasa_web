@@ -59,8 +59,8 @@ pavivasa/
 │   ├── brief-claude-design.md
 │   ├── anexo-extraccion-pavivasa-com.md
 │   └── referencia-globotent/
-├── img/                        # 39M, IGNORADO por git — fotos originales/fuente
-│   ├── NEW_LOGO.png
+├── img/                        # 39M, versionado — fotos originales/fuente (sin GPS) y logo.png; no se sirve
+│   ├── logo.png, NEW_LOGO.png
 │   └── work/*.jpg               # lo servible vive en apps/web/public/img
 ├── scripts/verify/             # gate postbuild (ver §11)
 ├── apps/

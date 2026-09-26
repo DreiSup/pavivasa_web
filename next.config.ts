@@ -29,6 +29,15 @@ const nextConfig: NextConfig = {
     // Redirecciones 301 de la web WordPress anterior. Con trailingSlash:true
     // cada `source` tiene que llevar barra final para coincidir.
     return [
+      // El dominio .vercel.app sirve la web entera en producción y Vercel no le
+      // pone noindex: para Google es un duplicado. Se manda al dominio propio.
+      // Los previews usan otras URLs y no se ven afectados.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'pavivasa-web.vercel.app' }],
+        destination: 'https://www.pavivasa.com/:path*',
+        permanent: true,
+      },
       { source: '/contacto/', destination: '/presupuesto/', permanent: true },
       { source: '/servicios/pavimentos-de-hormigon-impreso/', destination: '/hormigon-impreso/', permanent: true },
       { source: '/servicios/pavimentos-de-hormigon-pulido/', destination: '/hormigon-pulido/', permanent: true },

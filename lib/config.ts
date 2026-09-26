@@ -8,14 +8,23 @@
  */
 
 /** Una variable vacía (como en .env.example o en el panel de Vercel) cuenta como no definida. */
-function env(nombre: string): string | undefined {
-  return process.env[nombre]?.trim() || undefined
+function limpiar(valor: string | undefined): string | undefined {
+  return valor?.trim() || undefined
 }
 
-const telefonoEnv = env('NEXT_PUBLIC_TELEFONO') ?? '627 66 31 46'
+/**
+ * Solo para variables de servidor. Las NEXT_PUBLIC_* se leen siempre como
+ * `process.env.NEXT_PUBLIC_X` literal: Next.js no inyecta en el navegador
+ * una lectura dinámica (`process.env[nombre]`) y ahí llegarían vacías.
+ */
+function env(nombre: string): string | undefined {
+  return limpiar(process.env[nombre])
+}
+
+const telefonoEnv = limpiar(process.env.NEXT_PUBLIC_TELEFONO) ?? '627 66 31 46'
 /** El WhatsApp es el mismo móvil salvo que la variable diga otro. */
-const whatsappEnv = env('NEXT_PUBLIC_WHATSAPP') ?? telefonoEnv
-const direccionEnv = env('NEXT_PUBLIC_DIRECCION') ?? 'Calle Blasco Ibáñez, 16'
+const whatsappEnv = limpiar(process.env.NEXT_PUBLIC_WHATSAPP) ?? telefonoEnv
+const direccionEnv = limpiar(process.env.NEXT_PUBLIC_DIRECCION) ?? 'Calle Blasco Ibáñez, 16'
 
 export const nap = {
   nombre: 'Pavivasa',
@@ -54,9 +63,10 @@ export const claims = {
 }
 
 export const sitio = {
-  url: (env('NEXT_PUBLIC_SITE_URL') ?? 'https://pavivasa.com').replace(/\/+$/, ''),
-  gaId: env('NEXT_PUBLIC_GA_ID'),
-  googleAdsId: env('NEXT_PUBLIC_GOOGLE_ADS_ID'),
-  googleAdsLeadLabel: env('NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL'),
-  metaPixelId: env('NEXT_PUBLIC_META_PIXEL_ID'),
+  url: (limpiar(process.env.NEXT_PUBLIC_SITE_URL) ?? 'https://pavivasa.com').replace(/\/+$/, ''),
+  /** Propiedad GA4 de pavivasa.com. La variable de entorno la sobreescribe. */
+  gaId: limpiar(process.env.NEXT_PUBLIC_GA_ID) ?? 'G-F8KV8176ZG',
+  googleAdsId: limpiar(process.env.NEXT_PUBLIC_GOOGLE_ADS_ID),
+  googleAdsLeadLabel: limpiar(process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL),
+  metaPixelId: limpiar(process.env.NEXT_PUBLIC_META_PIXEL_ID),
 }

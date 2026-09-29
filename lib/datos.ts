@@ -44,3 +44,14 @@ export { articulos }
 export function articuloPorSlug(slug: string): Articulo | undefined {
   return articulos.find((a) => a.slug === slug)
 }
+
+/**
+ * Artículos publicados pero sin cuerpo redactado: la página sigue en pie por los
+ * enlaces entrantes, pero no se propone a indexación (ni sitemap ni /ai/ ni llms.txt).
+ * El `noindex` va por X-Robots-Tag en `next.config.ts`. Sacar de aquí en cuanto haya texto.
+ */
+export const ARTICULOS_SIN_INDEXAR = ['hormigon-desactivado-piedra-vista']
+
+export function articulosIndexables(): Articulo[] {
+  return articulos.filter((a) => !ARTICULOS_SIN_INDEXAR.includes(a.slug))
+}

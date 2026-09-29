@@ -21,9 +21,11 @@ Si cambia algo estructural, actualizar este fichero en el mismo commit.
 | `/blog/` + 4 artículos | `app/blog/…` | `content/articulos.ts` |
 | `/empresa/`, `/presupuesto/` | `app/empresa`, `app/presupuesto` | `lib/config.ts` |
 | legales (aviso, privacidad, cookies) | `app/*/page.tsx` + `PlantillaLegal` | `lib/legal/*.md` |
+| `/llms.txt`, `/llms-full.txt`, `/ai/*.md`, `/ai/servicios/<id>.md` (Markdown para IA/GEO/AEO) | `app/llms.txt`, `app/llms-full.txt`, `app/ai/…` (route handlers estáticos) + `lib/ai.ts` | generado desde `content/` y `lib/config.ts`; sin copy propio |
 | `sitemap.xml`, `robots.txt`, 404, OG image | `app/sitemap.ts`, `robots.ts`, `not-found.tsx`, `opengraph-image.jpg` | |
 
 Servicios: impreso, pulido, lavado, microcemento, autonivelantes, caucho, alicatados (`lib/tipos.ts`: `ORDEN_SERVICIOS`, `RUTA_SERVICIO`, `NOMBRE_SERVICIO`).
+Ficheros de `/ai/`: se añaden en `ARCHIVOS_AI` (lib/ai.ts) y en el mapa de `app/ai/[archivo]/route.ts`. Omiten lo pendiente (FAQ sin respuesta, artículo sin indexar: `ARTICULOS_SIN_INDEXAR` en `lib/datos.ts`) y marcan `[pendiente de confirmar]`. No van al sitemap.
 Añadir ruta estática nueva ⇒ añadirla a `rutasEstaticas` en `app/sitemap.ts`.
 
 ## Dónde se toca cada cosa

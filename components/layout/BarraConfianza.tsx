@@ -1,6 +1,3 @@
-import { claims } from '@/lib/config'
-import DatoPendiente from '../datos/DatoPendiente'
-
 const datos = [
   { cifra: '+15', texto: 'años de oficio', textoMovil: 'años de oficio' },
   { cifra: '10', texto: 'años de garantía con mantenimiento', textoMovil: 'años de garantía' },
@@ -29,10 +26,8 @@ export default function BarraConfianza() {
         </li>
       ))}
       <li className="flex flex-col gap-1 md:gap-[6px] px-lat-movil py-4 md:px-8 md:py-6">
-        <span className="font-display font-bold text-26 md:text-34 leading-none">{claims.provincias.length}</span>
-        <span className="font-mono text-d-10 md:text-d-12 uppercase text-tinta-media">
-          provincias · <DatoPendiente pequeno className="md:!text-d-12">por confirmar</DatoPendiente>
-        </span>
+        <span className="font-display font-bold text-26 md:text-34 leading-none">Comunidad Valenciana</span>
+        <span className="font-mono text-d-10 md:text-d-12 uppercase text-tinta-media">zona de trabajo</span>
       </li>
     </ul>
   )

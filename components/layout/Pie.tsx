@@ -24,14 +24,14 @@ function Rotulo({ children, className = '' }: { children: React.ReactNode; class
 
 const enlacePie = 'text-sobre-tinta no-underline hover:text-fondo-alt'
 
-/** Pie: NAP, siete servicios, empresa y redes, Kit Digital, legales. Fondo tinta. */
+/** Pie: NAP, siete servicios, empresa y redes, legales. Fondo tinta. */
 export default function Pie() {
   const anio = new Date().getFullYear()
 
   return (
     <footer className="bg-tinta text-sobre-tinta px-lat-movil pt-12 pb-[96px] md:px-lat-desktop md:pt-16 md:pb-8">
       <div className="max-w-contenido mx-auto flex flex-col gap-8 md:gap-0">
-        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-8 md:gap-12 md:pb-12 md:border-b md:border-sobre-tinta/[.16]">
+        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-8 md:gap-12 md:pb-12 md:border-b md:border-sobre-tinta/[.16]">
           <div className="flex flex-col gap-4 md:gap-5">
             <Logo className="!text-26 md:!text-34" />
             <p className="hidden md:block text-16 text-sobre-tinta/70">
@@ -72,19 +72,6 @@ export default function Pie() {
                 </a>
               ))}
             </nav>
-          </div>
-
-          <div className="flex flex-col gap-[10px] md:gap-3">
-            <Rotulo className="leading-[1.5]">Proyecto web financiado por la Unión Europea – NextGenerationEU</Rotulo>
-            <div
-              role="img"
-              aria-label="Logotipos pendientes: Kit Digital, Unión Europea, Gobierno de España, Plan de Recuperación"
-              className="relative h-[72px] md:h-24 bg-sobre-tinta bg-trama-clara md:border md:border-sobre-tinta/30"
-            >
-              <span className="absolute left-2 bottom-[6px] font-mono text-d-10 uppercase text-tinta-media">
-                Logos Kit Digital · UE · Gobierno · PRTR
-              </span>
-            </div>
           </div>
         </div>
 

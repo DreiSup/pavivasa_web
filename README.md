@@ -41,6 +41,5 @@ lib/          config (NAP y claims), tipos, datos, schema (JSON-LD), eventos, me
 
 ## Pendiente del cliente
 
-WhatsApp (`NEXT_PUBLIC_WHATSAPP`), horario, fotos originales a 2400 px, logotipos del Kit
-Digital, textos legales y NIF, respuestas de las FAQ, confirmación de la cobertura por
+WhatsApp (`NEXT_PUBLIC_WHATSAPP`), horario, fotos originales a 2400 px, textos legales y NIF, respuestas de las FAQ, confirmación de la cobertura por
 provincias y reescritura del artículo de piedra vista (original en rumano).

@@ -47,7 +47,7 @@ Añadir ruta estática nueva ⇒ añadirla a `rutasEstaticas` en `app/sitemap.ts
 
 - FAQ: `FAQ_HOME` y las de cada servicio tienen preguntas **sin respuesta** (se pintan con `DatoPendiente`; el FAQPage JSON-LD queda fuera hasta que haya respuestas).
 - Artículo `hormigon-desactivado-piedra-vista`: cuerpo pendiente (original en rumano), `noindex` por cabecera y fuera del sitemap.
-- Horario, NIF, logos Kit Digital/UE (bloque con trama en `Pie.tsx`), m² y año de obra (`anioFoto` siempre pendiente), cobertura de 6 provincias («por confirmar»), textos legales.
+- Horario, NIF, m² y año de obra (`anioFoto` siempre pendiente), cobertura de 6 provincias («por confirmar»), textos legales.
 - Fichas técnicas: solo hay datos reales de 3 obras de impreso; `ficha: {}` en varias obras.
 
 ## Imágenes

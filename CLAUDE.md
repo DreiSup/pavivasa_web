@@ -3,6 +3,9 @@
 Web de Pavivasa en Next.js 15 (App Router) + Tailwind. Esqueleto derivado de la
 arquitectura de pavimentos-albufera.com. Ver `docs/` para la especificación cuando exista.
 
+**Antes de empezar cualquier tarea, lee `docs/CONTEXTO.md`**: mapa de rutas, dónde se toca cada
+cosa, estado del build y desviaciones conocidas. No reinspecciones el proyecto entero.
+
 ## Reglas de este proyecto
 
 **Diseño**

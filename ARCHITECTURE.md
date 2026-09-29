@@ -10,6 +10,8 @@ estado: "migración a monorepo en curso; frontend de esta rama congelado (apps/w
 fuente_de_verdad: "el código; este documento lo resume"
 ---
 
+> Nota: la rama plana anterior `main` (novedades hasta 2026-09) se integró en el monorepo (`integracion/monorepo-main`): CLAUDE.md, `docs/CONTEXTO.md`, teléfono normalizado, URL canónica con www, `/llms.txt` y `/ai/*`, y retirada del Kit Digital. Ver `docs/CONTEXTO.md`.
+
 # Arquitectura — Pavivasa
 
 > Para una IA: qué leer primero, reglas que no se rompen, dónde está cada cosa.
@@ -157,7 +159,7 @@ Reglas verificadas en el código (no solo declaradas):
 - **Responsabilidad**: variables de entorno (públicas y de servidor) y config de sitio (URL canónica, locales).
 - **API pública** (`"."` → `src/index.ts`): `publicEnv` (8 lecturas literales de `NEXT_PUBLIC_*`, pasadas por `clean()` que convierte vacío/espacios a `undefined`); `site` (objeto con **solo** `url`); y, como **exports nombrados independientes** (no propiedades de `site`) — `defaultLocale: 'es'`, `supportedLocales: ['es','en','fr','de']`, `publishedLocales: ['es']`. *(`site.defaultLocale` sería `undefined`; el import correcto es `import { site, defaultLocale, supportedLocales, publishedLocales } from '@site/config'`.)*
 - **Subpath `"./server"`** (`src/server.ts`): `serverEnv` — 5 lecturas planas (`EMAIL_DESTINO`, `RESEND_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `META_CAPI_ACCESS_TOKEN`), mismo `clean()`. Import solo desde Server Actions/route handlers/`@site/tracking/server`.
-- **Ficheros clave**: `env.schema.ts`/`server-env.schema.ts` (Zod, solo importados por `scripts/check-env.ts`) vs `env.ts`/`server.ts` (importan solo el *tipo* inferido, sin traer Zod al bundle cliente) — mismo patrón de separación que en `@site/content`. `site.ts`: `site.url = (publicEnv.NEXT_PUBLIC_SITE_URL ?? 'https://pavivasa.com').replace(/\/+$/, '')` — cae al hardcode en vez de fallar en producción (ver §14).
+- **Ficheros clave**: `env.schema.ts`/`server-env.schema.ts` (Zod, solo importados por `scripts/check-env.ts`) vs `env.ts`/`server.ts` (importan solo el *tipo* inferido, sin traer Zod al bundle cliente) — mismo patrón de separación que en `@site/content`. `site.ts`: `site.url = (publicEnv.NEXT_PUBLIC_SITE_URL ?? 'https://www.pavivasa.com').replace(/\/+$/, '')` — cae al hardcode en vez de fallar en producción (ver §14).
 - **Scripts**: `check-env.ts` (`pnpm --filter @site/config run check-env`, corre como `prebuild` de `apps/web`, node nativo con `--experimental-strip-types`). Reglas: `FAIL_ON_MALFORMED_PUBLIC_ENV=false` y `FAIL_IF_SITE_URL_MISSING_IN_PRODUCTION=false` — ambas hoy solo avisan, nunca rompen el build (`packages/config/scripts/check-env.ts:60,83-96`). No lee `.env*`, solo `process.env` real.
 
 ### `@site/content`
@@ -334,7 +336,7 @@ Atribución: `captureLandingParams()` guarda click-IDs (`gclid`,`gbraid`,`wbraid
 
 | Variable | Tipo | Validación | Efecto si falta | Fuente |
 |---|---|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | pública | URL absoluta si presente (opcional hoy) | Cae a `https://pavivasa.com` hardcodeado (`site.ts`); en `VERCEL_ENV=production` solo AVISA por consola, no rompe el build | `packages/config/src/env.schema.ts:18-33`, `site.ts:1-18` |
+| `NEXT_PUBLIC_SITE_URL` | pública | URL absoluta si presente (opcional hoy) | Cae a `https://www.pavivasa.com` hardcodeado (`site.ts`); en `VERCEL_ENV=production` solo AVISA por consola, no rompe el build | `packages/config/src/env.schema.ts:18-33`, `site.ts:1-18` |
 | `NEXT_PUBLIC_TELEFONO` | pública | libre | Usa el de `@site/content` (`business.ts`) | `.env.example:11` |
 | `NEXT_PUBLIC_WHATSAPP` | pública | libre | Vacío hoy (no hay WhatsApp confirmado) → se muestra como `DatoPendiente` | `.env.example:13` |
 | `NEXT_PUBLIC_DIRECCION` | pública | libre | Usa el de `@site/content` | `.env.example:14` |
@@ -420,7 +422,7 @@ Referencia normativa: *arquitectura-plantilla-monorepo.md* (documento fuera de e
 | `@id` del negocio (§7) | `<url>/#business` | `${siteUrl}/#negocio` (español) | Deliberado, "kept exactly" para igualar la web pre-migración. El comentario del código cita "§9" para justificarlo, pero en la numeración actual del documento §9 es "Configuración y entorno" — la referencia cruzada está desactualizada (debería ser §7). |
 | Nombres de eventos (§8) | `phone_call`, `whatsapp_click`, `form_submit`, todos con `variante` y `locale` | `clic_llamar`, `clic_whatsapp`, `envio_formulario`, en español, sin `locale` en ninguno; solo `envio_formulario` lleva `variante` | Deliberado y documentado en README/§15, bloqueado hasta confirmar si GA4/Ads Key Events ya referencian los nombres en español |
 | Atributos de tracking en enlaces (§8) | `data-cta="phone"|"whatsapp"` + `data-ubicacion` en cada `tel:`/`wa.me` | No implementado: `EventosGlobales.tsx` detecta por `href.startsWith('tel:')`/`href.includes('wa.me')`, sin esos atributos | No documentado en el repo como desviación explícita — gap real frente a §8 |
-| `NEXT_PUBLIC_SITE_URL` en producción (§9) | Obligatoria; si falta, el build falla | Cae al hardcode `https://pavivasa.com`; `check-env` solo avisa (`FAIL_IF_SITE_URL_MISSING_IN_PRODUCTION=false`) | Pendiente de decisión, autodocumentado en comentarios del propio código |
+| `NEXT_PUBLIC_SITE_URL` en producción (§9) | Obligatoria; si falta, el build falla | Cae al hardcode `https://www.pavivasa.com`; `check-env` solo avisa (`FAIL_IF_SITE_URL_MISSING_IN_PRODUCTION=false`) | Pendiente de decisión, autodocumentado en comentarios del propio código |
 | Gate CI→deploy (§11) | "Vercel solo despliega si pasa" CI | Vercel despliega vía Git integration sin depender del resultado de CI | No implementado; no hay branch protection ni deployment gating configurados |
 | Idiomas (§4 del plan) | `app/[locale]/` con next-intl en la fase de idiomas | Aplazado al rediseño; contenido ya multidioma, enrutado no | Deliberado, §15 |
 | Adaptadores legacy en español (§13, "renombrado a inglés") | Identificadores nuevos en inglés | `apps/web/src/lib/*` y `src/content/*` mantienen su API en español intacta | Deliberado — se borran cuando el rediseño consuma `@site/*` directo |

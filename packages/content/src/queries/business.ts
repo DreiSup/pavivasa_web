@@ -54,10 +54,29 @@ export type ResolvedBusiness = {
  * `locale` resolves the WhatsApp greeting's `Localized<string>` like every
  * other query — see the `Localized<T>` rule in the package README.
  */
+/**
+ * Returns the 9 national digits of a Spanish phone. Strips spaces, dots,
+ * hyphens, parentheses and one +34 / 0034 / 34 prefix. Anything that does not
+ * leave exactly 9 digits returns `undefined` (caller falls back to default).
+ */
+function normalizePhone(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  const clean = value.replace(/[\s.\-()]/g, '').replace(/^(?:\+34|0034|34)/, '')
+  return /^\d{9}$/.test(clean) ? clean : undefined
+}
+
+/** Single formatter, 3-2-2-2 ("627 66 31 46"). */
+function formatPhone(national: string): string {
+  return `${national.slice(0, 3)} ${national.slice(3, 5)} ${national.slice(5, 7)} ${national.slice(7)}`
+}
+
 export function resolveBusiness(overrides: BusinessOverrides, locale: Locale): ResolvedBusiness {
-  const phone = overrides.phone ?? business.phone ?? ''
-  // The WhatsApp number defaults to the (already-overridden) phone, unless a WhatsApp-specific override is given.
-  const whatsapp = overrides.whatsapp ?? phone
+  // Invalid overrides (not exactly 9 national digits) fall back to the default.
+  const phoneNational = normalizePhone(overrides.phone) ?? normalizePhone(business.phone) ?? ''
+  // The WhatsApp number defaults to the (already-resolved) phone, unless a valid WhatsApp-specific override is given.
+  const whatsappNational = normalizePhone(overrides.whatsapp) ?? phoneNational
+  const phone = phoneNational ? formatPhone(phoneNational) : ''
+  const whatsapp = whatsappNational ? formatPhone(whatsappNational) : ''
   const address = overrides.address ?? business.address ?? ''
   const email = business.email
 
@@ -73,10 +92,10 @@ export function resolveBusiness(overrides: BusinessOverrides, locale: Locale): R
     province: business.province,
     country: business.country,
     socials: business.socials,
-    phoneHref: `tel:+34${phone.replace(/\D/g, '')}`,
+    phoneHref: `tel:+34${phoneNational}`,
     phoneInternational: `+34 ${phone}`,
-    whatsappHref: whatsapp
-      ? `https://wa.me/34${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(pickLocalized(business.whatsappMessage, locale) ?? '')}`
+    whatsappHref: whatsappNational
+      ? `https://wa.me/34${whatsappNational}?text=${encodeURIComponent(pickLocalized(business.whatsappMessage, locale) ?? '')}`
       : undefined,
     addressLine: `${address} · ${business.postalCode} ${business.town} (${business.province})`,
   }

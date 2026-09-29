@@ -7,7 +7,7 @@ on:
 env:
   NEXT_TELEMETRY_DISABLED: '1'
   COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
-  NEXT_PUBLIC_SITE_URL: https://pavivasa.com
+  NEXT_PUBLIC_SITE_URL: https://www.pavivasa.com
 
 jobs:
   ci:

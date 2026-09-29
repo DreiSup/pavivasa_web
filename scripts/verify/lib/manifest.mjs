@@ -45,6 +45,9 @@ export async function loadBuild(nextDir) {
   const pages = []
   for (const route of Object.keys(prerender.routes || {})) {
     if (route === '/_not-found' || METADATA_ROUTES.has(route)) continue
+    // Route handlers de texto (/llms.txt, /ai/*.md): sin HTML ni dataRoute; no son páginas.
+    const ct = prerender.routes[route]?.initialHeaders?.['content-type'] ?? ''
+    if (prerender.routes[route]?.dataRoute === null && ct && !/text\/html/i.test(ct)) continue
     pages.push({
       route,
       htmlFile: path.join(nextDir, 'server', 'app', routeToHtmlFile(route)),

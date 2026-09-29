@@ -242,7 +242,7 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
         method: 'POST',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: `${nap.nombre} <presupuesto@${new URL(sitio.url).hostname}>`,
+          from: `${nap.nombre} <presupuesto@${new URL(sitio.url).hostname.replace(/^www\./, '')}>`,
           // Lead destination decoupled from the publicly-displayed NAP email (nap.email):
           // EMAIL_DESTINO, when set, is the real inbox for leads; nap.email is only ever
           // the business's public contact address.

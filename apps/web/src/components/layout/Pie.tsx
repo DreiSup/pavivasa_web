@@ -24,7 +24,7 @@ function Rotulo({ children, className = '' }: { children: React.ReactNode; class
 
 const enlacePie = 'text-sobre-tinta no-underline hover:text-fondo-alt'
 
-/** Pie: NAP, siete servicios, empresa y redes, Kit Digital, legales. Fondo tinta. */
+/** Pie: NAP, siete servicios, empresa y redes, legales. Fondo tinta. */
 export default function Pie() {
   const anio = new Date().getFullYear()
 
@@ -82,18 +82,6 @@ export default function Pie() {
               </a>
             ))}
           </nav>
-
-          <div className="flex flex-col items-center justify-center">
-            <div
-              role="img"
-              aria-label="Logotipos pendientes: Kit Digital"
-              className="w-40 h-12 bg-sobre-tinta/8 bg-[repeating-linear-gradient(135deg,rgba(246,241,232,.08)_0px,rgba(246,241,232,.08)_1px,transparent_1px,transparent_12px)] flex items-center justify-center"
-            >
-              <span className="font-mono text-d-10 uppercase text-sobre-tinta/50 text-center px-2">
-                Logos Kit Digital · pendiente
-              </span>
-            </div>
-          </div>
         </div>
 
         <div className="flex flex-col gap-[10px] pt-6 border-t border-sobre-tinta/[.16] font-mono text-12 tracking-[0.02em] text-sobre-tinta/60">

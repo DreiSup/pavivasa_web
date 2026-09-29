@@ -14,5 +14,6 @@ export const publishedLocales: readonly Locale[] = ['es']
 // pending the user's decision on failing outright; see that script's
 // comment for the one-line switch.
 export const site = {
-  url: (publicEnv.NEXT_PUBLIC_SITE_URL ?? 'https://pavivasa.com').replace(/\/+$/, ''),
+  // Canonical host is www (Vercel redirects pavivasa.com to www; untouched here).
+  url: (publicEnv.NEXT_PUBLIC_SITE_URL ?? 'https://www.pavivasa.com').replace(/\/+$/, ''),
 }

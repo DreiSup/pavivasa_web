@@ -8,7 +8,7 @@ GABRIEL CRISTINEL NEAMTU se reserva el derecho de modificar cualquier tipo de in
 
 **1\. DATOS IDENTIFICATIVOS**
 
-Nombre de dominio: [www.pavivasa.com](https://pavivasa.com/)  
+Nombre de dominio: [www.pavivasa.com](https://www.pavivasa.com/)  
 Nombre comercial: PAVIVASA  
 Denominación social: GABRIEL CRISTINEL NEAMTU  
 NIF: X9252734H  
@@ -22,7 +22,7 @@ El sitio web, incluyendo a título enunciativo pero no limitativo su programaci�
 
 Independientemente de la finalidad para la que fueran destinados, la reproducción total o parcial, uso, explotación, distribución y comercialización, requiere en todo caso la autorización escrita previa por parte del RESPONSABLE. Cualquier uso no autorizado previamente se considera un incumplimiento grave de los derechos de propiedad intelectual o industrial del autor.
 
-Los diseños, logotipos, texto y/o gráficos ajenos al RESPONSABLE y que pudieran aparecer en el sitio web, pertenecen a sus respectivos propietarios, siendo ellos mismos responsables de cualquier posible controversia que pudiera suscitarse respecto a los mismos. El RESPONSABLE autoriza expresamente a que terceros puedan redirigir directamente a los contenidos concretos del sitio web, y en todo caso redirigir al sitio web principal de [www.pavivasa.com](https://pavivasa.com/)
+Los diseños, logotipos, texto y/o gráficos ajenos al RESPONSABLE y que pudieran aparecer en el sitio web, pertenecen a sus respectivos propietarios, siendo ellos mismos responsables de cualquier posible controversia que pudiera suscitarse respecto a los mismos. El RESPONSABLE autoriza expresamente a que terceros puedan redirigir directamente a los contenidos concretos del sitio web, y en todo caso redirigir al sitio web principal de [www.pavivasa.com](https://www.pavivasa.com/)
 
 El RESPONSABLE reconoce a favor de sus titulares los correspondientes derechos de propiedad intelectual e industrial, no implicando su sola mención o aparición en el sitio web la existencia de derechos o responsabilidad alguna sobre los mismos, como tampoco respaldo, patrocinio o recomendación por parte del mismo.
 

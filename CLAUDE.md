@@ -8,6 +8,9 @@ Tailwind, en `apps/web`, sobre paquetes `@site/*` (`content`, `seo`,
 `arquitectura-plantilla-monorepo.md` (fuera de este repo) para la plantilla
 normativa que sigue todo esto.
 
+**Antes de empezar cualquier tarea, lee `docs/CONTEXTO.md`**: mapa de rutas, dónde se toca cada
+cosa, estado del build y desviaciones conocidas. No reinspecciones el proyecto entero.
+
 ## Reglas de este proyecto
 
 **Frontend congelado**

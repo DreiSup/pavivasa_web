@@ -16,7 +16,7 @@
 import { z } from 'zod'
 
 export const PublicEnvSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z.string().url('must be an absolute URL, e.g. "https://pavivasa.com"').optional(),
+  NEXT_PUBLIC_SITE_URL: z.string().url('must be an absolute URL, e.g. "https://www.pavivasa.com"').optional(),
   NEXT_PUBLIC_TELEFONO: z.string().optional(),
   NEXT_PUBLIC_WHATSAPP: z.string().optional(),
   NEXT_PUBLIC_DIRECCION: z.string().optional(),

@@ -76,7 +76,7 @@ errors.push(...zodIssues('server env', ServerEnvSchema.safeParse(serverEnv)))
  * §9 of `arquitectura-plantilla-monorepo.md` asks for a production build to
  * fail when `NEXT_PUBLIC_SITE_URL` is unset (`site.ts` would otherwise
  * silently publish canonical URLs, the sitemap and JSON-LD under the
- * hardcoded `https://pavivasa.com` fallback). Pending the user's decision,
+ * hardcoded `https://www.pavivasa.com` fallback). Pending the user's decision,
  * this WARNS loudly instead of failing the build. One-line switch to make
  * it fail instead: flip this constant to `true`.
  */

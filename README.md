@@ -93,7 +93,7 @@ Resumen:
 
 | Variable | Ámbito | Qué hace | Dónde se pone en Vercel |
 |---|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | pública | Origen absoluto para canonical, sitemap, JSON-LD, `og:url`. Sin ella cae al valor fijo `https://pavivasa.com` en `@site/config/site.ts`. | Project → Settings → Environment Variables, entorno Production (y Preview si se quiere un dominio distinto ahí) |
+| `NEXT_PUBLIC_SITE_URL` | pública | Origen absoluto para canonical, sitemap, JSON-LD, `og:url`. Sin ella cae al valor fijo `https://www.pavivasa.com` en `@site/config/site.ts`. | Project → Settings → Environment Variables, entorno Production (y Preview si se quiere un dominio distinto ahí) |
 | `NEXT_PUBLIC_TELEFONO` | pública | Sobrescribe el teléfono publicado en `@site/content`. Vacío = usa el de `business.ts`. | igual |
 | `NEXT_PUBLIC_WHATSAPP` | pública | Número de WhatsApp del NAP. Aún no existe (pendiente del cliente); vacío se muestra como `DatoPendiente`. | igual |
 | `NEXT_PUBLIC_DIRECCION` | pública | Sobrescribe la dirección publicada. | igual |
@@ -214,7 +214,7 @@ se hace en la fase de rediseño, junto con las rutas nuevas.
 ## Pendiente del cliente
 
 WhatsApp (`NEXT_PUBLIC_WHATSAPP`), horario, fotos originales a 2400 px,
-logotipos del Kit Digital, textos legales y NIF, respuestas de las FAQ,
+textos legales y NIF, respuestas de las FAQ,
 confirmación de la cobertura por provincias y reescritura del artículo de
 piedra vista (original en rumano).
 

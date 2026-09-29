@@ -48,8 +48,10 @@ Añadir ruta estática nueva ⇒ añadirla a `rutasEstaticas` en `app/sitemap.ts
 
 ## Imágenes
 
-- `public/img/` tiene ~92 ficheros; **todas las referencias existen** (sin rotas). Toda foto sin `src` se pinta como `BloquePosicion` (trama + etiqueta).
-- **45 fotos están en `public/img/` pero sin usar** (p. ej. `caucho-parque-*`, `pista-deportiva-roja*`, `solera-industrial-mallazo*`, `microcemento-pared-*`, `impreso-*` sueltas, `trabajadores1/3.png`, `camino.png`). Candidatas a rellenar huecos de servicios/proyectos que aún no tienen foto.
+- `public/img/` tiene 81 ficheros; **todas las referencias existen** (sin rotas). Toda foto sin `src` se pinta como `BloquePosicion` (trama + etiqueta).
+- **45 fotos están en `public/img/` pero sin usar** (revisadas una a una el 2026-09-29): `impreso-*` sueltas (patios, porches, terrazas, caminos, piscinas), `pulido-*` sueltas (porches, terrazas, interiores, pasarela, patio), `desactivado-*` (camino beige, texturas marrones), `microcemento-pared-*` y `microcemento-bano-lavabos1`, `caucho-parque-acuatico/tobogan`, `pista-deportiva-roja1/2` (impreso rojo, no caucho), `solera-industrial-mallazo1/2`, `trabajadores1/3.png`, `camino.png`.
+- **Huecos de foto vacíos: 2**, ambos `imagenHero` en `content/servicios.ts`: autonivelantes («autonivelante · sin obra documentada») y alicatados («alicatado · sin obra documentada»). Ninguna foto sin usar muestra un autonivelante ni un alicatado como sujeto (`pulido-interior-loft2` tiene un banco de trencadís, pero el sujeto es un suelo pulido), así que quedan vacíos hasta que haya fotos reales. Los demás huecos (proyectos, home, artículos, servicios) ya tienen foto. Bloque con trama restante que no es foto: mapa en `app/empresa/page.tsx` y logos en `Pie.tsx`.
+- Las fotos sin usar podrían servir de galería secundaria en proyectos con una sola imagen, pero no se sabe a qué obra pertenece cada una: no asignar sin confirmación.
 - `hormigon-impreso-calpe` usa `portada.png` como única imagen.
 
 ## Desviaciones detectadas frente a CLAUDE.md / puntos a revisar

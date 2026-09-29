@@ -12,7 +12,7 @@ Revisar la estructura de la pçagina web hecha con [Next.js](http://Next.js) y s
 
 ## 1\. Introducción
 
-### Nuestra web, [https://pavivasa.com](https://pavivasa.com/) (en adelante: «la web») utiliza cookies y otras tecnologías relacionadas (para mayor comodidad, todas las tecnologías se denominan «cookies»). Las cookies también son colocadas por terceros a los que hemos contratado. En el siguiente documento te informamos sobre el uso de cookies en nuestra web.
+### Nuestra web, [https://www.pavivasa.com](https://www.pavivasa.com/) (en adelante: «la web») utiliza cookies y otras tecnologías relacionadas (para mayor comodidad, todas las tecnologías se denominan «cookies»). Las cookies también son colocadas por terceros a los que hemos contratado. En el siguiente documento te informamos sobre el uso de cookies en nuestra web.
 
 ## 2\. ¿Qué son las cookies?
 
@@ -708,7 +708,7 @@ Revisar la estructura de la pçagina web hecha con [Next.js](http://Next.js) y s
 
 ### Para preguntas y/o comentarios sobre nuestra política de cookies y esta declaración, por favor, contacta con nosotros usando los siguientes datos de contacto:
 
-### PAVIVASA Carrer V Blasco Ibáñez, 16 SollanaValència (Valencia) (ES)46430 España España Web: [https://pavivasa.com](https://pavivasa.com/) Correo electrónico: pavialbufera@gmail.com Número de teléfono: \+34 627 66 31 46
+### PAVIVASA Carrer V Blasco Ibáñez, 16 SollanaValència (Valencia) (ES)46430 España España Web: [https://www.pavivasa.com](https://www.pavivasa.com/) Correo electrónico: pavialbufera@gmail.com Número de teléfono: \+34 627 66 31 46
 
 ### Esta política de cookies se ha sincronizado con [cookiedatabase.org](https://cookiedatabase.org/) el mayo 9, 2025\.
 

@@ -29,6 +29,7 @@ Añadir ruta estática nueva ⇒ añadirla a `rutasEstaticas` en `app/sitemap.ts
 ## Dónde se toca cada cosa
 
 - **NAP / claims / redes / IDs de analítica:** `lib/config.ts` (env vacía = no definida). Tel. `627 66 31 46`, Calle Blasco Ibáñez 16, 46430 Sollana. WhatsApp = mismo móvil salvo `NEXT_PUBLIC_WHATSAPP`.
+  Teléfono y WhatsApp se normalizan a 9 cifras (quita espacios/puntos/guiones/paréntesis y +34, 0034 o 34); si la variable no da 9 cifras se usa el valor por defecto, y todos los campos de `nap` se derivan de ahí con un único formateador (sin +34 duplicado). La variable se pone sin prefijo.
 - **Tokens:** `tailwind.config.ts` + `app/globals.css` (mismos valores en los dos). La paleta de Tailwind está reemplazada: solo existen los colores del config.
 - **Fuentes:** `app/fuentes.ts` (Big Shoulders / Barlow / Overpass Mono).
 - **Navegación:** `components/layout/Cabecera.tsx` (`enlaces`), `Pie.tsx`, `MenuMovil.tsx`, `BarraMovil.tsx` (única sombra).

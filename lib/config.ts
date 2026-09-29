@@ -2,9 +2,11 @@
  * NAP único del sitio (nombre, dirección, teléfono). Ningún componente escribe
  * un teléfono o una dirección a mano: todo sale de aquí.
  *
- * Los valores por defecto son los que publica pavivasa.com (sept. 2026). Las
- * variables de entorno los sobreescriben. Lo que la web no da (horario)
- * llega vacío y se muestra con <DatoPendiente>.
+ * Los datos reales (los que publica pavivasa.com, sept. 2026) viven en este
+ * código. Las variables de entorno solo sirven para sobrescribirlos; el
+ * teléfono y el WhatsApp se ponen SIN prefijo (+34), aunque se tolera y se
+ * normaliza. Si una variable es inválida, se usa el valor por defecto. Lo que
+ * la web no da (horario) llega vacío y se muestra con <DatoPendiente>.
  */
 
 /** Una variable vacía (como en .env.example o en el panel de Vercel) cuenta como no definida. */
@@ -12,24 +14,38 @@ function env(nombre: string): string | undefined {
   return process.env[nombre]?.trim() || undefined
 }
 
-const telefonoEnv = env('NEXT_PUBLIC_TELEFONO') ?? '627 66 31 46'
+/**
+ * Devuelve las 9 cifras nacionales de un móvil/fijo español. Quita espacios,
+ * puntos, guiones, paréntesis y un prefijo +34, 0034 o 34. Si no quedan
+ * exactamente 9 cifras devuelve undefined.
+ */
+function normalizarTelefono(valor: string | undefined): string | undefined {
+  if (!valor) return undefined
+  const limpio = valor.replace(/[\s.\-()]/g, '').replace(/^(?:\+34|0034|34)/, '')
+  return /^\d{9}$/.test(limpio) ? limpio : undefined
+}
+
+/** Formato visible 3-2-2-2 (627 66 31 46). */
+function formatear(nacional: string): string {
+  return `${nacional.slice(0, 3)} ${nacional.slice(3, 5)} ${nacional.slice(5, 7)} ${nacional.slice(7)}`
+}
+
+const telefonoNacional = normalizarTelefono(env('NEXT_PUBLIC_TELEFONO')) ?? '627663146'
 /** El WhatsApp es el mismo móvil salvo que la variable diga otro. */
-const whatsappEnv = env('NEXT_PUBLIC_WHATSAPP') ?? telefonoEnv
+const whatsappNacional = normalizarTelefono(env('NEXT_PUBLIC_WHATSAPP')) ?? telefonoNacional
 const direccionEnv = env('NEXT_PUBLIC_DIRECCION') ?? 'Calle Blasco Ibáñez, 16'
 
 export const nap = {
   nombre: 'Pavivasa',
   gestor: 'Gabriel',
   email: env('EMAIL_DESTINO') ?? 'gabriel.pavivasa@gmail.com',
-  telefono: telefonoEnv,
-  telefonoInternacional: `+34 ${telefonoEnv}`,
-  telefonoHref: `tel:+34${telefonoEnv.replace(/\D/g, '')}`,
-  whatsapp: whatsappEnv,
-  whatsappHref: whatsappEnv
-    ? `https://wa.me/34${whatsappEnv.replace(/\D/g, '')}?text=${encodeURIComponent(
-        'Hola, quiero presupuesto para ',
-      )}`
-    : undefined,
+  telefono: formatear(telefonoNacional),
+  telefonoInternacional: `+34 ${formatear(telefonoNacional)}`,
+  telefonoHref: `tel:+34${telefonoNacional}`,
+  whatsapp: formatear(whatsappNacional),
+  whatsappHref: `https://wa.me/34${whatsappNacional}?text=${encodeURIComponent(
+    'Hola, quiero presupuesto para ',
+  )}`,
   direccion: direccionEnv,
   municipio: 'Sollana',
   codigoPostal: '46430',

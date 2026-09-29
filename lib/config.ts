@@ -70,7 +70,7 @@ export const claims = {
 }
 
 export const sitio = {
-  url: (env('NEXT_PUBLIC_SITE_URL') ?? 'https://pavivasa.com').replace(/\/+$/, ''),
+  url: (env('NEXT_PUBLIC_SITE_URL') ?? 'https://www.pavivasa.com').replace(/\/+$/, ''),
   gaId: env('NEXT_PUBLIC_GA_ID'),
   googleAdsId: env('NEXT_PUBLIC_GOOGLE_ADS_ID'),
   googleAdsLeadLabel: env('NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL'),

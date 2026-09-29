@@ -120,7 +120,8 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
         method: 'POST',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: `${nap.nombre} <presupuesto@${new URL(sitio.url).hostname}>`,
+          // Dominio raíz: la URL del sitio lleva www y el dominio verificado en Resend no.
+          from: `${nap.nombre} <presupuesto@${new URL(sitio.url).hostname.replace(/^www\./, '')}>`,
           to: nap.email,
           reply_to: email || undefined,
           subject: `Presupuesto — ${nombre} · ${espacio}${municipio ? ` · ${municipio}` : ''}`,

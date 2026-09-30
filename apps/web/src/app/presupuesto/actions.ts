@@ -133,6 +133,9 @@ function formatSubmittedAt(date: Date) {
 
 const TELEGRAM_MAX_CHARS = 4096
 
+type TelegramSegment = { text: string; bold?: boolean }
+type TelegramLine = TelegramSegment[]
+
 /**
  * Telegram's `sendMessage` rejects the whole message outright above 4096
  * characters — there's no partial delivery, so staying under the cap matters more
@@ -142,14 +145,34 @@ const TELEGRAM_MAX_CHARS = 4096
  * hard-cut as a last resort, rather than have the whole notice bounce — this can
  * happen for real: `nombre`, `municipio` and `email` have no `.max()` in the
  * schema above, so a long-enough submission reaches this path.
+ *
+ * The message goes out with `parse_mode: 'HTML'` (bold values), and Telegram counts
+ * the limit on the visible text, after entity parsing. So the cap runs on the raw
+ * segments and HTML is rendered afterwards: cutting the rendered string could split
+ * a `<b>` tag or an `&amp;` entity, which Telegram rejects as malformed.
  */
-function capTelegramText(baseLines: string[], attributionLine: string): string {
-  const base = baseLines.join('\n')
-  if (!attributionLine) return base.slice(0, TELEGRAM_MAX_CHARS)
-  const prefix = '\nOrigen: '
-  const budget = TELEGRAM_MAX_CHARS - base.length - prefix.length
-  const withAttribution = budget > 0 ? `${base}${prefix}${attributionLine.slice(0, budget)}` : base
-  return withAttribution.slice(0, TELEGRAM_MAX_CHARS)
+function buildTelegramHtml(baseLines: TelegramLine[], attributionLine: string): string {
+  const lines = [...baseLines]
+  const baseLength = baseLines.reduce((n, l) => n + l.reduce((m, s) => m + s.text.length, 0), 0) + baseLines.length - 1
+  const prefix = 'Origen: '
+  const budget = TELEGRAM_MAX_CHARS - baseLength - 1 - prefix.length
+  if (attributionLine && budget > 0) lines.push([{ text: prefix }, { text: attributionLine.slice(0, budget) }])
+
+  let remaining = TELEGRAM_MAX_CHARS
+  const rendered: string[] = []
+  for (const line of lines) {
+    if (rendered.length) remaining -= 1 // the '\n' joining it to the previous line
+    if (remaining <= 0) break
+    let html = ''
+    for (const segment of line) {
+      const text = segment.text.slice(0, Math.max(remaining, 0))
+      remaining -= text.length
+      if (!text) continue
+      html += segment.bold ? `<b>${escapeHtml(text)}</b>` : escapeHtml(text)
+    }
+    rendered.push(html)
+  }
+  return rendered.join('\n')
 }
 
 export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData): Promise<EstadoEnvio> {
@@ -328,19 +351,26 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: telegramChat,
-          text: capTelegramText(
+          parse_mode: 'HTML',
+          text: buildTelegramHtml(
             [
-              '🔔 Nuevo presupuesto',
-              `${nombre} · ${formatearTelefono(telefono)}`,
-              email || null,
-              espacio,
-              superficie ? `${superficie} m²` : null,
-              municipio || '—',
-              mensaje || null,
-              adjunto
-                ? `Foto: ${adjunto.filename}${entregado ? ' — adjunta en el email' : ' — SIN ENTREGAR: el email no ha salido'}`
-                : null,
-            ].filter((l): l is string => Boolean(l)),
+              [{ text: `${nap.nombre} 🔔 Nuevo presupuesto` }],
+              [{ text: 'nombre: ' }, { text: nombre, bold: true }],
+              [{ text: 'teléfono: ' }, { text: telefono, bold: true }],
+              [{ text: 'email: ' }, { text: email || '---', bold: true }],
+              [{ text: 'municipio: ' }, { text: municipio || '---', bold: true }],
+              [{ text: espacio.toLocaleUpperCase('es-ES'), bold: true }],
+              [{ text: '—' }],
+              ...[
+                superficie ? `superficie: ${superficie} m²` : null,
+                mensaje ? `mensaje: ${mensaje}` : null,
+                adjunto
+                  ? `foto: ${adjunto.filename}${entregado ? ' — adjunta en el email' : ' — SIN ENTREGAR: el email no ha salido'}`
+                  : null,
+              ]
+                .filter((l): l is string => Boolean(l))
+                .map((text) => [{ text }]),
+            ],
             attributionLine,
           ),
         }),

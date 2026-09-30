@@ -31,8 +31,8 @@ const claseChip =
   'peer-checked:bg-pigmento peer-checked:border-pigmento peer-checked:text-sobre-tinta peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-acero peer-focus-visible:outline-offset-[3px] hover:bg-tinta hover:text-sobre-tinta'
 
 /**
- * Formulario de presupuesto. `corto` (home): nombre, teléfono, espacio.
- * `completo` (/presupuesto/): + email, municipio, m², foto, mensaje, privacidad.
+ * Formulario de presupuesto. `corto` (home): nombre, teléfono, email (opcional), municipio, espacio.
+ * `completo` (/presupuesto/): + m², foto, mensaje; municipio obligatorio.
  * Estados: inicial · error (teléfono) · enviando (campos bloqueados) · enviado ("Recibido").
  */
 export default function FormularioPresupuesto({
@@ -232,8 +232,20 @@ export default function FormularioPresupuesto({
           className={claseInputMono}
         />
       </Campo>
+      <Campo etiqueta="Email" htmlFor={`${variante}-email`} error={estado.errores.email}>
+        <input
+          id={`${variante}-email`}
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="nombre@correo.com"
+          readOnly={enviando}
+          aria-invalid={Boolean(estado.errores.email)}
+          className={claseInput}
+        />
+      </Campo>
       {!completo ? (
-        <Campo etiqueta="Municipio" htmlFor={`${variante}-municipio`} error={estado.errores.municipio}>
+        <Campo etiqueta="Municipio" htmlFor={`${variante}-municipio`} error={estado.errores.municipio} className="md:col-span-2">
           <input
             id={`${variante}-municipio`}
             name="municipio"
@@ -249,18 +261,6 @@ export default function FormularioPresupuesto({
 
       {completo ? (
         <>
-          <Campo etiqueta="Email" htmlFor="completo-email" error={estado.errores.email}>
-            <input
-              id="completo-email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="nombre@correo.com"
-              readOnly={enviando}
-              aria-invalid={Boolean(estado.errores.email)}
-              className={claseInput}
-            />
-          </Campo>
           <Campo etiqueta="Municipio" htmlFor="completo-municipio" obligatorio error={estado.errores.municipio}>
             <input
               id="completo-municipio"

@@ -113,6 +113,24 @@ function formatearTelefono(t: string) {
   return `${t.slice(0, 3)} ${t.slice(3, 5)} ${t.slice(5, 7)} ${t.slice(7)}`
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
+// Submission moment as shown in the lead email, always in the business's local time
+// (the server may run in UTC).
+function formatSubmittedAt(date: Date) {
+  const zone = 'Europe/Madrid'
+  const day = new Intl.DateTimeFormat('es-ES', { timeZone: zone, day: 'numeric', month: 'long', year: 'numeric' }).format(date)
+  const time = new Intl.DateTimeFormat('es-ES', { timeZone: zone, hour: '2-digit', minute: '2-digit' }).format(date)
+  return { day, time }
+}
+
 const TELEGRAM_MAX_CHARS = 4096
 
 /**
@@ -237,6 +255,42 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
 
   const apiKey = serverEnv.RESEND_API_KEY
   if (apiKey) {
+    // Lead email: intro line with the submission date/time, then one row per field.
+    // `bold` values go in <strong> in the HTML part; the text part is the plain fallback.
+    const { day, time } = formatSubmittedAt(new Date())
+    const intro = `Tienes una nueva demanda de presupuesto, pedida el ${day} a las ${time}`
+    const vacio = '---'
+    const filas: { label: string; value: string; bold: boolean }[] = [
+      { label: 'Nombre', value: nombre, bold: true },
+      { label: 'Teléfono', value: telefono, bold: true },
+      { label: 'Email', value: email || vacio, bold: true },
+      { label: 'Espacio', value: espacio, bold: true },
+      { label: 'Superficie', value: superficie ? `${superficie} m²` : vacio, bold: true },
+      { label: 'Municipio', value: municipio || vacio, bold: true },
+      { label: 'Mensaje', value: mensaje || vacio, bold: false },
+      { label: 'Foto', value: adjunto ? adjunto.filename : vacio, bold: false },
+    ]
+    const texto = [
+      intro,
+      '',
+      ...filas.map((f) => `${f.label}: ${f.value}`),
+      attributionLine ? `Origen: ${attributionLine}` : null,
+    ]
+      .filter((l): l is string => l !== null)
+      .join('\n')
+    const html = [
+      `<p>${escapeHtml(intro)}</p>`,
+      '<p>',
+      filas
+        .map((f) => {
+          const valor = escapeHtml(f.value).replace(/\r?\n/g, '<br>')
+          return `${escapeHtml(f.label)}: ${f.bold ? `<strong>${valor}</strong>` : valor}`
+        })
+        .join('<br>\n'),
+      '</p>',
+      attributionLine ? `<p>Origen: ${escapeHtml(attributionLine)}</p>` : '',
+    ].join('\n')
+
     try {
       const respuesta = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -249,19 +303,8 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
           to: serverEnv.EMAIL_DESTINO ?? nap.email,
           reply_to: email || undefined,
           subject: `Presupuesto — ${nombre} · ${espacio}${municipio ? ` · ${municipio}` : ''}`,
-          text: [
-            `Nombre: ${nombre}`,
-            `Teléfono: ${formatearTelefono(telefono)}`,
-            `Email: ${email || '—'}`,
-            `Espacio: ${espacio}`,
-            `Superficie: ${superficie ? `${superficie} m²` : '—'}`,
-            `Municipio: ${municipio || '—'}`,
-            `Mensaje: ${mensaje || '—'}`,
-            `Foto: ${adjunto ? adjunto.filename : '—'}`,
-            attributionLine ? `Origen: ${attributionLine}` : null,
-          ]
-            .filter((l): l is string => Boolean(l))
-            .join('\n'),
+          text: texto,
+          html,
           attachments: adjunto ? [adjunto] : undefined,
         }),
         signal: AbortSignal.timeout(15000),

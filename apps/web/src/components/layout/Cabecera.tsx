@@ -93,7 +93,7 @@ export default function Cabecera() {
 
         <Link
           href="/presupuesto/"
-          className="h-11 px-[22px] bg-pigmento hover:bg-pigmento-hover text-sobre-tinta text-14 font-bold uppercase tracking-[.03em] inline-flex items-center no-underline whitespace-nowrap motion-reduce:transition-none shrink-0"
+          className="h-11 px-4 min-[340px]:px-[22px] bg-pigmento hover:bg-pigmento-hover text-sobre-tinta text-14 font-bold uppercase tracking-[.03em] inline-flex items-center no-underline whitespace-nowrap motion-reduce:transition-none shrink-0"
         >
           Presupuesto
         </Link>
@@ -105,7 +105,7 @@ export default function Cabecera() {
           aria-expanded={menuAbierto}
           aria-controls="menu-movil"
           onClick={() => setMenuAbierto((v) => !v)}
-          className="inline-flex flex-col justify-center gap-[5px] w-11 h-11 bg-transparent border border-tinta/30 cursor-pointer md:hidden shrink-0"
+          className="inline-flex flex-col items-center justify-center gap-[5px] w-11 h-11 bg-transparent border border-tinta/30 cursor-pointer md:hidden shrink-0"
         >
           <span className="block w-5 h-[2px] bg-tinta" />
           <span className="block w-5 h-[2px] bg-tinta" />

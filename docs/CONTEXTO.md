@@ -52,6 +52,7 @@ Root Directory `apps/web` con «Include files outside the Root Directory»; Buil
 
 ## Pendientes de contenido (no inventar)
 
+- Fotos de modelos y colores del hormigón impreso: hasta tenerlas, la sección «Catálogo / Modelos y colores» de la Home está oculta (`app/page.tsx`; el componente `components/home/SeccionCatalogo.tsx` se conserva para reactivarla). La sección equivalente de las páginas de servicio (`SeccionMuestrario`) sigue visible.
 - Respuestas de las FAQ (sin ellas no hay FAQPage JSON-LD).
 - Artículo `hormigon-desactivado-piedra-vista`: cuerpo pendiente (original en rumano), noindex.
 - WhatsApp, horario, NIF, textos legales, fotos originales a 2400 px, cobertura de 6 provincias.

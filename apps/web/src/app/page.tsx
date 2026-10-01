@@ -6,7 +6,6 @@ import BarraConfianza from '@/components/layout/BarraConfianza'
 import SeccionEspacios from '@/components/home/SeccionEspacios'
 import SeccionServicios from '@/components/home/SeccionServicios'
 import SeccionObras from '@/components/home/SeccionObras'
-import SeccionCatalogo from '@/components/home/SeccionCatalogo'
 import BandaGarantia from '@/components/home/BandaGarantia'
 import SeccionPreguntas from '@/components/home/SeccionPreguntas'
 import SeccionFormularioHome from '@/components/home/SeccionFormularioHome'
@@ -38,8 +37,8 @@ export default function Home() {
       {/* 5. Obras destacadas */}
       <SeccionObras />
 
-      {/* 6. Catálogo (Modelos y colores) */}
-      <SeccionCatalogo />
+      {/* 6. Catálogo (Modelos y colores): oculto hasta tener fotos reales de modelos y colores.
+          Para reactivarlo: importar `@/components/home/SeccionCatalogo` y renderizarlo aquí. */}
 
       {/* 7. Banda de garantía */}
       <BandaGarantia />

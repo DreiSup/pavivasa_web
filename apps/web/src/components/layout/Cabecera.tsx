@@ -93,7 +93,7 @@ export default function Cabecera() {
 
         <Link
           href="/presupuesto/"
-          className="h-11 px-4 min-[340px]:px-[22px] bg-pigmento hover:bg-pigmento-hover text-sobre-tinta text-14 font-bold uppercase tracking-[.03em] inline-flex items-center no-underline whitespace-nowrap motion-reduce:transition-none shrink-0"
+          className="h-11 px-3 min-[360px]:px-[22px] bg-pigmento hover:bg-pigmento-hover text-sobre-tinta text-14 font-bold uppercase tracking-[.03em] inline-flex items-center no-underline whitespace-nowrap motion-reduce:transition-none shrink-0"
         >
           Presupuesto
         </Link>

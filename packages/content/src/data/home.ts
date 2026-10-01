@@ -103,7 +103,7 @@ export const home = {
   faq: [
     { question: { es: '¿Cuánto tarda una obra de hormigón impreso?' } },
     { question: { es: '¿Se puede pavimentar sobre una solera existente?' } },
-    { question: { es: '¿Qué mantenimiento necesita el hormigón impreso?' } },
+    { question: { es: '¿Qué mantenimiento necesita el hormigón impreso?' }, answer: { es: 'Poco: limpieza habitual con agua y jabón neutro y renovar la resina de sellado cada 2 o 3 años, aproximadamente, según el uso y la exposición. Esa resina protege el color y evita que entren manchas y humedad. Si hay mucho tráfico o el pavimento está cerca del mar puede hacer falta resellar antes; una señal de aviso es que el agua deje de formar gotas sobre la superficie.' } },
     { question: { es: '¿Cubrís mi municipio?' } },
     { question: { es: '¿Qué incluye la garantía de 10 años?' } },
   ],

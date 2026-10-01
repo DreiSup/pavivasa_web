@@ -106,8 +106,8 @@ export const services = [
     },
     faq: [
       { question: { es: '¿Se puede poner impreso sobre un suelo que ya existe?' } },
-      { question: { es: '¿Cuánto tarda en poder pisarse y en poder aparcar?' } },
-      { question: { es: '¿Qué mantenimiento necesita?' } },
+      { question: { es: '¿Cuánto tarda en poder pisarse y en poder aparcar?' }, answer: { es: 'Normalmente se puede pisar a las 24-48 horas y circular con vehículos ligeros pasada una semana, aproximadamente. Son plazos orientativos: el clima, el espesor y la resina pueden alargarlos, y el curado completo del hormigón lleva unas 4 semanas. Conviene evitar mojar el pavimento los primeros días y respetar el plazo antes de aparcar.' } },
+      { question: { es: '¿Qué mantenimiento necesita?' }, answer: { es: 'El hormigón impreso necesita poco mantenimiento: limpieza con agua y jabón neutro y renovar la resina de sellado cada 2 o 3 años, según el uso y la exposición. Esa resina protege el color y evita que penetren manchas y humedad. Si el agua ya no forma gotas sobre la superficie, es momento de revisar el sellado.' } },
       { question: { es: '¿Qué cubre la garantía de 10 años?' } },
     ],
     cta: { es: '¿Un patio, una entrada, una piscina? Dinos los metros y te llamamos.' },
@@ -186,9 +186,9 @@ export const services = [
       ],
     },
     faq: [
-      { question: { es: '¿Sirve el pulido para el interior de una vivienda?' } },
-      { question: { es: '¿Qué diferencia hay entre acabado brillo y mate?' } },
-      { question: { es: '¿Cuánto aguanta el paso de carretillas y camiones?' } },
+      { question: { es: '¿Sirve el pulido para el interior de una vivienda?' }, answer: { es: 'Sí, el hormigón pulido sirve para el interior de una vivienda: es un suelo continuo, con pocas juntas, fácil de limpiar y compatible con suelo radiante. Hemos ejecutado un pulido en el interior de una vivienda unifamiliar en Benissa (Alicante). Conviene prever juntas de retracción y tener en cuenta que es un material frío al tacto.' } },
+      { question: { es: '¿Qué diferencia hay entre acabado brillo y mate?' }, answer: { es: 'La diferencia está en cuánta luz refleja el suelo: el acabado brillo es más reflectante y el mate es más sobrio, con menos reflejo. Depende del grado de pulido o del sellador aplicado. En exteriores y zonas húmedas, además del aspecto, hay que mirar la resbaladicidad: el CTE pide clase 3 en exteriores.' } },
+      { question: { es: '¿Cuánto aguanta el paso de carretillas y camiones?' }, answer: { es: 'Un hormigón pulido bien diseñado soporta el paso de carretillas y camiones: es el pavimento habitual en naves y muelles de carga. Cuánto aguanta depende del espesor, del armado con mallazo y fibras, de la subbase y de las cargas puntuales, como estanterías o ruedas duras. Por eso no hay una cifra válida para todos los casos: se define según el uso previsto de cada obra.' } },
       { question: { es: '¿Qué cubre la garantía de 10 años?' } },
     ],
     cta: { es: '¿Una nave, un garaje, un interior? Dinos los metros y te llamamos.' },
@@ -257,9 +257,9 @@ export const services = [
       ],
     },
     faq: [
-      { question: { es: '¿Qué tamaño de árido conviene para una rampa?' } },
+      { question: { es: '¿Qué tamaño de árido conviene para una rampa?' }, answer: { es: 'Para una rampa conviene un árido de machaqueo (triturado) de tamaño medio o grueso, mejor que el canto rodado, que resbala más. Lo importante es que el pavimento alcance clase 3 de resbaladicidad (Rd > 45), que el CTE pide en exteriores. El tamaño final depende de la pendiente y del acabado que busques.' } },
       { question: { es: '¿Se puede combinar con hormigón impreso en la misma obra?' } },
-      { question: { es: '¿Qué mantenimiento necesita?' } },
+      { question: { es: '¿Qué mantenimiento necesita?' }, answer: { es: 'El hormigón lavado necesita poco mantenimiento: basta con limpiarlo con agua y detergente suave y, en zonas con más tránsito, pasar la hidrolimpiadora de vez en cuando. Si se quiere reavivar el color del árido y facilitar la limpieza, se puede aplicar un sellador protector, normalmente cada varios años según el uso y la exposición.' } },
     ],
     cta: { es: '¿Una rampa, un vial, el borde de la piscina? Dinos los metros y te llamamos.' },
     flagship: false,
@@ -325,9 +325,9 @@ export const services = [
       ],
     },
     faq: [
-      { question: { es: '¿Se puede aplicar sobre los azulejos del baño?' } },
+      { question: { es: '¿Se puede aplicar sobre los azulejos del baño?' }, answer: { es: 'Sí, normalmente el microcemento se puede aplicar sobre los azulejos del baño sin retirarlos, siempre que estén firmes, limpios y sin piezas sueltas. Se rellenan las juntas, se aplica una imprimación de agarre específica para superficies no absorbentes y, por lo general, una malla de fibra de vidrio antes de las capas de microcemento. Conviene valorar el estado del soporte antes de decidirlo.' } },
       { question: { es: '¿Cuánto dura la reforma de un baño?' } },
-      { question: { es: '¿Resbala en una ducha?' } },
+      { question: { es: '¿Resbala en una ducha?' }, answer: { es: 'Depende del acabado: el microcemento no es antideslizante por sí mismo, lo es el sistema con su sellador y su textura. En duchas conviene pedir un acabado antideslizante y comprobar su clase de resbaladicidad (Rd, ensayo UNE-ENV 12633). El CTE DB-SUA 1 pide, en zonas interiores húmedas con poca pendiente, clase 2 (Rd entre 35 y 45), y muchas guías recomiendan clase 3 (Rd mayor de 45) dentro de la ducha.' } },
       { question: { es: '¿Qué cubre la garantía de 10 años?' } },
     ],
     cta: { es: '¿Un baño, una cocina, un suelo entero? Dinos los metros y te llamamos.' },
@@ -380,9 +380,9 @@ export const services = [
     models: [],
     colors: [],
     faq: [
-      { question: { es: '¿Sobre qué soporte se puede aplicar un autonivelante?' } },
-      { question: { es: '¿Cuánto tarda en poder pisarse?' } },
-      { question: { es: '¿Qué espesor lleva?' } },
+      { question: { es: '¿Sobre qué soporte se puede aplicar un autonivelante?' }, answer: { es: 'Un mortero autonivelante se aplica sobre un soporte firme, estable, limpio y libre de polvo, grasas y restos: normalmente soleras de hormigón o cemento y, según el producto, también anhidrita o baldosas cerámicas y piedra natural ya colocadas. Antes se prepara el soporte y se aplica la imprimación que indique la ficha del fabricante.' } },
+      { question: { es: '¿Cuánto tarda en poder pisarse?' }, answer: { es: 'Depende del producto, del espesor y de la temperatura: algunos autonivelantes admiten tránsito peatonal a las pocas horas y otros a las 24 horas, y el tráfico con ruedas o el revestimiento posterior requieren más tiempo. En nuestros trabajos el tiempo mínimo de secado es de más de 24 horas. El plazo concreto lo marca la ficha del producto y las condiciones de la obra.' } },
+      { question: { es: '¿Qué espesor lleva?' }, answer: { es: 'Depende del tipo de mortero y del soporte: un autonivelante cementoso de capa fina se aplica normalmente entre 2 y 10 mm, algunos de altas prestaciones llegan a 30 o 50 mm y los de anhidrita de capa gruesa parten de unos 35 mm. El espesor exacto lo marcan la ficha del producto y las irregularidades del soporte, por eso conviene medirlo en obra.' } },
     ],
     cta: { es: 'Cuéntanos el uso del suelo y te llamamos.' },
     flagship: false,
@@ -395,7 +395,7 @@ export const services = [
     shortName: { es: 'Caucho' },
     summary: { es: 'Parques infantiles y zonas deportivas. EN 1176 y EN 1177.' },
     description: {
-      es: 'Pavimentos de caucho para parques infantiles y zonas deportivas: EPDM o SBR, espesor según el HIC del equipo de juego, normas EN 1176 y EN 1177.',
+      es: 'Pavimentos de caucho para parques infantiles y zonas deportivas: EPDM o SBR, espesor según la altura crítica de caída del equipo de juego, normas EN 1176 y EN 1177.',
     },
     intro: {
       es: 'Una solución limpia y segura para crear zonas lúdicas infantiles y zonas deportivas: pavimentos que minimizan el riesgo de lesiones por caídas desde los equipos de juego.',
@@ -410,7 +410,7 @@ export const services = [
       title: { es: 'Amortiguación medida, no estimada' },
       paragraphs: [
         {
-          es: 'Trabajamos con dos sistemas: EPDM vulcanizado, o SBR reciclado con una capa de SBR coloreado ejecutada in situ. El espesor se calcula según el HIC (altura crítica de caída) del equipo de juego.',
+          es: 'Trabajamos con dos sistemas: EPDM vulcanizado, o SBR reciclado con una capa de SBR coloreado ejecutada in situ. El espesor se calcula según la altura crítica de caída del equipo de juego.',
         },
         {
           es: 'Todo el pavimento se ejecuta conforme a las normas EN 1176 y EN 1177 de equipamiento de áreas de juego y superficies amortiguadoras.',
@@ -425,7 +425,7 @@ export const services = [
     ],
     advantages: [
       { es: 'Amortigua las caídas' },
-      { es: 'Espesor según el HIC' },
+      { es: 'Espesor según la altura de caída' },
       { es: 'EN 1176 y EN 1177' },
       { es: 'Colores in situ' },
       { es: 'Limpio y seguro' },
@@ -433,9 +433,9 @@ export const services = [
     models: [],
     colors: [],
     faq: [
-      { question: { es: '¿Qué diferencia hay entre EPDM y SBR?' } },
-      { question: { es: '¿Cómo se calcula el espesor?' } },
-      { question: { es: '¿Se puede instalar sobre un pavimento existente?' } },
+      { question: { es: '¿Qué diferencia hay entre EPDM y SBR?' }, answer: { es: 'El EPDM es un caucho nuevo, con color propio y buena resistencia al sol; el SBR es caucho reciclado de neumático, más económico pero con peor resistencia a los rayos UV. En un pavimento de caucho continuo suele usarse SBR como capa base amortiguadora y EPDM como capa vista de color. La elección depende del uso, de la exposición al sol y del presupuesto.' } },
+      { question: { es: '¿Cómo se calcula el espesor?' }, answer: { es: 'El espesor del pavimento de caucho se calcula según la altura crítica de caída que debe cubrir el equipo de juego, de acuerdo con la norma UNE-EN 1177: cuanto mayor es la altura desde la que se puede caer, más espesor hace falta. Ese valor lo acredita el ensayo del sistema elegido (criterio HIC), por lo que no existe una tabla única de espesores.' } },
+      { question: { es: '¿Se puede instalar sobre un pavimento existente?' }, answer: { es: 'Sí, normalmente se puede instalar un pavimento de caucho continuo sobre un pavimento existente de hormigón o asfalto, siempre que la base sea firme, esté limpia y en buen estado. Si el soporte está suelto o deteriorado, hay que repararlo antes. También influyen la temperatura y que el soporte esté seco el día de la obra.' } },
     ],
     cta: { es: 'Cuéntanos el equipo de juego y la superficie, y te llamamos.' },
     flagship: false,
@@ -483,8 +483,8 @@ export const services = [
     colors: [],
     faq: [
       { question: { es: '¿Trabajáis fuera de la provincia de Valencia?' } },
-      { question: { es: '¿Podéis alicatar sobre el azulejo antiguo?' } },
-      { question: { es: '¿Qué material conviene en el exterior?' } },
+      { question: { es: '¿Podéis alicatar sobre el azulejo antiguo?' }, answer: { es: 'Sí, en muchos casos se puede alicatar sobre el azulejo antiguo sin picarlo, siempre que esté bien adherido, sin piezas huecas ni fisuras, y limpio y desengrasado. Se coloca con adhesivo cementoso mejorado (C2), a menudo con imprimación de anclaje. Hay que contar con el grosor añadido en marcos y puertas; si hay piezas sueltas, es mejor retirarlas.' } },
+      { question: { es: '¿Qué material conviene en el exterior?' }, answer: { es: 'En exterior conviene un azulejo de gres porcelánico con muy baja absorción de agua, apto para heladas si la zona lo requiere, y con acabado antideslizante de clase 3, que es lo que el CTE exige en suelos exteriores y junto a piscinas. El adhesivo debe ser cementoso mejorado (C2), y deformable (S1 o S2) en superficies muy expuestas al sol.' } },
     ],
     cta: { es: 'Cuéntanos el espacio y te llamamos.' },
     flagship: false,

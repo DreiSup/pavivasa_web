@@ -53,7 +53,7 @@ Root Directory `apps/web` con «Include files outside the Root Directory»; Buil
 ## Pendientes de contenido (no inventar)
 
 - Fotos de modelos y colores del hormigón impreso: hasta tenerlas, la sección «Catálogo / Modelos y colores» de la Home está oculta (`app/page.tsx`; el componente `components/home/SeccionCatalogo.tsx` se conserva para reactivarla). La sección equivalente de las páginas de servicio (`SeccionMuestrario`) sigue visible.
-- Respuestas de las FAQ (sin ellas no hay FAQPage JSON-LD).
+- FAQ: 18 de 29 respuestas redactadas (home + 7 servicios, `packages/content/src/data/{home,services}.ts`). Son hechos técnicos genéricos sacados de resúmenes de búsqueda, sin fichas abiertas: contrastar con fabricantes/normativa. Siguen pendientes las 11 que dependen de Pavivasa: plazo de obra (home), solera/suelo existente (home, impreso), cobertura de municipios (home, alicatados), plazo de reforma de baño (microcemento), combinar lavado con impreso, y las 5 de garantía de 10 años (home, impreso, pulido, microcemento; la web no define su alcance). Sin `FAQPage` JSON-LD todavía (`schemaFAQ` no tiene llamadores).
 - Artículo `hormigon-desactivado-piedra-vista`: cuerpo pendiente (original en rumano), noindex.
 - WhatsApp, horario, NIF, textos legales, fotos originales a 2400 px, cobertura de 6 provincias.
 - Email/NIF/razón social de los legales en conflicto con `business.ts` (ver README).

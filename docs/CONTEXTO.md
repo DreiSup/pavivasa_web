@@ -37,6 +37,7 @@ Monorepo pnpm 9.15.9 + Turborepo, Node >=22.6. Next 15.5 · React 19 · Tailwind
 - **Contenido:** `@site/content` (`packages/content/src/data`), adaptadores en `apps/web/src/content` y `src/lib/datos.ts`.
 - **Analítica / consentimiento / atribución:** `@site/tracking`; UI en `components/layout/Consentimiento.tsx`; eventos por `src/lib/eventos.ts`.
 - **Env vars:** esquemas en `packages/config/src/env.schema.ts` y `server-env.schema.ts`, más `globalEnv` de `turbo.json`.
+- **Hero de la Home (carrusel automático):** `components/home/HeroPestanas.tsx` (`'use client'`). Zoom lento (`animate-zoom-lento`, 7 s, ×1.06) y fundido (`duration-fundido`, 1.2 s) definidos en `tailwind.config.ts`. El cambio a la siguiente foto lo dispara el `animationend` del zoom (no un temporizador JS), así el botón de pausa (`animation-play-state`) congela zoom y cambio a la vez. Con `prefers-reduced-motion` no hay zoom, cambio automático ni botón. Si cambias la duración del fundido, actualiza también `FUNDIDO_MS` en el componente.
 - **Tokens / fuentes:** `apps/web/tailwind.config.ts`, `src/app/globals.css`, `src/app/fuentes.ts`.
 - **Redirecciones 301 / noindex:** `apps/web/next.config.ts` (`source` con barra final).
 - **Zona congelada:** `apps/web/src/app/**` y `src/components/**` hasta el rediseño (ver `CLAUDE.md`).

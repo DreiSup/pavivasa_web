@@ -63,7 +63,14 @@ const config: Config = {
         'barra-movil': '64px',
       },
       maxWidth: { lectura: '680px', contenido: '1344px' },
-      transitionDuration: { cabecera: '150ms' },
+      // `fundido`: cambio de foto del hero (HeroPestanas.tsx, FUNDIDO_MS: mantener igual).
+      transitionDuration: { cabecera: '150ms', fundido: '1200ms' },
+      // Zoom lento del hero: 7 s por foto, 6 % de escala. El final de esta animación es el que
+      // dispara el cambio a la siguiente foto (HeroPestanas.tsx), así que la pausa congela las dos cosas.
+      keyframes: {
+        'zoom-lento': { from: { transform: 'scale(1)' }, to: { transform: 'scale(1.06)' } },
+      },
+      animation: { 'zoom-lento': 'zoom-lento 7s linear forwards' },
       backgroundImage: {
         // Trama diagonal de BloquePosicion (toda foto que aún no existe)
         trama: 'repeating-linear-gradient(135deg, rgba(33,29,24,0.1) 0 1px, transparent 1px 14px)',

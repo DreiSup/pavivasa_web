@@ -67,10 +67,16 @@ const config: Config = {
       transitionDuration: { cabecera: '150ms', fundido: '1200ms' },
       // Zoom lento del hero: 7 s por foto, 6 % de escala. El final de esta animación es el que
       // dispara el cambio a la siguiente foto (HeroPestanas.tsx), así que la pausa congela las dos cosas.
+      // Dos copias idénticas (-a / -b): cambiar de nombre es la forma de reiniciar el zoom cuando
+      // una foto vuelve a activarse mientras aún conserva la clase de animación.
       keyframes: {
-        'zoom-lento': { from: { transform: 'scale(1)' }, to: { transform: 'scale(1.06)' } },
+        'zoom-lento-a': { from: { transform: 'scale(1)' }, to: { transform: 'scale(1.06)' } },
+        'zoom-lento-b': { from: { transform: 'scale(1)' }, to: { transform: 'scale(1.06)' } },
       },
-      animation: { 'zoom-lento': 'zoom-lento 7s linear forwards' },
+      animation: {
+        'zoom-lento-a': 'zoom-lento-a 7s linear forwards',
+        'zoom-lento-b': 'zoom-lento-b 7s linear forwards',
+      },
       backgroundImage: {
         // Trama diagonal de BloquePosicion (toda foto que aún no existe)
         trama: 'repeating-linear-gradient(135deg, rgba(33,29,24,0.1) 0 1px, transparent 1px 14px)',

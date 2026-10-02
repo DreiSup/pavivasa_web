@@ -22,6 +22,12 @@ export default function HeroPestanas({ pestanas }: { pestanas: ResolvedHomeConte
   /** Veces que se ha activado cada foto. Su paridad elige `zoom-lento-a` o `-b`: cambiar de nombre reinicia el zoom. */
   const [ciclos, setCiclos] = useState<number[]>(() => pestanas.map(() => 0))
   const [pausado, setPausado] = useState(false)
+  /**
+   * El zoom solo arranca tras hidratar. Si arrancara con el HTML del servidor, su `animationend`
+   * podría dispararse antes de que React conecte el manejador (red o móvil lentos) y el
+   * carrusel se quedaría parado en la primera foto.
+   */
+  const [listo, setListo] = useState(false)
   const activaRef = useRef(0)
   const salidas = useRef<Record<number, number>>({})
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([])
@@ -29,6 +35,7 @@ export default function HeroPestanas({ pestanas }: { pestanas: ResolvedHomeConte
   const automatico = pestanas.length > 1
 
   useEffect(() => {
+    setListo(true)
     const temporizadores = salidas.current
     return () => Object.values(temporizadores).forEach((t) => window.clearTimeout(t))
   }, [])
@@ -93,7 +100,7 @@ export default function HeroPestanas({ pestanas }: { pestanas: ResolvedHomeConte
               className={`absolute inset-0 transition-opacity duration-fundido ease-in-out ${
                 visible ? 'opacity-100' : 'opacity-0'
               } ${esActiva ? 'z-10' : 'z-0'} ${
-                visible
+                visible && listo
                   ? `${ciclos[i] % 2 === 0 ? 'animate-zoom-lento-a' : 'animate-zoom-lento-b'} motion-reduce:animate-none will-change-transform`
                   : ''
               } ${pausado ? '[animation-play-state:paused]' : ''}`}
@@ -124,7 +131,7 @@ export default function HeroPestanas({ pestanas }: { pestanas: ResolvedHomeConte
               aria-label={
                 pausado ? 'Reanudar el cambio automático de imágenes' : 'Pausar el cambio automático de imágenes'
               }
-              className="pointer-events-auto inline-flex items-center justify-center w-11 h-11 bg-tinta/70 border border-sobre-tinta/40 text-sobre-tinta transition-colors duration-cabecera hover:bg-sobre-tinta hover:text-tinta focus-visible:outline-sobre-tinta motion-reduce:hidden"
+              className="pointer-events-auto inline-flex items-center justify-center w-11 h-11 bg-tinta/70 border border-sobre-tinta/40 text-sobre-tinta transition-colors duration-cabecera hover:bg-sobre-tinta hover:text-tinta focus-visible:outline-sobre-tinta focus-visible:-outline-offset-4 motion-reduce:hidden"
             >
               {pausado ? (
                 <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
@@ -145,7 +152,7 @@ export default function HeroPestanas({ pestanas }: { pestanas: ResolvedHomeConte
         role="tabpanel"
         id="hero-panel"
         aria-labelledby={`tab-${activa}`}
-        className="relative z-[2] max-w-[1280px] mx-auto w-full px-[20px] pb-0 md:pt-[72px] md:pb-4"
+        className="relative z-[2] max-w-[1280px] mx-auto w-full px-[20px] pt-16 pb-0 md:pt-[72px] md:pb-4"
       >
         <div className="flex flex-col gap-[10px] md:gap-4 mb-4 md:mb-6">
           {/* Los tres textos van apilados en la misma celda: la altura es la del más largo y no hay

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { nap } from '@/lib/config'
 import Migas from '../layout/Migas'
@@ -11,7 +12,8 @@ export const PAGINAS_LEGALES = [
   { href: '/politica-de-cookies/', titulo: 'Política de cookies', corto: 'Cookies' },
 ]
 
-export type SeccionLegal = { id: string; titulo: string; nota?: string }
+/** `contenido`: texto ya redactado que va tras el aviso de texto pendiente (p. ej. una atribución de licencia). */
+export type SeccionLegal = { id: string; titulo: string; nota?: string; contenido?: ReactNode }
 
 /**
  * Las tres páginas legales comparten esta plantilla. El texto lo redacta el
@@ -107,6 +109,7 @@ export default function PlantillaLegal({
                 <p className="p-4 md:px-6 md:py-5 border border-dashed border-tinta/30 font-mono text-d-12 uppercase text-tinta-media leading-[1.8]">
                   [{s.nota ?? (i === 0 ? 'Texto legal pendiente · lo redacta el cliente o su asesoría · no se sustituye por plantilla' : 'Texto legal pendiente')}]
                 </p>
+                {s.contenido}
               </div>
             ))}
           </div>

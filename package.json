@@ -11,6 +11,7 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "content:validate": "turbo run content:validate",
     "verify": "node --experimental-strip-types scripts/verify/index.mjs apps/web",
     "verify:secrets": "node scripts/verify/build-and-scan-secrets.mjs apps/web"

@@ -31,3 +31,6 @@ next-env.d.ts
 # vercel
 .vercel
 
+
+# raw third-party datasets (e.g. GeoNames ES.txt), downloaded locally, never committed
+packages/content/data-raw/

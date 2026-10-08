@@ -10,6 +10,7 @@
   "scripts": {
     "transit": "true",
     "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test 'src/**/*.test.ts'",
     "content:validate": "node --experimental-strip-types scripts/validate.ts"
   },
   "dependencies": {

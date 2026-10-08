@@ -1,6 +1,6 @@
 'use client'
 
-import { startTransition, useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
+import { startTransition, useActionState, useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import { isClickIdParam } from '@site/tracking'
 import { enviarPresupuesto, type EstadoEnvio } from '@/app/presupuesto/actions'
@@ -26,14 +26,36 @@ const estadoInicial: EstadoEnvio = { estado: 'inicial', errores: {} }
 const FOTO_MAX_BYTES = 4 * 1024 * 1024
 const FOTO_ERROR_TAMANO = 'La foto pesa más de 4 MB.'
 
+/**
+ * Nombres de población por provincia, de la ruta estática `/api/cp/<provincia>/`. Se guarda la
+ * promesa (no el resultado): dos teclas seguidas no lanzan dos peticiones. Un fallo de red se
+ * olvida para poder reintentar. El código postal no sale hacia ningún tercero.
+ */
+const poblacionesPorProvincia = new Map<string, Promise<Record<string, string>>>()
+function poblacionesDe(provincia: string): Promise<Record<string, string>> {
+  let pendiente = poblacionesPorProvincia.get(provincia)
+  if (!pendiente) {
+    pendiente = fetch(`/api/cp/${provincia}/`)
+      .then((r) => (r.ok ? (r.json() as Promise<Record<string, string>>) : {}))
+      .catch(() => {
+        poblacionesPorProvincia.delete(provincia)
+        return {}
+      })
+    poblacionesPorProvincia.set(provincia, pendiente)
+  }
+  return pendiente
+}
+
 const claseChip =
   'inline-flex items-center min-h-tactil px-4 border border-tinta bg-sobre-tinta font-sans text-14 font-semibold text-tinta cursor-pointer transition-colors duration-cabecera ' +
   'peer-checked:bg-pigmento peer-checked:border-pigmento peer-checked:text-sobre-tinta peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-acero peer-focus-visible:outline-offset-[3px] hover:bg-tinta hover:text-sobre-tinta'
 
 /**
- * Formulario de presupuesto. `corto` (home): nombre, teléfono, email (opcional), municipio, espacio.
- * `completo` (/presupuesto/): + m², foto, mensaje; municipio obligatorio.
- * Estados: inicial · error (teléfono) · enviando (campos bloqueados) · enviado ("Recibido").
+ * Formulario de presupuesto. Las dos variantes piden nombre, teléfono, email (opcional), espacio,
+ * superficie y código postal (el municipio no se pide: se deduce del código postal).
+ * `completo` (/presupuesto/): + foto y mensaje.
+ * Estados: inicial · error · enviando (campos bloqueados) · enviado ("Recibido") · rechazado
+ * (no llega al mínimo de su zona: aviso en lugar del formulario).
  */
 export default function FormularioPresupuesto({
   variante = 'completo',
@@ -48,6 +70,11 @@ export default function FormularioPresupuesto({
 }) {
   const [estado, accion, enviando] = useActionState(enviarPresupuesto, estadoInicial)
   const telefonoRef = useRef<HTMLInputElement>(null)
+  const superficieRef = useRef<HTMLInputElement>(null)
+  const codigoPostalRef = useRef<HTMLInputElement>(null)
+  const [poblacion, setPoblacion] = useState('')
+  /** Último código consultado: descarta respuestas viejas que lleguen tarde. */
+  const codigoBuscado = useRef('')
   const [eventoId, setEventoId] = useState('')
   const [nombreFoto, setNombreFoto] = useState<string>()
   const [errorFoto, setErrorFoto] = useState<string>()
@@ -60,9 +87,30 @@ export default function FormularioPresupuesto({
     setEventoId(crypto.randomUUID())
   }, [])
 
+  // Foco al primer campo rechazado, en el orden del formulario.
   useEffect(() => {
-    if (estado.estado === 'error' && estado.errores.telefono) telefonoRef.current?.focus()
+    if (estado.estado !== 'error') return
+    if (estado.errores.telefono) telefonoRef.current?.focus()
+    else if (estado.errores.superficie) superficieRef.current?.focus()
+    else if (estado.errores.codigo_postal) codigoPostalRef.current?.focus()
   }, [estado])
+
+  /**
+   * Nombre de la población bajo el código postal. Se pide la provincia con la segunda cifra,
+   * así que el nombre aparece al instante con la quinta. Un código que no está en la tabla no
+   * pinta nada y tampoco bloquea el envío.
+   */
+  const buscarPoblacion = useCallback((valor: string) => {
+    const codigo = valor.replace(/\s/g, '')
+    codigoBuscado.current = codigo
+    if (codigo.length < 5) setPoblacion('')
+    if (!/^\d{2}/.test(codigo)) return
+    void poblacionesDe(codigo.slice(0, 2)).then((poblaciones) => {
+      if (codigoBuscado.current !== codigo || !/^\d{5}$/.test(codigo)) return
+      // `Object.hasOwn`, no `in`: un código como `toString` no debe colarse.
+      setPoblacion(Object.hasOwn(poblaciones, codigo.slice(2)) ? poblaciones[codigo.slice(2)] : '')
+    })
+  }, [])
 
   /**
    * Con JS, se envía en una transición en vez de por `action`: así React no vacía
@@ -110,12 +158,23 @@ export default function FormularioPresupuesto({
     }
   }, [estado, eventoId, variante])
 
+  // No llega al mínimo de su zona: aviso en lugar del formulario, para que no se reenvíe
+  // subiendo los metros. No es conversión: el efecto de arriba solo dispara con `enviado`.
+  if (estado.estado === 'rechazado') {
+    return (
+      <div role="alert" className="border-2 border-error p-[26px] flex flex-col gap-5">
+        <p className="font-mono text-d-12 tracking-[0.08em] uppercase text-error m-0">Fuera de zona</p>
+        <p className="font-display font-bold text-26 text-tinta m-0">{estado.aviso}</p>
+      </div>
+    )
+  }
+
   // Lo que ve quien envía es lo mismo en los dos casos; lo que se mide, no.
   if (estado.estado === 'enviado' || estado.estado === 'descartado') {
     const r = estado.resumen
     const lineas = [
       r?.espacio ? `Espacio · ${r.espacio}` : null,
-      r?.superficie ? `Superficie · ≈ ${r.superficie} m²` : null,
+      r?.superficie ? `Superficie · ≈ ${r.superficie}\u00a0m²` : null,
       r?.municipio ? `Municipio · ${r.municipio}` : null,
       r?.nombre ? `Contacto · ${r.nombre}` : null,
     ].filter((l): l is string => Boolean(l))
@@ -180,6 +239,67 @@ export default function FormularioPresupuesto({
     </div>
   )
 
+  // Superficie y código postal: obligatorios y en las dos variantes (los pide el filtro por zona).
+  // `type="text"` y no `number`: tiene que admitir «10x5» o «80 m2».
+  const camposZona = (
+    <>
+      <Campo
+        etiqueta="Superficie aproximada"
+        htmlFor={`${variante}-superficie`}
+        obligatorio
+        ayuda="Un cálculo aproximado nos vale. Largo × ancho."
+        error={estado.errores.superficie}
+      >
+        <div className="flex">
+          <input
+            ref={superficieRef}
+            id={`${variante}-superficie`}
+            name="superficie"
+            type="text"
+            inputMode="text"
+            autoComplete="off"
+            required
+            readOnly={enviando}
+            aria-invalid={Boolean(estado.errores.superficie)}
+            aria-describedby={estado.errores.superficie ? `${variante}-superficie-error` : undefined}
+            className={`${claseInputMono} border-r-0`}
+          />
+          <span className="flex items-center shrink-0 whitespace-nowrap px-[14px] border border-tinta-media bg-fondo font-sans text-14 text-tinta-media">
+            m²
+          </span>
+        </div>
+      </Campo>
+      <div className="flex flex-col gap-[6px]">
+        <Campo etiqueta="Código postal" htmlFor={`${variante}-codigo-postal`} obligatorio error={estado.errores.codigo_postal}>
+          <input
+            ref={codigoPostalRef}
+            id={`${variante}-codigo-postal`}
+            name="codigo_postal"
+            type="text"
+            inputMode="numeric"
+            autoComplete="postal-code"
+            maxLength={5}
+            required
+            readOnly={enviando}
+            onChange={(e) => buscarPoblacion(e.target.value)}
+            aria-invalid={Boolean(estado.errores.codigo_postal)}
+            aria-describedby={`${variante}-codigo-postal-poblacion${estado.errores.codigo_postal ? ` ${variante}-codigo-postal-error` : ''}`}
+            className={claseInputMono}
+          />
+        </Campo>
+        {/* Siempre presente: la línea reservada evita que el formulario salte, y la región viva
+            anuncia el nombre a lectores de pantalla. */}
+        <p
+          id={`${variante}-codigo-postal-poblacion`}
+          aria-live="polite"
+          className="font-sans text-14 text-tinta-media min-h-[1lh] m-0"
+        >
+          {poblacion}
+        </p>
+      </div>
+    </>
+  )
+
   const claseFormulario = sinCaja
     ? 'grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-6 md:gap-y-5'
     : completo
@@ -232,7 +352,7 @@ export default function FormularioPresupuesto({
           className={claseInputMono}
         />
       </Campo>
-      <Campo etiqueta="Email" htmlFor={`${variante}-email`} error={estado.errores.email}>
+      <Campo etiqueta="Email" htmlFor={`${variante}-email`} error={estado.errores.email} className={completo ? 'md:col-span-2' : ''}>
         <input
           id={`${variante}-email`}
           name="email"
@@ -244,36 +364,8 @@ export default function FormularioPresupuesto({
           className={claseInput}
         />
       </Campo>
-      {!completo ? (
-        <Campo etiqueta="Municipio" htmlFor={`${variante}-municipio`} error={estado.errores.municipio} className="md:col-span-2">
-          <input
-            id={`${variante}-municipio`}
-            name="municipio"
-            type="text"
-            autoComplete="address-level2"
-            placeholder="Sollana"
-            readOnly={enviando}
-            aria-invalid={Boolean(estado.errores.municipio)}
-            className={claseInput}
-          />
-        </Campo>
-      ) : null}
-
       {completo ? (
         <>
-          <Campo etiqueta="Municipio" htmlFor="completo-municipio" obligatorio error={estado.errores.municipio}>
-            <input
-              id="completo-municipio"
-              name="municipio"
-              type="text"
-              autoComplete="address-level2"
-              required
-              readOnly={enviando}
-              aria-invalid={Boolean(estado.errores.municipio)}
-              className={claseInput}
-            />
-          </Campo>
-
           <fieldset className="md:col-span-2 m-0 p-0 border-0 flex flex-col gap-[10px]">
             <legend className="font-sans text-14 font-semibold mb-[10px]">
               ¿Qué quieres pavimentar?{' '}
@@ -307,24 +399,9 @@ export default function FormularioPresupuesto({
             ) : null}
           </fieldset>
 
-          <Campo etiqueta="Superficie aproximada" htmlFor="completo-superficie" error={estado.errores.superficie}>
-            <div className="flex">
-              <input
-                id="completo-superficie"
-                name="superficie"
-                type="text"
-                inputMode="numeric"
-                readOnly={enviando}
-                aria-invalid={Boolean(estado.errores.superficie)}
-                className={`${claseInputMono} border-r-0`}
-              />
-              <span className="flex items-center shrink-0 whitespace-nowrap px-[14px] border border-tinta-media bg-fondo font-sans text-14 text-tinta-media">
-                m²
-              </span>
-            </div>
-          </Campo>
+          {camposZona}
 
-          <Campo etiqueta="Sube una foto del espacio" htmlFor="completo-foto" error={estado.errores.foto ?? errorFoto}>
+          <Campo etiqueta="Sube una foto del espacio" htmlFor="completo-foto" error={estado.errores.foto ?? errorFoto} className="md:col-span-2">
             <label
               htmlFor="completo-foto"
               className="flex items-center justify-between gap-3 min-h-campo px-[14px] border border-dashed border-tinta-media bg-sobre-tinta text-14 text-tinta-media cursor-pointer has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-acero has-[:focus-visible]:outline-offset-[3px]"
@@ -394,6 +471,7 @@ export default function FormularioPresupuesto({
               ))}
             </select>
           </Campo>
+          {camposZona}
           {casillaPrivacidad}
           <Boton type="submit" variante="tinta" anchoCompleto cargando={enviando} className="md:col-span-2">
             Enviar y que me llamen

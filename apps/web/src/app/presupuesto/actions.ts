@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { cookies, headers } from 'next/headers'
 import { serverEnv } from '@site/config/server'
 import { redactClickIdsUnlessConsented } from '@site/tracking'
+import { classifyLead, getPostalCodeName, normalizePostalCode, parseSquareMeters } from '@site/content'
+import type { LeadClassification } from '@site/content'
 import { enviarEventoCAPI } from '@/lib/meta-capi'
 import { nap, sitio } from '@/lib/config'
 import { NOMBRES_ESPACIOS } from '@/content/home'
@@ -13,9 +15,13 @@ export type EstadoEnvio = {
    * `descartado` es el éxito falso del honeypot: se pinta igual que `enviado`
    * pero no dispara ningún evento de conversión. Cualquier estado nuevo que se
    * añada aquí tampoco los disparará mientras no se declare explícitamente.
+   * `rechazado`: la solicitud no llega al mínimo de su zona (filtro por código
+   * postal y superficie). Tampoco es conversión: el aviso va solo al dueño.
    */
-  estado: 'inicial' | 'error' | 'enviando' | 'enviado' | 'descartado'
+  estado: 'inicial' | 'error' | 'enviando' | 'enviado' | 'descartado' | 'rechazado'
   errores: Record<string, string>
+  /** Solo en `'rechazado'`: lo que ve quien envía en lugar del formulario. */
+  aviso?: string
   resumen?: { nombre: string; telefono: string; espacio: string; superficie?: string; municipio?: string }
 }
 
@@ -51,13 +57,20 @@ const esquema = z.object({
     .refine((v) => /^\d{9}$/.test(v), 'Escribe un teléfono de 9 cifras para que podamos llamarte.'),
   email: z.string().trim().email('Revisa el email.').optional().or(z.literal('')),
   espacio: z.string().refine((v) => NOMBRES_ESPACIOS.includes(v), 'Elige qué quieres pavimentar.'),
+  // Obligatoria en las dos variantes: sin superficie no se puede decidir el reparto de
+  // la solicitud (filtro por zona). Tiene que poder leerse como número: lo que no se
+  // entiende se pregunta, no se adivina.
   superficie: z
     .string()
     .trim()
-    .optional()
-    .default('')
-    .refine((v) => v === '' || /^\d{1,6}$/.test(v), 'Escribe los metros cuadrados en cifras.'),
-  municipio: z.string().trim().optional().default(''),
+    .min(1, 'Escribe la superficie aproximada en m².')
+    .refine((v) => parseSquareMeters(v) !== null, 'Escribe la superficie en metros cuadrados, por ejemplo 80.'),
+  // Solo se comprueba el formato. Un prefijo que no existe (00, 53...) pasa y se trata como
+  // zona sin identificar, que se acepta: ante la duda no se pierde el lead.
+  codigo_postal: z
+    .string()
+    .transform(normalizePostalCode)
+    .refine((v) => /^\d{5}$/.test(v), 'Escribe tu código postal de 5 cifras.'),
   mensaje: z.string().trim().max(2000, 'Acorta un poco el mensaje.').optional().default(''),
   privacidad: z.string().optional(),
   evento_id: z.string().optional().default(''),
@@ -107,6 +120,23 @@ function limitePorIp(ip: string) {
   previos.push(ahora)
   envios.set(ip, previos)
   return true
+}
+
+/**
+ * La zona en palabras, para el aviso. Solo para el dueño: quien envía no la ve nunca.
+ */
+function etiquetaZona({ zone, minSquareMeters }: LeadClassification): string {
+  if (zone === 'unknown') return 'Zona sin identificar (código postal no reconocido)'
+  return minSquareMeters === null ? `Zona ${zone}` : `Zona ${zone} · solo obras de más de ${minSquareMeters} m²`
+}
+
+/** Lo que ve quien envía cuando su solicitud no llega al mínimo de su zona. */
+function avisoRechazo({ zone, minSquareMeters }: LeadClassification): string {
+  // Espacio de no separación: «1000» y «m²» no pueden quedar en líneas distintas.
+  const minimo = `${minSquareMeters}\u00a0m²`
+  return zone === 'C'
+    ? `No hacemos obras fuera de la Comunitat Valenciana de ${minimo} o menos. Lo sentimos.`
+    : `En tu zona solo hacemos obras de más de ${minimo}. Lo sentimos.`
 }
 
 function formatearTelefono(t: string) {
@@ -203,7 +233,7 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
     email,
     espacio,
     superficie,
-    municipio,
+    codigo_postal: codigoPostal,
     mensaje,
     privacidad,
     evento_id: eventoId,
@@ -249,7 +279,6 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
     .join(' · ')
 
   const errores: Record<string, string> = {}
-  if (variante === 'completo' && !municipio) errores.municipio = 'Dinos el municipio de la obra.'
   // La casilla existe en las dos variantes y el formulario lleva `noValidate`:
   // la única comprobación real es esta.
   if (!privacidad) errores.privacidad = 'Necesitamos que aceptes la política de privacidad.'
@@ -271,24 +300,45 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
     return { estado: 'error', errores: { form: `Demasiados envíos seguidos. Llámanos al ${nap.telefono}.` } }
   }
 
-  // 5. Entrega del aviso. Hay dos vías posibles: email (Resend) y Telegram. Basta con
-  // que una entregue. Si ninguna estaba configurada, o todas fallan, el lead se ha
-  // perdido: se devuelve error para que la persona pueda llamar en vez de darlo por hecho.
-  let entregado = false
+  // Filtro por zona y superficie (`@site/content` → `classifyLead`, zonas en docs/zonas-cp.md).
+  // Solo decide por dónde llega el aviso y qué ve quien envía.
+  const clasificacion = classifyLead({ postalCode: codigoPostal, squareMeters: parseSquareMeters(superficie) })
+  const filtrada = !clasificacion.accepted
+  // El municipio no se pide: sale del código postal, con la misma tabla que pinta el nombre
+  // bajo el campo. Vacío si el código no está en la tabla (no lo hace inválido).
+  const municipio = getPostalCodeName(codigoPostal) ?? ''
 
-  const apiKey = serverEnv.RESEND_API_KEY
-  if (apiKey) {
+  // El esquema ya garantiza que se puede leer. Lo escrito se conserva al lado cuando no es
+  // el mismo número («10x5», «1.200 m2»): se ve qué se tecleó y qué ha entendido el filtro.
+  const metros = parseSquareMeters(superficie) ?? 0
+  const metrosTexto = metros.toLocaleString('es-ES')
+  const superficieAviso =
+    metrosTexto === superficie ? `${metrosTexto} m²` : `${metrosTexto} m² (escrito: «${superficie}»)`
+  const zona = etiquetaZona(clasificacion)
+
+  // 5. Entrega del aviso. Hay dos vías posibles: email (Resend) y Telegram. Basta con que
+  // una entregue. Una solicitud aceptada sale por correo y después por Telegram (detrás,
+  // para poder decir si la foto salió en el correo). Una filtrada sale SOLO por Telegram;
+  // si Telegram no entrega, cae al correo marcada como filtrada: un aviso de más es mejor
+  // que un lead perdido. Si ninguna vía entrega (o no estaban configuradas), el lead se ha
+  // perdido y se devuelve error para que la persona pueda llamar en vez de darlo por hecho.
+  async function enviarEmail(): Promise<boolean> {
+    const apiKey = serverEnv.RESEND_API_KEY
+    if (!apiKey) return false
     // Lead email: intro line with the submission date/time, then one row per field.
     // `bold` values go in <strong> in the HTML part; the text part is the plain fallback.
     const { day, time } = formatSubmittedAt(new Date())
-    const intro = `Tienes una nueva demanda de presupuesto, pedida el ${day} a las ${time}`
+    const intro = filtrada
+      ? `Solicitud fuera de filtro (${zona}), pedida el ${day} a las ${time}. Al cliente se le ha dicho que no se acepta. Llega por correo porque el aviso de Telegram no ha salido.`
+      : `Tienes una nueva demanda de presupuesto, pedida el ${day} a las ${time}`
     const vacio = '---'
     const filas: { label: string; value: string; bold: boolean }[] = [
       { label: 'Nombre', value: nombre, bold: true },
       { label: 'Teléfono', value: telefono, bold: true },
       { label: 'Email', value: email || vacio, bold: true },
       { label: 'Espacio', value: espacio, bold: true },
-      { label: 'Superficie', value: superficie ? `${superficie} m²` : vacio, bold: true },
+      { label: 'Superficie', value: superficieAviso, bold: true },
+      { label: 'Código postal', value: codigoPostal, bold: true },
       { label: 'Municipio', value: municipio || vacio, bold: true },
       { label: 'Mensaje', value: mensaje || vacio, bold: false },
       { label: 'Foto', value: adjunto ? adjunto.filename : vacio, bold: false },
@@ -325,26 +375,51 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
           // the business's public contact address.
           to: serverEnv.EMAIL_DESTINO ?? nap.email,
           reply_to: email || undefined,
-          subject: `Presupuesto — ${nombre} · ${espacio}${municipio ? ` · ${municipio}` : ''}`,
+          // Solo llega aquí una filtrada si Telegram no la ha entregado.
+          subject: `${filtrada ? '[Fuera de filtro] ' : ''}Presupuesto — ${nombre} · ${espacio}`,
           text: texto,
           html,
           attachments: adjunto ? [adjunto] : undefined,
         }),
         signal: AbortSignal.timeout(15000),
       })
-      if (!respuesta.ok) throw new Error(`Resend ${respuesta.status}`)
-      entregado = true
-    } catch {
-      // No se corta aquí: puede que Telegram sí entregue.
+      if (!respuesta.ok) console.error(`Resend ${respuesta.status}`)
+      return respuesta.ok
+    } catch (error) {
+      console.error('Resend: no se pudo enviar', error instanceof Error ? error.message : error)
+      return false
     }
   }
 
-  // 6. Aviso por Telegram (si hay credenciales). Cuenta como entrega solo si Telegram
-  // confirma con 2xx. La foto solo viaja por email: si el email no salió, el aviso
-  // lo dice en vez de dar a entender que está en algún sitio.
-  const telegramToken = serverEnv.TELEGRAM_BOT_TOKEN
-  const telegramChat = serverEnv.TELEGRAM_CHAT_ID
-  if (telegramToken && telegramChat) {
+  /** `emailEntregado === null`: el correo se omite a propósito (solicitud filtrada). */
+  async function enviarTelegram(emailEntregado: boolean | null): Promise<boolean> {
+    const telegramToken = serverEnv.TELEGRAM_BOT_TOKEN
+    const telegramChat = serverEnv.TELEGRAM_CHAT_ID
+    if (!telegramToken || !telegramChat) return false
+
+    // La foto solo viaja por email: si no salió, el aviso lo dice en vez de dar a entender
+    // que está en algún sitio.
+    const lineaFoto = adjunto
+      ? emailEntregado === null
+        ? `foto: ${adjunto.filename} — no reenviada: esta solicitud no sale por email, pídesela al cliente`
+        : `foto: ${adjunto.filename}${emailEntregado ? ' — adjunta en el email' : ' — SIN ENTREGAR: el email no ha salido'}`
+      : null
+
+    const lineas: (TelegramLine | null)[] = [
+      [{ text: filtrada ? `${nap.nombre} 🟡 Fuera de filtro · solo Telegram` : `${nap.nombre} 🔔 Nuevo presupuesto` }],
+      filtrada ? [{ text: zona, bold: true }] : null,
+      filtrada ? [{ text: 'Al cliente se le ha dicho que no se acepta.' }] : null,
+      [{ text: 'nombre: ' }, { text: nombre, bold: true }],
+      [{ text: 'teléfono: ' }, { text: telefono, bold: true }],
+      [{ text: 'email: ' }, email ? { text: email, bold: true } : { text: '—' }],
+      [{ text: espacio.toLocaleUpperCase('es-ES'), bold: true }],
+      [{ text: superficieAviso, bold: true }],
+      [municipio ? { text: municipio, bold: true } : { text: '—' }, { text: ` · CP ${codigoPostal}` }],
+      filtrada ? null : [{ text: zona }],
+      lineaFoto ? [{ text: lineaFoto }] : null,
+      mensaje ? [{ text: `mensaje: ${mensaje}` }] : null,
+    ]
+
     try {
       const respuesta = await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
         method: 'POST',
@@ -353,43 +428,47 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
           chat_id: telegramChat,
           parse_mode: 'HTML',
           text: buildTelegramHtml(
-            [
-              [{ text: `${nap.nombre} 🔔 Nuevo presupuesto` }],
-              [{ text: 'nombre: ' }, { text: nombre, bold: true }],
-              [{ text: 'teléfono: ' }, { text: telefono, bold: true }],
-              [{ text: 'email: ' }, { text: email || '---', bold: true }],
-              [{ text: 'municipio: ' }, { text: municipio || '---', bold: true }],
-              [{ text: espacio.toLocaleUpperCase('es-ES'), bold: true }],
-              [{ text: '—' }],
-              ...[
-                superficie ? `superficie: ${superficie} m²` : null,
-                mensaje ? `mensaje: ${mensaje}` : null,
-                adjunto
-                  ? `foto: ${adjunto.filename}${entregado ? ' — adjunta en el email' : ' — SIN ENTREGAR: el email no ha salido'}`
-                  : null,
-              ]
-                .filter((l): l is string => Boolean(l))
-                .map((text) => [{ text }]),
-            ],
+            lineas.filter((l): l is TelegramLine => l !== null),
             attributionLine,
           ),
         }),
         signal: AbortSignal.timeout(8000),
       })
-      if (respuesta.ok) entregado = true
-    } catch {
-      // Igual que arriba: solo es un fallo si tampoco entregó la otra vía.
+      if (!respuesta.ok) console.error(`Telegram ${respuesta.status}`)
+      return respuesta.ok
+    } catch (error) {
+      console.error('Telegram: no se pudo enviar', error instanceof Error ? error.message : error)
+      return false
     }
   }
 
-  if (!entregado) {
+  let emailEntregado = false
+  let telegramEntregado = false
+  if (filtrada) {
+    telegramEntregado = await enviarTelegram(null)
+    if (!telegramEntregado) emailEntregado = await enviarEmail()
+  } else {
+    emailEntregado = await enviarEmail()
+    telegramEntregado = await enviarTelegram(emailEntregado)
+  }
+
+  // Rechazada: se devuelve ANTES del bloque de CAPI y con un estado que el cliente no
+  // cuenta como conversión (ni Pixel ni `generate_lead`).
+  if (filtrada) {
+    if (!emailEntregado && !telegramEntregado) {
+      console.error(`Solicitud fuera de filtro sin entregar a ningún canal (CP ${codigoPostal}, ${superficieAviso})`)
+    }
+    return { estado: 'rechazado', errores: {}, aviso: avisoRechazo(clasificacion) }
+  }
+
+  if (!emailEntregado && !telegramEntregado) {
     return {
       estado: 'error',
       errores: { form: `No hemos podido enviarlo. Llámanos al ${nap.telefono}.` },
     }
   }
 
-  // 7. Meta CAPI, deduplicado con el Pixel por evento_id
+  // 6. Meta CAPI, deduplicado con el Pixel por evento_id
   // Gated on marketing consent, read at submit time (see FormularioPresupuesto.tsx).
   // Without consent the lead is still delivered by email/Telegram, but no event is sent to Meta.
   if (marketingConsent === 'aceptado') {
@@ -417,7 +496,7 @@ export async function enviarPresupuesto(_prev: EstadoEnvio, formData: FormData):
       nombre,
       telefono: formatearTelefono(telefono),
       espacio,
-      superficie: superficie || undefined,
+      superficie: metrosTexto,
       municipio: municipio || undefined,
     },
   }

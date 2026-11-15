@@ -2,7 +2,9 @@ import type { Service } from '../schemas/service.ts'
 
 /**
  * Real copy for each service (pavivasa.com, Sept. 2026), unchanged from
- * Spanish. Array order is the site's menu order (`01`..`07`); the three
+ * Spanish. `seoTitle`, `headingPlace` and `guide` come from the SEO pass of
+ * 2026-11-15, written only from the real projects, articles and service
+ * copy already in this package. Array order is the site's menu order (`01`..`07`); the three
  * marked `flagship: true` (`hormigon-impreso`, `hormigon-pulido`,
  * `microcemento` — not necessarily contiguous in this order) are the
  * declared strongest offer. What the current site doesn't give (FAQ
@@ -22,6 +24,8 @@ export const services = [
     description: {
       es: 'Pavimentos de hormigón impreso en Valencia y Alicante: patios, terrazas, piscinas, jardines, fachadas y muros. Más de 15 años de oficio y 10 años de garantía.',
     },
+    seoTitle: { es: 'Hormigón impreso en Valencia y Alicante: patios y piscinas' },
+    headingPlace: { es: 'en Valencia y Alicante' },
     intro: {
       es: 'Pavimentos de hormigón impreso, revestimiento de fachadas y muros, recubrimiento de piscinas, patios, terrazas, jardines o paseos. Piedra, adoquín, baldosa o pizarra: el molde y el color los eliges tú.',
     },
@@ -109,7 +113,49 @@ export const services = [
       { question: { es: '¿Cuánto tarda en poder pisarse y en poder aparcar?' }, answer: { es: 'Normalmente se puede pisar a las 24-48 horas y circular con vehículos ligeros pasada una semana, aproximadamente. Son plazos orientativos: el clima, el espesor y la resina pueden alargarlos, y el curado completo del hormigón lleva unas 4 semanas. Conviene evitar mojar el pavimento los primeros días y respetar el plazo antes de aparcar.' } },
       { question: { es: '¿Qué mantenimiento necesita?' }, answer: { es: 'El hormigón impreso necesita poco mantenimiento: limpieza con agua y jabón neutro y renovar la resina de sellado cada 2 o 3 años, según el uso y la exposición. Esa resina protege el color y evita que penetren manchas y humedad. Si el agua ya no forma gotas sobre la superficie, es momento de revisar el sellado.' } },
       { question: { es: '¿Qué cubre la garantía de 10 años?' } },
+      {
+        question: { es: '¿Cuánto cuesta el metro cuadrado de hormigón impreso?' },
+        answer: {
+          es: 'No publicamos precios porque cada obra es distinta: cuentan los metros, el estado del terreno, el espesor que pide el uso (no es lo mismo una entrada de garaje que un patio) y el molde y el color que elijas. Dinos los metros y qué quieres hacer y te damos presupuesto sin compromiso.',
+        },
+      },
     ],
+    guide: {
+      kicker: { es: 'Cómo se hace' },
+      title: { es: 'Moldes y color sobre el hormigón fresco' },
+      intro: {
+        es: 'El hormigón impreso es una solera de hormigón a la que, todavía fresca, se le aplica color y se le estampa un molde. Al endurecer, la superficie copia la piedra, el ladrillo, la madera o la pizarra, y conserva la resistencia del hormigón.',
+      },
+      blocks: [
+        {
+          title: { es: 'Cinco moldes que ya hemos puesto en obra' },
+          paragraphs: [
+            {
+              es: 'La piedra inglesa es el que más se repite: en gris mate y crema en una [vivienda de Dénia](/proyectos/hormigon-impreso-denia/), en gris medio en una [urbanización de Calpe](/proyectos/hormigon-impreso-calpe/) y en gris muy oscuro en [Montaberner](/proyectos/hormigon-impreso-montaberner/). La sillería la hicimos en color 107 en una [urbanización de Llíria](/proyectos/hormigon-impreso-lliria/), y la sillería grande, en arena, junto a la [piscina de otra obra de Calpe](/proyectos/hormigon-impreso-calpe-2/).',
+            },
+            {
+              es: 'En un terreno con desnivel de Benissa el cliente eligió el [adoquín belga en gris oscuro](/proyectos/hormigon-impreso-benissa/), y en un chalé de Moraira, el [manteado en gris y marrón](/proyectos/hormigon-impreso-moraira/) con acabado mate. La carta completa de moldes y colores te la enseñamos en la visita.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Espesor y armado según el uso' },
+          paragraphs: [
+            {
+              es: 'En las obras que tenemos documentadas el espesor va de 10 a 12 cm, con hormigón HM20 o HM25 y árido de 12 mm. Según el caso se añade mallazo, fibra de polipropileno, 4 kg de color por metro cuadrado y juntas de dilatación cada 5×5 m. El detalle de cada obra está en la ficha técnica de esta página.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Patios, piscinas y también paredes' },
+          paragraphs: [
+            {
+              es: 'En una vivienda con jardín sirve para el patio, la terraza, los caminos y el contorno de la piscina. El mismo sistema, con los mismos moldes y colores, se aplica en vertical para revestir muros y fachadas. Si prefieres ver la piedra real del árido y una superficie rugosa, mira el [hormigón lavado](/hormigon-lavado/).',
+            },
+          ],
+        },
+      ],
+    },
     cta: { es: '¿Un patio, una entrada, una piscina? Dinos los metros y te llamamos.' },
     flagship: true,
   },
@@ -204,6 +250,8 @@ export const services = [
     description: {
       es: 'Hormigón lavado o árido visto: pavimentos rugosos, antideslizantes y muy resistentes al desgaste para rampas, salidas de parking, entornos de piscina y zonas peatonales.',
     },
+    seoTitle: { es: 'Hormigón lavado antideslizante en Valencia y Alicante' },
+    headingPlace: { es: 'en Valencia y Alicante' },
     intro: {
       es: 'Gracias a las distintas clases de áridos, granulometrías y colores obtenemos una amplia variedad de acabados atractivos y resistentes. Rugosos, antideslizantes y muy resistentes al desgaste y a los agentes atmosféricos.',
     },
@@ -246,13 +294,13 @@ export const services = [
     colors: [{ es: 'Gris' }],
     specList: {
       title: { es: 'Ficha técnica' },
-      text: { es: 'Especificación literal del hormigón lavado que ejecutamos.' },
+      text: { es: 'Especificación del hormigón lavado que ejecutamos.' },
       lines: [
         { label: { es: 'Hormigón' }, value: { es: 'HA-25 · cono blando' } },
         { label: { es: 'Árido' }, value: { es: 'Seleccionado según acabado' } },
         { label: { es: 'Fibra' }, value: { es: 'Polipropileno' } },
         { label: { es: 'Aditivado' }, value: { es: 'Sí · pigmentable en masa' } },
-        { label: { es: 'Resistencia' }, value: { es: 'HA-25 según EHE-08' } },
+        { label: { es: 'Resistencia' }, value: { es: 'HA-25 según Código Estructural' } },
         { label: { es: 'Superficie' }, value: { es: 'Antideslizante clase 3 · Rd > 45 · áridos de machaqueo' } },
       ],
     },
@@ -261,6 +309,39 @@ export const services = [
       { question: { es: '¿Se puede combinar con hormigón impreso en la misma obra?' } },
       { question: { es: '¿Qué mantenimiento necesita?' }, answer: { es: 'El hormigón lavado necesita poco mantenimiento: basta con limpiarlo con agua y detergente suave y, en zonas con más tránsito, pasar la hidrolimpiadora de vez en cuando. Si se quiere reavivar el color del árido y facilitar la limpieza, se puede aplicar un sellador protector, normalmente cada varios años según el uso y la exposición.' } },
     ],
+    guide: {
+      kicker: { es: 'Dónde y con qué árido' },
+      title: { es: 'Un pavimento que agarra porque deja la piedra a la vista' },
+      intro: {
+        es: 'El hormigón lavado deja al descubierto el árido de la masa: la superficie queda rugosa y antideslizante, y por eso va donde se pisa mojado o en pendiente, como rampas, salidas de parking y entornos de piscina.',
+      },
+      blocks: [
+        {
+          title: { es: 'Árido visto de 12 mm en Godella' },
+          paragraphs: [
+            {
+              es: 'En el [jardín de una vivienda de Godella](/proyectos/hormigon-lavado-valencia-godella/) lo hicimos en gris, con árido de 12 mm y piedra vista, modelo valencia aserras. El color y el tamaño de la piedra los decide el árido que se elige: {{carta de áridos con la que trabajáis (tamaños y colores)}}.',
+            },
+          ],
+        },
+        {
+          title: { es: 'HA-25 y superficie de clase 3' },
+          paragraphs: [
+            {
+              es: 'Lo ejecutamos con hormigón HA-25 según el Código Estructural, de cono blando, con fibra de polipropileno y aditivado, pigmentable en masa. Con áridos de machaqueo la superficie llega a la clase 3 de resbaladicidad (Rd > 45), la que el Código Técnico de la Edificación pide en exteriores.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Lavado o impreso' },
+          paragraphs: [
+            {
+              es: 'El [hormigón impreso](/hormigon-impreso/) imita la piedra con un molde y color sobre la superficie; el lavado enseña la piedra real del árido y deja una textura rugosa. Son dos acabados distintos para dos usos distintos.',
+            },
+          ],
+        },
+      ],
+    },
     cta: { es: '¿Una rampa, un vial, el borde de la piscina? Dinos los metros y te llamamos.' },
     flagship: false,
   },
@@ -276,6 +357,8 @@ export const services = [
     description: {
       es: 'Microcemento decorativo en baños, cocinas, suelos y paredes. Renovación completa sin retirar el material existente, con ahorro económico y de tiempo.',
     },
+    seoTitle: { es: 'Microcemento en Valencia y Alicante: baños y cocinas' },
+    headingPlace: { es: 'en Valencia y Alicante' },
     intro: {
       es: 'Renovamos por completo suelos, paredes, baños, cocinas o revestimientos de tu hogar con un ahorro económico y de tiempo muy importante: no hay que retirar el material existente.',
     },
@@ -330,6 +413,31 @@ export const services = [
       { question: { es: '¿Resbala en una ducha?' }, answer: { es: 'Depende del acabado: el microcemento no es antideslizante por sí mismo, lo es el sistema con su sellador y su textura. En duchas conviene pedir un acabado antideslizante y comprobar su clase de resbaladicidad (Rd, ensayo UNE-ENV 12633). El CTE DB-SUA 1 pide, en zonas interiores húmedas con poca pendiente, clase 2 (Rd entre 35 y 45), y muchas guías recomiendan clase 3 (Rd mayor de 45) dentro de la ducha.' } },
       { question: { es: '¿Qué cubre la garantía de 10 años?' } },
     ],
+    guide: {
+      kicker: { es: 'Obras' },
+      title: { es: 'Renovar el baño sin levantar el azulejo' },
+      intro: {
+        es: 'El microcemento se aplica sobre lo que ya tienes —azulejo, suelo o pared— y lo cubre con un revestimiento continuo. Sin retirar el material de antes no hay desescombro, y eso ahorra tiempo y obra al renovar un baño o una cocina.',
+      },
+      blocks: [
+        {
+          title: { es: 'Dos baños que hemos reformado' },
+          paragraphs: [
+            {
+              es: 'En [Moraira](/proyectos/microcemento-en-moraira/) revestimos un cuarto de baño completo en gris claro, el color que eligió el cliente. En [Alicante](/proyectos/microcemento-en-alicante/) hicimos la reforma completa de un baño con el modelo y el color que el cliente eligió asesorado por un diseñador: en los últimos años son muchos los diseñadores que nos piden microcemento.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Microcemento u hormigón pulido' },
+          paragraphs: [
+            {
+              es: 'El microcemento sirve para renovar sin quitar lo que hay. Si el suelo es nuevo y lo que buscas es un pavimento continuo de hormigón, mira el [hormigón pulido](/hormigon-pulido/).',
+            },
+          ],
+        },
+      ],
+    },
     cta: { es: '¿Un baño, una cocina, un suelo entero? Dinos los metros y te llamamos.' },
     flagship: true,
   },
@@ -343,6 +451,8 @@ export const services = [
     description: {
       es: 'Morteros autonivelantes decorativos: lisos o antideslizantes, industriales o decorativos, con maquinaria propia de bombeo y adaptados al Código Técnico de la Edificación.',
     },
+    seoTitle: { es: 'Morteros autonivelantes en Valencia y Alicante' },
+    headingPlace: { es: 'en Valencia y Alicante' },
     intro: {
       es: 'Morteros autonivelantes decorativos. Una apuesta por la arquitectura creativa, inspirada en acabados cromáticos naturales: lisos o antideslizantes, industriales o decorativos, flexibles, conductores y alimentarios.',
     },
@@ -397,6 +507,8 @@ export const services = [
     description: {
       es: 'Pavimentos de caucho para parques infantiles y zonas deportivas: EPDM o SBR, espesor según la altura crítica de caída del equipo de juego, normas EN 1176 y EN 1177.',
     },
+    seoTitle: { es: 'Suelo de caucho para parques infantiles (EN 1177)' },
+    headingPlace: { es: 'en Valencia y Alicante' },
     intro: {
       es: 'Una solución limpia y segura para crear zonas lúdicas infantiles y zonas deportivas: pavimentos que minimizan el riesgo de lesiones por caídas desde los equipos de juego.',
     },
@@ -450,6 +562,8 @@ export const services = [
     description: {
       es: 'Alicatados en toda la provincia de Valencia: baños, cocinas, piscinas y terrazas, desde reformas residenciales hasta obras comerciales.',
     },
+    seoTitle: { es: 'Alicatados en Valencia: baños, cocinas, piscinas y terrazas' },
+    headingPlace: { es: 'en la provincia de Valencia' },
     intro: {
       es: 'Servicio de alicatados en toda la provincia de Valencia, tanto en proyectos de renovación residencial como en grandes obras comerciales: desde baños y cocinas hasta espacios exteriores como piscinas y terrazas.',
     },

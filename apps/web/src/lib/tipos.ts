@@ -109,6 +109,20 @@ export type Articulo = {
 
 export type Pregunta = { pregunta: string; respuesta?: string }
 
+/** Tramo de prosa con enlaces internos y datos pendientes (`RichText` de `@site/content`). */
+export type TramoProsa =
+  | { type: 'text'; text: string }
+  | { type: 'link'; text: string; href: string }
+  | { type: 'pending'; text: string }
+
+/** Banda «cómo es / cómo se hace» de la página de servicio (pase SEO del 2026-11-15). */
+export type GuiaServicio = {
+  antetitulo: string
+  titulo: string
+  entradilla: TramoProsa[]
+  bloques: { titulo: string; parrafos: TramoProsa[][] }[]
+}
+
 export type Servicio = {
   id: ServicioId
   numero: string
@@ -118,6 +132,10 @@ export type Servicio = {
   resumen: string
   /** Descripción para <meta>. */
   descripcion: string
+  /** <title> sin la marca; si falta, se usa `nombre`. */
+  tituloSeo?: string
+  /** Segunda línea del H1 ("en Valencia y Alicante"). */
+  lugarH1?: string
   /** Entradilla del hero. */
   intro: string
   introMovil: string
@@ -135,6 +153,7 @@ export type Servicio = {
   }
   /** Lista de especificación cuando no hay tabla comparativa (lavado, microcemento…). */
   especificacion?: { titulo: string; texto: string; lineas: { etiqueta: string; valor: string }[] }
+  guia?: GuiaServicio
   faq: Pregunta[]
   cta: string
 }

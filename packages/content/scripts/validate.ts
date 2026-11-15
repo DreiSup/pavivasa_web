@@ -27,6 +27,7 @@ import { projectSchema } from '../src/schemas/project.zod.ts'
 import { articleSchema } from '../src/schemas/article.zod.ts'
 import { homeContentSchema } from '../src/schemas/home.zod.ts'
 import { localizedText } from '../src/schemas/localized.zod.ts'
+import { parseRichText } from '../src/queries/rich-text.ts'
 
 import { business } from '../src/data/business.ts'
 import { claims } from '../src/data/claims.ts'
@@ -85,7 +86,7 @@ for (const entry of serviceCatalog) {
 // (data/service-catalog.ts intentionally duplicates a few fields out of
 // data/services.ts for client-bundle-size reasons — see its own comment.)
 
-const serviceIds = new Set(services.map((s) => s.id))
+const serviceIds = new Set<string>(services.map((s) => s.id))
 for (const entry of serviceCatalog) {
   if (!serviceIds.has(entry.id)) fail(`service catalog: "${entry.id}" has no matching entry in services.ts`)
 }
@@ -133,6 +134,33 @@ for (const article of articles) {
   for (const block of article.body) {
     if (block.type === 'projectCallout' && !projectSlugs.has(block.slug)) {
       fail(`article "${article.slug.es}": projectCallout references unknown project "${block.slug}"`)
+    }
+  }
+}
+
+// ---- 3b. Service guides: every internal link points to a page this content
+// (or a static route of apps/web) produces, and no markup is left half-open.
+// Static routes mirror apps/web/src/app/** (kept by hand, like
+// scripts/verify/checks/page-count.mjs's own list).
+
+const STATIC_ROUTES = ['/', '/proyectos/', '/empresa/', '/presupuesto/', '/blog/']
+const knownRoutes = new Set<string>([
+  ...STATIC_ROUTES,
+  ...services.map((s) => `/${s.slug.es}/`),
+  ...projects.map((p) => `/proyectos/${p.slug.es}/`),
+  ...articles.map((a) => `/blog/${a.slug.es}/`),
+])
+for (const service of services as readonly Service[]) {
+  if (!service.guide) continue
+  const texts = [service.guide.intro.es, ...service.guide.blocks.flatMap((b) => b.paragraphs.map((p) => p.es))]
+  for (const text of texts) {
+    for (const run of parseRichText(text)) {
+      if (run.type === 'link' && !knownRoutes.has(run.href)) {
+        fail(`service "${service.id}": guide links to "${run.href}", which is not a page this content produces`)
+      }
+      if (run.type === 'text' && (/\]\(/.test(run.text) || /\{\{|\}\}/.test(run.text))) {
+        fail(`service "${service.id}": malformed guide markup near "${run.text.slice(0, 60)}"`)
+      }
     }
   }
 }

@@ -31,6 +31,8 @@ export const servicios: Record<ServicioId, Servicio> = Object.fromEntries(
       nombreCorto: s.shortName,
       resumen: s.summary,
       descripcion: s.description,
+      ...(s.seoTitle !== undefined ? { tituloSeo: s.seoTitle } : {}),
+      ...(s.headingPlace !== undefined ? { lugarH1: s.headingPlace } : {}),
       intro: s.intro,
       introMovil: s.introMobile,
       imagenHero: imagen(s.heroImage),
@@ -55,6 +57,16 @@ export const servicios: Record<ServicioId, Servicio> = Object.fromEntries(
               titulo: s.specList.title,
               texto: s.specList.text,
               lineas: s.specList.lines.map((line) => ({ etiqueta: line.label, valor: line.value })),
+            },
+          }
+        : {}),
+      ...(s.guide
+        ? {
+            guia: {
+              antetitulo: s.guide.kicker,
+              titulo: s.guide.title,
+              entradilla: s.guide.intro,
+              bloques: s.guide.blocks.map((b) => ({ titulo: b.title, parrafos: b.paragraphs })),
             },
           }
         : {}),

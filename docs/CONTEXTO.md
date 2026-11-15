@@ -41,6 +41,7 @@ Monorepo pnpm 9.15.9 + Turborepo, Node >=22.6. Next 15.5 · React 19 · Tailwind
 - **Tokens / fuentes:** `apps/web/tailwind.config.ts`, `src/app/globals.css`, `src/app/fuentes.ts`.
 - **Redirecciones 301 / noindex:** `apps/web/next.config.ts` (`source` con barra final).
 - **Zona congelada:** `apps/web/src/app/**` y `src/components/**` hasta el rediseño (ver `CLAUDE.md`).
+- **Levantamiento puntual de la congelación (2026-11-15, orden del dueño):** solo para el pase SEO de servicios. Cambia a propósito la salida de las páginas de servicio: `<title>` desde `seoTitle`, H1 con segunda línea `headingPlace` («en Valencia y Alicante») y banda `seccion-guia` (H2 + H3, prosa con `[texto](/ruta/)` y `{{pendiente}}`) desde `guide` en `packages/content/src/data/services.ts`. `content:validate` comprueba que cada enlace de una guía apunta a una página que existe. Fuera de eso, la regla de congelación sigue.
 
 ## Cambios traídos de main
 

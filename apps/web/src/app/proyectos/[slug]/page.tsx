@@ -10,6 +10,7 @@ import BloquePosicion from '@/components/contenido/BloquePosicion'
 import TarjetaProyecto, { EtiquetaProyecto } from '@/components/contenido/TarjetaProyecto'
 import { proyectoPorSlug, proyectos, proyectosSimilares } from '@/lib/datos'
 import { NOMBRE_SERVICIO, RUTA_SERVICIO, TECNICA_CORTA } from '@/lib/tipos'
+import { serviceAreaForProject, serviceAreaRoute } from '@/lib/service-areas'
 
 /** Patrón de ruta generada desde content/. Todo SSG; un slug desconocido da 404 vía notFound(). */
 export function generateStaticParams() {
@@ -39,6 +40,7 @@ export default async function FichaProyecto({ params }: { params: Promise<{ slug
   const similares = proyectosSimilares(proyecto)
   const [principal, ...miniaturas] = proyecto.imagenes
   const tecnica = NOMBRE_SERVICIO[proyecto.servicio]
+  const zona = serviceAreaForProject(proyecto.slug)
 
   const lineasEjecucion = [
     f.hormigon && `Hormigón · ${f.hormigon}`,
@@ -158,6 +160,7 @@ export default async function FichaProyecto({ params }: { params: Promise<{ slug
               <Boton variante="primario" href="/presupuesto/" anchoCompleto>
                 Quiero algo así
               </Boton>
+              {zona ? <EnlaceEtiqueta href={serviceAreaRoute(zona)}>{zona.heading} →</EnlaceEtiqueta> : null}
             </div>
           </div>
 
@@ -173,6 +176,11 @@ export default async function FichaProyecto({ params }: { params: Promise<{ slug
                   <EnlaceEtiqueta href={RUTA_SERVICIO[proyecto.servicio]} pequeno>
                     Sobre el {tecnica.toLowerCase()} →
                   </EnlaceEtiqueta>
+                  {zona ? (
+                    <EnlaceEtiqueta href={serviceAreaRoute(zona)} pequeno>
+                      {zona.heading} →
+                    </EnlaceEtiqueta>
+                  ) : null}
                 </>
               }
             />

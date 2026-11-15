@@ -169,8 +169,10 @@ export const services = [
       es: 'Naves, garajes y parkings; y cada vez más en interiores de vivienda. Impermeable, no se astilla ni agrieta, acabado brillo o mate.',
     },
     description: {
-      es: 'Pavimentos de hormigón pulido para naves industriales, garajes, parkings, terrazas, piscinas e interiores de vivienda. Durabilidad, impermeabilidad y bajo mantenimiento.',
+      es: 'Hormigón pulido para el interior de casa, terrazas, piscinas, garajes y naves en Valencia y Alicante: brillo o mate, en color, con obras reales y ficha técnica.',
     },
+    seoTitle: { es: 'Hormigón pulido en Valencia y Alicante: viviendas y naves' },
+    headingPlace: { es: 'en Valencia y Alicante' },
     intro: {
       es: 'Pavimentos ideales tanto para suelos industriales como para terrazas, piscinas, jardines y zonas de interior. Durabilidad, impermeabilidad, precio y bajo mantenimiento, en acabado brillo o mate.',
     },
@@ -236,7 +238,46 @@ export const services = [
       { question: { es: '¿Qué diferencia hay entre acabado brillo y mate?' }, answer: { es: 'La diferencia está en cuánta luz refleja el suelo: el acabado brillo es más reflectante y el mate es más sobrio, con menos reflejo. Depende del grado de pulido o del sellador aplicado. En exteriores y zonas húmedas, además del aspecto, hay que mirar la resbaladicidad: el CTE pide clase 3 en exteriores.' } },
       { question: { es: '¿Cuánto aguanta el paso de carretillas y camiones?' }, answer: { es: 'Un hormigón pulido bien diseñado soporta el paso de carretillas y camiones: es el pavimento habitual en naves y muelles de carga. Cuánto aguanta depende del espesor, del armado con mallazo y fibras, de la subbase y de las cargas puntuales, como estanterías o ruedas duras. Por eso no hay una cifra válida para todos los casos: se define según el uso previsto de cada obra.' } },
       { question: { es: '¿Qué cubre la garantía de 10 años?' } },
+      {
+        question: { es: '¿Cuánto cuesta el metro cuadrado de hormigón pulido?' },
+        answer: {
+          es: 'No publicamos precios: no cuesta lo mismo un salón que una nave de 2000 m². Cuentan los metros, el estado del soporte, el armado que pide el uso y el color y el acabado, brillo o mate. Dinos los metros y para qué es el suelo y te damos presupuesto sin compromiso.',
+        },
+      },
     ],
+    guide: {
+      kicker: { es: 'Cómo es' },
+      title: { es: 'Pulir el hormigón: brillo, color y la dureza de siempre' },
+      intro: {
+        es: 'Pulir el hormigón es trabajar su superficie con abrasivos mecánicos de distintos granos hasta dejarla lisa, brillante y capaz de reflejar la luz. El aspecto recuerda al mármol o al terrazo; la resistencia y la durabilidad siguen siendo las del hormigón.',
+      },
+      blocks: [
+        {
+          title: { es: 'En casa: dentro, fuera y alrededor de la piscina' },
+          paragraphs: [
+            {
+              es: 'Cada vez se pide más en viviendas, y no solo dentro. En una [unifamiliar de Benissa](/proyectos/hormigon-pulido-alicante/) hicimos un mismo pavimento continuo en 117 crema marfil para el interior, el exterior y el contorno de la piscina, y en una [residencia de Xàbia](/proyectos/hormigon-pulido-xabia/) pavimentamos 120 m² en crema 117. En otra urbanización de Benissa, [Monte Mar](/proyectos/hormigon-pulido-benissa/), el pulido en crema 117 lleva mallazo, fibra de polipropileno y 4 kg de color por metro cuadrado.',
+            },
+          ],
+        },
+        {
+          title: { es: 'En naves, garajes y locales' },
+          paragraphs: [
+            {
+              es: 'Es el pavimento habitual en naves y muelles de carga: en [Daimús](/proyectos/hormigon-pulido-daimus/) pavimentamos 2000 m² de una nave con muelle de carga y descarga, y en [Riba-roja de Túria](/proyectos/hormigon-pulido-ribarroja-del-turia/) otra nave en color natural, con mallazo y fibra. También lo eligen salas de exposición, recepciones y locales comerciales, por el acabado refinado que deja.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Brillo o mate, y en color' },
+          paragraphs: [
+            {
+              es: 'El acabado brillo refleja más la luz; el mate es más sobrio. El hormigón admite multitud de colores: en obra lo hemos hecho en crema 117, en 117 crema marfil y en natural. Fuera de casa, además del aspecto, cuenta que no resbale: {{cómo dejáis el pulido en exterior y junto a la piscina (grado de pulido, tratamiento antideslizante, clase de resbaladicidad)}}.',
+            },
+          ],
+        },
+      ],
+    },
     cta: { es: '¿Una nave, un garaje, un interior? Dinos los metros y te llamamos.' },
     flagship: true,
   },

@@ -76,11 +76,11 @@ const nextConfig: NextConfig = {
         destination: '/blog/hormigon-fratasado-fino-decorativo-viviendas/',
         permanent: true,
       },
-      {
-        source: '/brillo-elegancia-explorando-hormigon-pulido/',
-        destination: '/blog/brillo-elegancia-explorando-hormigon-pulido/',
-        permanent: true,
-      },
+      // «Brillo y elegancia» (2023) se fusionó en /hormigon-pulido/ el 2026-11-15:
+      // misma búsqueda, contenido reescrito en la guía del servicio. La URL de
+      // WordPress va directa al destino final (un solo salto).
+      { source: '/brillo-elegancia-explorando-hormigon-pulido/', destination: '/hormigon-pulido/', permanent: true },
+      { source: '/blog/brillo-elegancia-explorando-hormigon-pulido/', destination: '/hormigon-pulido/', permanent: true },
       {
         source: '/hormigon-desactivado-piedra-vista-estetica-funcionalidad-solo-material/',
         destination: '/blog/hormigon-desactivado-piedra-vista/',

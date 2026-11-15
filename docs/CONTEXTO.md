@@ -43,6 +43,12 @@ Monorepo pnpm 9.15.9 + Turborepo, Node >=22.6. Next 15.5 · React 19 · Tailwind
 - **Zona congelada:** `apps/web/src/app/**` y `src/components/**` hasta el rediseño (ver `CLAUDE.md`).
 - **Levantamiento puntual de la congelación (2026-11-15, orden del dueño):** solo para el pase SEO de servicios. Cambia a propósito la salida de las páginas de servicio: `<title>` desde `seoTitle`, H1 con segunda línea `headingPlace` («en Valencia y Alicante») y banda `seccion-guia` (H2 + H3, prosa con `[texto](/ruta/)` y `{{pendiente}}`) desde `guide` en `packages/content/src/data/services.ts`. `content:validate` comprueba que cada enlace de una guía apunta a una página que existe. Fuera de eso, la regla de congelación sigue.
 
+## Artículos fusionados en su página de servicio (2026-11-15)
+
+Un artículo que responde a la misma búsqueda que una página de servicio compite con ella (canibalización). Se reescribe dentro de la `guide` del servicio, se retira de `packages/content/src/data/articles.ts` (con eso sale del blog, del sitemap y de `/ai/`) y su URL redirige con 301 (`apps/web/next.config.ts`, también la URL de WordPress, directa al destino: un solo salto).
+
+- `brillo-elegancia-explorando-hormigon-pulido` → `/hormigon-pulido/`.
+
 ## Cambios traídos de main
 
 - Kit Digital eliminado del sitio y del README.

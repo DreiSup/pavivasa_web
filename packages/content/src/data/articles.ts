@@ -5,6 +5,11 @@ import type { Article } from '../schemas/article.ts'
  * Spanish ("tú") and without typos. The stone-effect article's original
  * body is in Romanian: kept as a `pending` block instead of inventing a
  * translation.
+ *
+ * «Brillo y elegancia: explorando el hormigón pulido» (2023) no está aquí desde
+ * el 2026-11-15: respondía a la misma búsqueda que `/hormigon-pulido/`, su
+ * contenido se reescribió dentro de la guía de ese servicio y su URL redirige
+ * allí con un 301 (`apps/web/next.config.ts`).
  */
 export const articles = [
   {
@@ -143,49 +148,6 @@ export const articles = [
       },
     ],
     closing: { es: '¿Un interior o una terraza en pulido?' },
-  },
-  {
-    slug: { es: 'brillo-elegancia-explorando-hormigon-pulido' },
-    title: { es: 'Brillo y elegancia: explorando el hormigón pulido' },
-    excerpt: { es: 'Cómo se pule el hormigón y por qué se usa en viviendas, exposiciones y locales.' },
-    service: 'hormigon-pulido',
-    date: { es: 'Agosto 2023' },
-    dateIso: '2023-08-22',
-    image: {
-      label: { es: 'Foto · pulido · sustituye a la foto de WhatsApp de 2023 (1024 px)' },
-      src: '/img/pulido-interior-loft3.jpg',
-      alt: { es: 'Interior con suelo de hormigón pulido brillante que refleja la luz de las ventanas' },
-    },
-    body: [
-      {
-        type: 'paragraph',
-        text: {
-          es: 'En la construcción y el diseño de interiores, la búsqueda de soluciones que combinen estética y funcionalidad es constante. Una técnica que ha ganado protagonismo es el hormigón pulido: en Valencia ha encontrado terreno fértil, con una apariencia sofisticada y contemporánea que combina belleza y durabilidad.',
-        },
-      },
-      { type: 'heading', id: 'proceso', text: { es: 'El arte del hormigón pulido' } },
-      {
-        type: 'paragraph',
-        text: {
-          es: 'Pulir el hormigón consiste en tratar la superficie hasta obtener un acabado liso, brillante y reflectante. Se pule mecánicamente con herramientas abrasivas de distintos granos hasta revelar su belleza natural: una superficie que a menudo recuerda al mármol o al terrazo, con la resistencia y durabilidad del hormigón.',
-        },
-      },
-      { type: 'heading', id: 'valencia', text: { es: 'El pulido en Valencia' } },
-      {
-        type: 'paragraph',
-        text: {
-          es: 'Desde residencias privadas hasta espacios comerciales, diseñadores y arquitectos valencianos han adoptado el pulido para añadir sofisticación. La técnica sirve tanto en interiores como en exteriores, lo que da cohesión estética a todo tipo de entornos.',
-        },
-      },
-      { type: 'heading', id: 'aplicaciones', text: { es: 'Aplicaciones' } },
-      {
-        type: 'paragraph',
-        text: {
-          es: 'Suelos de salas de exposición, encimeras de cocina, recepciones de hotel: el pulido transforma el hormigón en una superficie refinada y brillante que ha dejado marca en la arquitectura de la ciudad.',
-        },
-      },
-    ],
-    closing: { es: '¿Un local, una exposición, una vivienda?' },
   },
   {
     slug: { es: 'hormigon-desactivado-piedra-vista' },

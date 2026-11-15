@@ -28,6 +28,8 @@ export {
   getTownsWithProjects,
 } from './queries/projects.ts'
 export type { ResolvedProject, ResolvedExecutionSpecs } from './queries/projects.ts'
+export { getServiceAreas, getServiceArea } from './queries/service-areas.ts'
+export type { ResolvedServiceArea } from './queries/service-areas.ts'
 export { getArticles, getArticle } from './queries/articles.ts'
 export type { ResolvedArticle, ResolvedArticleBlock } from './queries/articles.ts'
 export { getHome } from './queries/home.ts'
@@ -49,6 +51,7 @@ export type {
   SpecList,
   Project,
   ExecutionSpecs,
+  ServiceArea,
   Article,
   ArticleBlock,
   ParagraphBlock,

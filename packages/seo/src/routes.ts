@@ -13,9 +13,12 @@ export type RoutePrefixes = {
   projects: string
   /** Leading and trailing slash, e.g. `/blog/`. */
   articles: string
+  /** Leading and trailing slash, e.g. `/zonas/`. */
+  serviceAreas: string
 }
 
 export const DEFAULT_ROUTES: RoutePrefixes = {
   projects: '/proyectos/',
   articles: '/blog/',
+  serviceAreas: '/zonas/',
 }

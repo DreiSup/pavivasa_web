@@ -49,6 +49,9 @@ const nextConfig: NextConfig = {
       { source: '/microcemento-decorativo/', destination: '/microcemento/', permanent: true },
       { source: '/morteros-autonivelantes/', destination: '/autonivelantes/', permanent: true },
       { source: '/pavimentos-caucho/', destination: '/pavimentos-de-caucho/', permanent: true },
+      // Archivo de categoría de WordPress que hoy da 404 y aún sale en Search
+      // Console (20 impresiones, 1 clic): se manda a la página del servicio.
+      { source: '/category/hormigon-lavado/', destination: '/hormigon-lavado/', permanent: true },
       // Fichas de obra que colgaban de la raíz en WordPress
       { source: '/hormigon-impreso-denia/', destination: '/proyectos/hormigon-impreso-denia/', permanent: true },
       { source: '/hormigon-impreso-moraira/', destination: '/proyectos/hormigon-impreso-moraira/', permanent: true },

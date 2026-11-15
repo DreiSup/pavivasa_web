@@ -252,7 +252,9 @@ export const services = [
         { label: { es: 'Árido' }, value: { es: 'Seleccionado según acabado' } },
         { label: { es: 'Fibra' }, value: { es: 'Polipropileno' } },
         { label: { es: 'Aditivado' }, value: { es: 'Sí · pigmentable en masa' } },
-        { label: { es: 'Resistencia' }, value: { es: 'HA-25 según EHE-08' } },
+        // EHE-08 was repealed by the Código Estructural (Real Decreto 470/2021,
+        // in force since 10-11-2021). HA-25 keeps the same designation under it.
+        { label: { es: 'Resistencia' }, value: { es: 'HA-25 según Código Estructural' } },
         { label: { es: 'Superficie' }, value: { es: 'Antideslizante clase 3 · Rd > 45 · áridos de machaqueo' } },
       ],
     },

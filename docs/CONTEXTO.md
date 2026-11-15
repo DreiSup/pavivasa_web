@@ -19,6 +19,7 @@ Monorepo pnpm 9.15.9 + Turborepo, Node >=22.6. Next 15.5 · React 19 · Tailwind
 | `/` | `page.tsx` |
 | 8 servicios (impreso, pulido, fratasado, lavado, microcemento, autonivelantes, caucho, alicatados) | `[servicio]/page.tsx` (plantilla única) |
 | `/proyectos/` + fichas | `proyectos/page.tsx`, `proyectos/[slug]/` |
+| `/zonas/<municipio>/` (Calpe, Benissa; `noindex` hasta tener foto confirmada) | `zonas/[municipio]/page.tsx`; datos en `packages/content/src/data/service-areas.ts`, lectura en `src/lib/service-areas.ts`; criterio en `docs/seo-zonas.md` |
 | `/blog/` + artículos | `blog/page.tsx`, `blog/[slug]/` |
 | `/empresa/`, `/presupuesto/` | `empresa/`, `presupuesto/` (`actions.ts` = Server Action del formulario) |
 | Legales | `aviso-legal/`, `politica-de-privacidad/`, `politica-de-cookies/` (textos en `packages/content/src/legal/*.md`) |

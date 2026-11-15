@@ -10,6 +10,7 @@ import BloquePosicion from '@/components/contenido/BloquePosicion'
 import TarjetaProyecto, { EtiquetaProyecto } from '@/components/contenido/TarjetaProyecto'
 import { proyectoPorSlug, proyectos, proyectosSimilares } from '@/lib/datos'
 import { NOMBRE_SERVICIO, RUTA_SERVICIO, TECNICA_CORTA } from '@/lib/tipos'
+import { serviceAreaForProject, serviceAreaRoute } from '@/lib/service-areas'
 
 /** Patrón de ruta generada desde content/. Todo SSG; un slug desconocido da 404 vía notFound(). */
 export function generateStaticParams() {
@@ -23,8 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const proyecto = proyectoPorSlug(slug)
   if (!proyecto) return {}
+  // «Técnica en Municipio: titular corto». Antes era solo «Técnica en Municipio», y
+  // dos obras del mismo municipio y técnica (Calpe y Calpe 2; las dos de pulido en
+  // Benissa) salían con el mismo <title>: Search Console las daba por duplicadas.
+  // El titular corto es modelo y color, propio de cada obra; el prefijo no cambia.
+  const titular = proyecto.titulo.charAt(0).toLowerCase() + proyecto.titulo.slice(1)
   return {
-    title: `${NOMBRE_SERVICIO[proyecto.servicio]} en ${proyecto.municipio}`,
+    title: `${NOMBRE_SERVICIO[proyecto.servicio]} en ${proyecto.municipio}: ${titular}`,
     description: `${proyecto.tituloLargo}. ${proyecto.tipo}, ${proyecto.municipio} (${proyecto.provincia}).`,
     alternates: { canonical: `/proyectos/${proyecto.slug}/` },
   }
@@ -39,6 +45,7 @@ export default async function FichaProyecto({ params }: { params: Promise<{ slug
   const similares = proyectosSimilares(proyecto)
   const [principal, ...miniaturas] = proyecto.imagenes
   const tecnica = NOMBRE_SERVICIO[proyecto.servicio]
+  const zona = serviceAreaForProject(proyecto.slug)
 
   const lineasEjecucion = [
     f.hormigon && `Hormigón · ${f.hormigon}`,
@@ -158,6 +165,7 @@ export default async function FichaProyecto({ params }: { params: Promise<{ slug
               <Boton variante="primario" href="/presupuesto/" anchoCompleto>
                 Quiero algo así
               </Boton>
+              {zona ? <EnlaceEtiqueta href={serviceAreaRoute(zona)}>{zona.heading} →</EnlaceEtiqueta> : null}
             </div>
           </div>
 
@@ -173,6 +181,11 @@ export default async function FichaProyecto({ params }: { params: Promise<{ slug
                   <EnlaceEtiqueta href={RUTA_SERVICIO[proyecto.servicio]} pequeno>
                     Sobre el {tecnica.toLowerCase()} →
                   </EnlaceEtiqueta>
+                  {zona ? (
+                    <EnlaceEtiqueta href={serviceAreaRoute(zona)} pequeno>
+                      {zona.heading} →
+                    </EnlaceEtiqueta>
+                  ) : null}
                 </>
               }
             />

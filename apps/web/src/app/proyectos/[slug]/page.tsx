@@ -24,8 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const proyecto = proyectoPorSlug(slug)
   if (!proyecto) return {}
+  // «Técnica en Municipio: titular corto». Antes era solo «Técnica en Municipio», y
+  // dos obras del mismo municipio y técnica (Calpe y Calpe 2; las dos de pulido en
+  // Benissa) salían con el mismo <title>: Search Console las daba por duplicadas.
+  // El titular corto es modelo y color, propio de cada obra; el prefijo no cambia.
+  const titular = proyecto.titulo.charAt(0).toLowerCase() + proyecto.titulo.slice(1)
   return {
-    title: `${NOMBRE_SERVICIO[proyecto.servicio]} en ${proyecto.municipio}`,
+    title: `${NOMBRE_SERVICIO[proyecto.servicio]} en ${proyecto.municipio}: ${titular}`,
     description: `${proyecto.tituloLargo}. ${proyecto.tipo}, ${proyecto.municipio} (${proyecto.provincia}).`,
     alternates: { canonical: `/proyectos/${proyecto.slug}/` },
   }

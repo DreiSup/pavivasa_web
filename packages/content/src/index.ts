@@ -18,7 +18,8 @@ export type { BusinessOverrides, ResolvedBusiness } from './queries/business.ts'
 export { getClaims } from './queries/claims.ts'
 export type { ResolvedClaims } from './queries/claims.ts'
 export { getServices, getService, getServiceCatalog, getServiceSlugMap } from './queries/services.ts'
-export type { ResolvedService, ResolvedServiceCatalogEntry } from './queries/services.ts'
+export type { ResolvedService, ResolvedServiceCatalogEntry, ResolvedServiceGuide } from './queries/services.ts'
+export type { ResolvedRichTextRun } from './queries/rich-text.ts'
 export {
   getProjects,
   getProject,
@@ -47,6 +48,9 @@ export type {
   Service,
   SpecSheet,
   SpecList,
+  RichText,
+  ServiceGuide,
+  ServiceGuideBlock,
   Project,
   ExecutionSpecs,
   Article,

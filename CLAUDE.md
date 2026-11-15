@@ -19,6 +19,14 @@ cosa, estado del build y desviaciones conocidas. No reinspecciones el proyecto e
   no llegue el rediseño nuevo. La salida pública tiene que seguir siendo
   byte-idéntica a la de antes de esta fase. Un fix real ahí va a
   `scripts/verify/known-issues.json` con su `reason`, no al código.
+- **Levantamiento puntual, 2026-11-15, por orden del dueño (puntos 10 y 11):**
+  la congelación se levanta **solo** para las mejoras SEO de servicios —
+  plantilla `apps/web/src/app/[servicio]/page.tsx` (title, H1 con lugar, banda
+  de guía con enlaces a obras), alta del servicio de hormigón fratasado
+  (`components/layout/MenuMovil.tsx`) y fusión de los artículos de pulido y
+  fratasado en sus páginas de servicio (301 en `next.config.ts`). La salida
+  pública de esas rutas cambia a propósito. Para todo lo demás la regla
+  general sigue vigente. Detalle en `docs/CONTEXTO.md`.
 - Los adaptadores legacy de `apps/web/src/lib/` y `src/content/` (marcados
   `legacy adapter, delete when the new design consumes @site/* directly`) se
   borran cuando el rediseño consuma `@site/*` directamente. Hasta entonces,

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Migas from '@/components/layout/Migas'
 import AntetituloSeccion from '@/components/ui/AntetituloSeccion'
@@ -9,16 +10,17 @@ import Seccion, { CabeceraSeccion } from '@/components/ui/Seccion'
 import BloquePosicion from '@/components/contenido/BloquePosicion'
 import TarjetaProyecto from '@/components/contenido/TarjetaProyecto'
 import TablaFichaTecnica from '@/components/datos/TablaFichaTecnica'
+import DatoPendiente from '@/components/datos/DatoPendiente'
 import SubmenuServicio, { type Ancla } from '@/components/secciones/SubmenuServicio'
 import SeccionMuestrario from '@/components/secciones/SeccionMuestrario'
 import SeccionFAQ from '@/components/secciones/SeccionFAQ'
 import LlamadaFinal from '@/components/secciones/LlamadaFinal'
 import { JsonLd, schemaServicio } from '@/lib/schema'
 import { proyectosPorServicio, servicioPorId } from '@/lib/datos'
-import { ORDEN_SERVICIOS, RUTA_SERVICIO } from '@/lib/tipos'
+import { ORDEN_SERVICIOS, RUTA_SERVICIO, type TramoProsa } from '@/lib/tipos'
 import { capitalizar, enPalabras, plural } from '@/lib/texto'
 
-/** Los siete servicios comparten esta plantilla. Todo SSG; una ruta desconocida da 404 vía notFound(). */
+/** Todos los servicios comparten esta plantilla. Todo SSG; una ruta desconocida da 404 vía notFound(). */
 export function generateStaticParams() {
   return ORDEN_SERVICIOS.map((servicio) => ({ servicio }))
 }
@@ -31,7 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ servicio:
   const servicio = servicioPorId(id)
   if (!servicio) return {}
   return {
-    title: servicio.nombre,
+    title: servicio.tituloSeo ?? servicio.nombre,
     description: servicio.descripcion,
     alternates: { canonical: RUTA_SERVICIO[servicio.id] },
   }
@@ -52,6 +54,25 @@ function Lista({ rotulo, items }: { rotulo: string; items: string[] }) {
   )
 }
 
+/** Prosa de la guía: texto, enlace interno (con texto descriptivo) o dato que solo puede dar el cliente. */
+function Prosa({ tramos }: { tramos: TramoProsa[] }) {
+  return (
+    <>
+      {tramos.map((t, i) =>
+        t.type === 'link' ? (
+          <Link key={i} href={t.href} className="text-tinta underline underline-offset-2 hover:text-acero">
+            {t.text}
+          </Link>
+        ) : t.type === 'pending' ? (
+          <DatoPendiente key={i}>{t.text}</DatoPendiente>
+        ) : (
+          <span key={i}>{t.text}</span>
+        ),
+      )}
+    </>
+  )
+}
+
 export default async function PaginaServicio({ params }: { params: Promise<{ servicio: string }> }) {
   const { servicio: id } = await params
   const servicio = servicioPorId(id)
@@ -64,6 +85,7 @@ export default async function PaginaServicio({ params }: { params: Promise<{ ser
 
   const anclas: Ancla[] = [
     { id: 'seccion-que-es', texto: 'Qué es' },
+    ...(servicio.guia ? [{ id: 'seccion-guia', texto: servicio.guia.antetitulo }] : []),
     { id: 'seccion-donde', texto: 'Dónde se usa' },
     ...(conMuestrario ? [{ id: 'seccion-modelos', texto: 'Modelos y colores', textoMovil: 'Modelos' }] : []),
     ...(conFicha ? [{ id: 'seccion-ficha', texto: 'Ficha técnica' }] : []),
@@ -91,7 +113,14 @@ export default async function PaginaServicio({ params }: { params: Promise<{ ser
                 </>
               ) : null}
             </AntetituloSeccion>
-            <h1 className="font-display font-extrabold text-46 md:text-88 leading-[0.98] md:leading-[0.95]">{servicio.nombre}</h1>
+            <h1 className="font-display font-extrabold text-46 md:text-88 leading-[0.98] md:leading-[0.95] flex flex-col gap-2 md:gap-3">
+              <span>{servicio.nombre}</span>
+              {/* Espacio real entre las dos líneas: el flex no lo pinta, pero el texto del H1 lo necesita. */}
+              {servicio.lugarH1 ? ' ' : null}
+              {servicio.lugarH1 ? (
+                <span className="font-bold text-20 md:text-34 leading-[1.1] text-tinta-media">{servicio.lugarH1}</span>
+              ) : null}
+            </h1>
             <p className="text-16 md:text-20 text-tinta-media">
               <span className="md:hidden">{servicio.introMovil}</span>
               <span className="hidden md:inline">{servicio.intro}</span>
@@ -122,6 +151,28 @@ export default async function PaginaServicio({ params }: { params: Promise<{ ser
           ))}
         </div>
       </Seccion>
+
+      {/* Guía: cómo es, cómo se hace, dónde, con enlaces a obras y servicios vecinos */}
+      {servicio.guia ? (
+        <Seccion id="seccion-guia" espacio="corto" className="border-t border-tinta/[.12]" interior="grid grid-cols-1 md:grid-cols-[400px_1fr] gap-6 md:gap-16">
+          <CabeceraSeccion antetitulo={<AntetituloSeccion>{servicio.guia.antetitulo}</AntetituloSeccion>} titulo={servicio.guia.titulo} />
+          <div className="flex flex-col gap-8 text-16 leading-[1.6]">
+            <p className="text-20 leading-[1.5]">
+              <Prosa tramos={servicio.guia.entradilla} />
+            </p>
+            {servicio.guia.bloques.map((b) => (
+              <div key={b.titulo} className="flex flex-col gap-3">
+                <h3 className="font-display font-bold text-20 md:text-26 leading-[1.15]">{b.titulo}</h3>
+                {b.parrafos.map((p, i) => (
+                  <p key={i}>
+                    <Prosa tramos={p} />
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
+        </Seccion>
+      ) : null}
 
       {/* Dónde se usa */}
       <Seccion id="seccion-donde" espacio="corto" className="bg-fondo-alt" interior="grid grid-cols-1 md:grid-cols-[400px_1fr] gap-4 md:gap-16">

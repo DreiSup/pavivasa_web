@@ -1,6 +1,6 @@
 import { claims, nap, sitio } from './config'
 import { articulosIndexables, proyectos, servicioPorId, serviciosOrdenados } from './datos'
-import type { BloqueArticulo, Proyecto, Servicio, ServicioId } from './tipos'
+import type { BloqueArticulo, Proyecto, Servicio, ServicioId, TramoProsa } from './tipos'
 import { NOMBRE_SERVICIO, ORDEN_SERVICIOS, RUTA_SERVICIO } from './tipos'
 
 /**
@@ -27,7 +27,7 @@ const lista = (items: string[]) => items.map((i) => `- ${i}`).join('\n')
 
 const NOMBRE_SITIO = `${nap.nombre} — pavimentos de hormigón en Valencia y Alicante`
 const RESUMEN =
-  'Pavivasa ejecuta y conserva pavimentos, recubrimientos y estructuras de hormigón: hormigón impreso, pulido y lavado, microcemento decorativo, autonivelantes, pavimentos de caucho y alicatados. Oficina en Sollana (Valencia).'
+  'Pavivasa ejecuta y conserva pavimentos, recubrimientos y estructuras de hormigón: hormigón impreso, pulido, fratasado y lavado, microcemento decorativo, autonivelantes, pavimentos de caucho y alicatados. Oficina en Sollana (Valencia).'
 
 export function llmsTxt(): string {
   return `# ${NOMBRE_SITIO}
@@ -124,6 +124,23 @@ function ficha(s: Servicio): string {
   return partes.join('\n\n')
 }
 
+/** Prosa de la guía en Markdown: enlaces absolutos, lo pendiente marcado como tal. */
+const prosa = (tramos: TramoProsa[]) =>
+  tramos
+    .map((t) => (t.type === 'link' ? `[${t.text}](${abs(t.href)})` : t.type === 'pending' ? PENDIENTE : t.text))
+    .join('')
+
+function guiaDe(s: Servicio, nivel: number): string {
+  const g = s.guia
+  if (!g) return ''
+  const h2 = '#'.repeat(nivel + 1)
+  const h3 = '#'.repeat(nivel + 2)
+  return [
+    `${h2} ${g.titulo}\n\n${prosa(g.entradilla)}`,
+    ...g.bloques.map((b) => `${h3} ${b.titulo}\n\n${b.parrafos.map(prosa).join('\n\n')}`),
+  ].join('\n\n')
+}
+
 function obrasDe(id: ServicioId): string {
   const obras = proyectos.filter((p) => p.servicio === id)
   if (obras.length === 0) return ''
@@ -140,6 +157,7 @@ export function aiServicio(id: ServicioId, nivel = 1): string {
   const bloques = [
     `${h} ${s.nombre}\n\n${s.intro}\n\nPágina: ${abs(RUTA_SERVICIO[id])}`,
     `${'#'.repeat(nivel + 1)} ${s.queEs.titulo}\n\n${s.queEs.parrafos.join('\n\n')}`,
+    guiaDe(s, nivel),
     s.aplicaciones.length ? `${'#'.repeat(nivel + 1)} Aplicaciones\n\n${lista(s.aplicaciones)}` : '',
     s.ventajas.length ? `${'#'.repeat(nivel + 1)} Ventajas\n\n${lista(s.ventajas)}` : '',
     s.modelos.length ? `${'#'.repeat(nivel + 1)} Modelos\n\n${lista(s.modelos)}` : '',

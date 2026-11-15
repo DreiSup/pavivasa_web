@@ -7,7 +7,7 @@ import { NOMBRE_SERVICIO, RUTA_SERVICIO } from '@/lib/tipos'
 import Boton from '../ui/Boton'
 import { Logo } from './Logo'
 
-const principales = ['hormigon-impreso', 'hormigon-pulido', 'hormigon-lavado', 'microcemento'] as const
+const principales = ['hormigon-impreso', 'hormigon-pulido', 'hormigon-fratasado', 'hormigon-lavado', 'microcemento'] as const
 const secundarios = [
   { id: 'autonivelantes', texto: 'Autonivelantes' },
   { id: 'pavimentos-de-caucho', texto: 'Caucho' },

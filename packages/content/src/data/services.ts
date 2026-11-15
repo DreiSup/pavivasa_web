@@ -4,7 +4,7 @@ import type { Service } from '../schemas/service.ts'
  * Real copy for each service (pavivasa.com, Sept. 2026), unchanged from
  * Spanish. `seoTitle`, `headingPlace` and `guide` come from the SEO pass of
  * 2026-11-15, written only from the real projects, articles and service
- * copy already in this package. Array order is the site's menu order (`01`..`07`); the three
+ * copy already in this package. Array order is the site's menu order (`01`..`08`); the three
  * marked `flagship: true` (`hormigon-impreso`, `hormigon-pulido`,
  * `microcemento` — not necessarily contiguous in this order) are the
  * declared strongest offer. What the current site doesn't give (FAQ
@@ -124,7 +124,7 @@ export const services = [
       kicker: { es: 'Cómo se hace' },
       title: { es: 'Moldes y color sobre el hormigón fresco' },
       intro: {
-        es: 'El hormigón impreso es una solera de hormigón a la que, todavía fresca, se le aplica color y se le estampa un molde. Al endurecer, la superficie copia la piedra, el ladrillo, la madera o la pizarra, y conserva la resistencia del hormigón.',
+        es: 'Hacer hormigón impreso es estampar moldes y aplicar colorantes sobre el hormigón recién extendido, antes de que fragüe. Así la superficie imita piedra, ladrillo, madera o pizarra, con las mismas prestaciones que una solera de hormigón.',
       },
       blocks: [
         {
@@ -276,15 +276,155 @@ export const services = [
             },
           ],
         },
+        {
+          title: { es: 'Pulido o fratasado' },
+          paragraphs: [
+            {
+              es: 'El pulido trabaja la superficie con abrasivos hasta sacarle brillo; el [hormigón fratasado](/hormigon-fratasado/) se alisa con llana mientras el hormigón está fresco y deja un suelo liso y continuo. Las obras de Benissa y Xàbia de arriba llevan acabado fratasado.',
+            },
+          ],
+        },
       ],
     },
     cta: { es: '¿Una nave, un garaje, un interior? Dinos los metros y te llamamos.' },
     flagship: true,
   },
   {
+    id: 'hormigon-fratasado',
+    slug: { es: 'hormigon-fratasado' },
+    number: '03',
+    name: { es: 'Hormigón fratasado' },
+    shortName: { es: 'Fratasado' },
+    summary: {
+      es: 'Un suelo liso, continuo y sin juntas para dentro y fuera de casa: salón, cocina, patio, terraza y contorno de piscina.',
+    },
+    description: {
+      es: 'Hormigón fratasado fino para viviendas en Valencia y Alicante: un suelo liso y continuo, en color, para salones, cocinas, patios, terrazas y piscinas.',
+    },
+    seoTitle: { es: 'Hormigón fratasado para viviendas en Valencia y Alicante' },
+    headingPlace: { es: 'en Valencia y Alicante' },
+    intro: {
+      es: 'El fratasado fino deja el hormigón liso, uniforme y sin juntas, y se tiñe del color que elijas. Lo hacemos en viviendas, dentro y fuera: del salón y la cocina al patio, la terraza y el borde de la piscina.',
+    },
+    introMobile: {
+      es: 'Suelo de hormigón liso, uniforme y sin juntas, en color, dentro y fuera de casa.',
+    },
+    heroImage: {
+      label: { es: 'Foto · suelo de hormigón fratasado en vivienda · pendiente de obra' },
+    },
+    about: {
+      title: { es: 'Hormigón fresco alisado a llana' },
+      paragraphs: [
+        {
+          es: 'Fratasar es alisar y pulir la superficie del hormigón mientras todavía está fresco, con una llana o fratás, hasta dejarla lisa, uniforme y continua. Con pigmentos y aditivos en la masa se ajusta el color al estilo de la casa, del más rústico al más actual.',
+        },
+        {
+          es: 'Al no tener juntas, el suelo sufre menos grietas y menos desgaste, y la superficie lisa no deja que se acumulen el polvo y la suciedad: se limpia con agua y jabón neutro. Por eso funciona en las zonas de la casa por las que más se pasa.',
+        },
+      ],
+    },
+    applications: [
+      { es: 'Salones y cocinas' },
+      { es: 'Suelos y paredes de interior' },
+      { es: 'Encimeras' },
+      { es: 'Patios y terrazas' },
+      { es: 'Contornos de piscina' },
+      { es: 'Fachadas' },
+    ],
+    advantages: [
+      { es: 'Superficie continua y sin juntas' },
+      { es: 'Menos grietas y desgaste' },
+      { es: 'Limpieza con agua y jabón neutro' },
+      { es: 'No acumula polvo' },
+      { es: 'Pigmentable en muchos colores' },
+      { es: 'Interior y exterior' },
+    ],
+    models: [],
+    colors: [{ es: 'Crema 117' }, { es: '117 crema marfil' }],
+    faq: [
+      {
+        question: { es: '¿En qué se diferencia el fratasado del hormigón pulido?' },
+        answer: {
+          es: 'En el momento y en la herramienta. El fratasado se hace con el hormigón todavía fresco: se alisa con llana o fratás hasta dejar una superficie lisa y continua. El pulido trabaja la superficie del hormigón con abrasivos mecánicos de distintos granos hasta dejarla brillante y reflectante. Si no tienes claro cuál te conviene, te lo explicamos en la visita.',
+        },
+      },
+      {
+        question: { es: '¿El fratasado sirve para el salón o la cocina?' },
+        answer: {
+          es: 'Sí. Es una de sus aplicaciones en vivienda: un suelo continuo, sin juntas, que aguanta bien el paso diario y se limpia con agua y jabón neutro. En Benissa hicimos un mismo pavimento fratasado para el interior, el exterior y el contorno de la piscina de una vivienda unifamiliar.',
+        },
+      },
+      { question: { es: '¿Resbala fuera de casa o junto a la piscina?' } },
+      { question: { es: '¿Qué tratamiento o sellado lleva al terminar?' } },
+      {
+        question: { es: '¿Qué colores hay?' },
+        answer: {
+          es: 'El hormigón se pigmenta, así que hay mucha variedad. Los que tenemos documentados en obra son el crema 117 y el 117 crema marfil; la carta completa te la enseñamos en la visita.',
+        },
+      },
+      {
+        question: { es: '¿Cuánto cuesta el metro cuadrado de hormigón fratasado?' },
+        answer: {
+          es: 'No publicamos precios, porque depende de cada casa: los metros, cómo esté el terreno o el soporte y el color que elijas. Dinos los metros y la estancia o la zona exterior y te damos presupuesto sin compromiso.',
+        },
+      },
+    ],
+    guide: {
+      kicker: { es: 'Fratasado fino' },
+      title: { es: 'Así queda un suelo de hormigón fratasado' },
+      intro: {
+        es: 'El hormigón fratasado es hormigón fresco alisado con llana o fratás hasta que la superficie queda lisa, uniforme y sin juntas. Teñido con pigmentos, sirve de suelo continuo para casi toda la vivienda, dentro y fuera.',
+      },
+      blocks: [
+        {
+          title: { es: 'Cómo lo hacemos' },
+          paragraphs: [
+            {
+              es: 'Para que el acabado quede uniforme y dure hace falta oficio: hay que preparar bien el soporte, contar con el tiempo que haga el día de la obra y respetar el secado. {{herramienta con la que fratasáis (a mano o con fratasadora mecánica), espesor y tipo de hormigón}}.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Dentro de casa' },
+          paragraphs: [
+            {
+              es: 'En el interior se usa en suelos, paredes y encimeras. Para el salón o la cocina tiene sentido: sin juntas hay menos grietas y menos desgaste, y la superficie lisa se limpia con agua y jabón neutro. {{tratamiento o sellado que aplicáis al fratasado de interior}}.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Fuera: patio, terraza y piscina' },
+          paragraphs: [
+            {
+              es: 'Fuera se pone en patios, terrazas, contornos de piscina y fachadas. Tenemos dos obras documentadas con acabado fratasado: una [vivienda unifamiliar de Benissa](/proyectos/hormigon-pulido-alicante/), con el mismo pavimento en 117 crema marfil dentro, fuera y alrededor de la piscina, y una [residencia de Xàbia](/proyectos/hormigon-pulido-xabia/) con 120 m² en crema 117. En el borde de la piscina importa que no resbale: {{cómo dejáis el fratasado en exterior y junto a la piscina (acabado antideslizante, clase de resbaladicidad)}}.',
+            },
+          ],
+        },
+        {
+          title: { es: 'El color' },
+          paragraphs: [
+            {
+              es: 'Con pigmentos en la masa el suelo puede ir en muchos colores, del tono más rústico al más moderno. En obra lo tenemos hecho en crema 117 y en 117 crema marfil. {{qué colores ofrecéis en fratasado además de los dos cremas}}.',
+            },
+          ],
+        },
+        {
+          title: { es: 'Frente al pulido y al impreso' },
+          paragraphs: [
+            {
+              es: 'Los tres parten de hormigón. El fratasado se alisa en fresco con llana hasta quedar liso y continuo; el [hormigón pulido](/hormigon-pulido/) se trabaja con abrasivos de distintos granos hasta sacarle brillo; el [hormigón impreso](/hormigon-impreso/) lleva un molde que copia piedra, ladrillo o madera.',
+            },
+          ],
+        },
+      ],
+    },
+    cta: { es: '¿Un salón, una terraza, el borde de la piscina? Dinos los metros y te llamamos.' },
+    flagship: false,
+  },
+  {
     id: 'hormigon-lavado',
     slug: { es: 'hormigon-lavado' },
-    number: '03',
+    number: '04',
     name: { es: 'Hormigón lavado' },
     shortName: { es: 'Lavado' },
     summary: { es: 'Árido visto, antideslizante. Rampas, salidas de parking, entornos de piscina.' },
@@ -389,7 +529,7 @@ export const services = [
   {
     id: 'microcemento',
     slug: { es: 'microcemento' },
-    number: '04',
+    number: '05',
     name: { es: 'Microcemento decorativo' },
     shortName: { es: 'Microcemento' },
     summary: {
@@ -485,7 +625,7 @@ export const services = [
   {
     id: 'autonivelantes',
     slug: { es: 'autonivelantes' },
-    number: '05',
+    number: '06',
     name: { es: 'Autonivelantes' },
     shortName: { es: 'Autonivelantes' },
     summary: { es: 'Morteros decorativos, lisos o antideslizantes, con bomba propia.' },
@@ -541,7 +681,7 @@ export const services = [
   {
     id: 'pavimentos-de-caucho',
     slug: { es: 'pavimentos-de-caucho' },
-    number: '06',
+    number: '07',
     name: { es: 'Pavimentos de caucho' },
     shortName: { es: 'Caucho' },
     summary: { es: 'Parques infantiles y zonas deportivas. EN 1176 y EN 1177.' },
@@ -596,7 +736,7 @@ export const services = [
   {
     id: 'alicatados',
     slug: { es: 'alicatados' },
-    number: '07',
+    number: '08',
     name: { es: 'Alicatados' },
     shortName: { es: 'Alicatados' },
     summary: { es: 'Baños, cocinas, piscinas y terrazas en la provincia de Valencia.' },

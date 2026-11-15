@@ -17,7 +17,7 @@ Monorepo pnpm 9.15.9 + Turborepo, Node >=22.6. Next 15.5 · React 19 · Tailwind
 | Ruta | Fichero |
 |---|---|
 | `/` | `page.tsx` |
-| 7 servicios (impreso, pulido, lavado, microcemento, autonivelantes, caucho, alicatados) | `[servicio]/page.tsx` (plantilla única) |
+| 8 servicios (impreso, pulido, fratasado, lavado, microcemento, autonivelantes, caucho, alicatados) | `[servicio]/page.tsx` (plantilla única) |
 | `/proyectos/` + fichas | `proyectos/page.tsx`, `proyectos/[slug]/` |
 | `/blog/` + artículos | `blog/page.tsx`, `blog/[slug]/` |
 | `/empresa/`, `/presupuesto/` | `empresa/`, `presupuesto/` (`actions.ts` = Server Action del formulario) |
@@ -48,6 +48,9 @@ Monorepo pnpm 9.15.9 + Turborepo, Node >=22.6. Next 15.5 · React 19 · Tailwind
 Un artículo que responde a la misma búsqueda que una página de servicio compite con ella (canibalización). Se reescribe dentro de la `guide` del servicio, se retira de `packages/content/src/data/articles.ts` (con eso sale del blog, del sitemap y de `/ai/`) y su URL redirige con 301 (`apps/web/next.config.ts`, también la URL de WordPress, directa al destino: un solo salto).
 
 - `brillo-elegancia-explorando-hormigon-pulido` → `/hormigon-pulido/`.
+- `hormigon-fratasado-fino-decorativo-viviendas` → `/hormigon-fratasado/` (servicio nuevo, punto 10 del dueño, 2026-11-15). Sin foto de obra propia de fratasado: el hero es `<BloquePosicion>`. Las dos obras con «modelo: Fratasado» (`hormigon-pulido-xabia`, `hormigon-pulido-alicante`) siguen con `service: 'hormigon-pulido'` porque la web original las llama «pulido (fratasado)»; la guía del fratasado las enlaza. Reclasificarlas es decisión del dueño.
+
+El blog queda con 2 artículos (Dénia, indexable; desactivado, noindex).
 
 ## Cambios traídos de main
 
@@ -61,7 +64,8 @@ Root Directory `apps/web` con «Include files outside the Root Directory»; Buil
 ## Pendientes de contenido (no inventar)
 
 - Fotos de modelos y colores del hormigón impreso: hasta tenerlas, la sección «Catálogo / Modelos y colores» de la Home está oculta (`app/page.tsx`; el componente `components/home/SeccionCatalogo.tsx` se conserva para reactivarla). La sección equivalente de las páginas de servicio (`SeccionMuestrario`) sigue visible.
-- FAQ: 18 de 29 respuestas redactadas (home + 7 servicios, `packages/content/src/data/{home,services}.ts`). Son hechos técnicos genéricos sacados de resúmenes de búsqueda, sin fichas abiertas: contrastar con fabricantes/normativa. Siguen pendientes las 11 que dependen de Pavivasa: plazo de obra (home), solera/suelo existente (home, impreso), cobertura de municipios (home, alicatados), plazo de reforma de baño (microcemento), combinar lavado con impreso, y las 5 de garantía de 10 años (home, impreso, pulido, microcemento; la web no define su alcance). Sin `FAQPage` JSON-LD todavía (`schemaFAQ` no tiene llamadores).
+- Pase SEO de servicios (2026-11-15): pendientes del dueño en las guías y FAQ (`{{…}}` / preguntas sin respuesta): cómo dejan pulido y fratasado en exterior y junto a piscina; herramienta, espesor y hormigón del fratasado; sellado del fratasado de interior; carta de colores de fratasado; carta de áridos del lavado; foto de obra de fratasado.
+- FAQ: 18 de 29 respuestas redactadas antes del pase SEO (home + 7 servicios, `packages/content/src/data/{home,services}.ts`). Son hechos técnicos genéricos sacados de resúmenes de búsqueda, sin fichas abiertas: contrastar con fabricantes/normativa. Siguen pendientes las 11 que dependen de Pavivasa: plazo de obra (home), solera/suelo existente (home, impreso), cobertura de municipios (home, alicatados), plazo de reforma de baño (microcemento), combinar lavado con impreso, y las 5 de garantía de 10 años (home, impreso, pulido, microcemento; la web no define su alcance). Sin `FAQPage` JSON-LD todavía (`schemaFAQ` no tiene llamadores).
 - Artículo `hormigon-desactivado-piedra-vista`: cuerpo pendiente (original en rumano), noindex.
 - WhatsApp, horario, NIF, textos legales, fotos originales a 2400 px, cobertura de 6 provincias.
 - Email/NIF/razón social de los legales en conflicto con `business.ts` (ver README).

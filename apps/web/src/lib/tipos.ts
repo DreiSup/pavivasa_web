@@ -14,6 +14,7 @@ import { getServiceCatalog } from '@site/content'
 export type ServicioId =
   | 'hormigon-impreso'
   | 'hormigon-pulido'
+  | 'hormigon-fratasado'
   | 'hormigon-lavado'
   | 'microcemento'
   | 'autonivelantes'

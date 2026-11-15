@@ -27,7 +27,7 @@ const lista = (items: string[]) => items.map((i) => `- ${i}`).join('\n')
 
 const NOMBRE_SITIO = `${nap.nombre} — pavimentos de hormigón en Valencia y Alicante`
 const RESUMEN =
-  'Pavivasa ejecuta y conserva pavimentos, recubrimientos y estructuras de hormigón: hormigón impreso, pulido y lavado, microcemento decorativo, autonivelantes, pavimentos de caucho y alicatados. Oficina en Sollana (Valencia).'
+  'Pavivasa ejecuta y conserva pavimentos, recubrimientos y estructuras de hormigón: hormigón impreso, pulido, fratasado y lavado, microcemento decorativo, autonivelantes, pavimentos de caucho y alicatados. Oficina en Sollana (Valencia).'
 
 export function llmsTxt(): string {
   return `# ${NOMBRE_SITIO}

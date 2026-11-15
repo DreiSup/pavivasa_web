@@ -6,6 +6,7 @@ import { questionSchema } from './faq.zod.ts'
 export const serviceIdSchema = z.enum([
   'hormigon-impreso',
   'hormigon-pulido',
+  'hormigon-fratasado',
   'hormigon-lavado',
   'microcemento',
   'autonivelantes',

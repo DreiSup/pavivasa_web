@@ -6,6 +6,7 @@ import type { Question } from './faq.ts'
 export type ServiceId =
   | 'hormigon-impreso'
   | 'hormigon-pulido'
+  | 'hormigon-fratasado'
   | 'hormigon-lavado'
   | 'microcemento'
   | 'autonivelantes'

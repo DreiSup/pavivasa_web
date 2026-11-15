@@ -29,5 +29,5 @@ Resultado: **no hay frases compartidas**, salvo:
 
 ## Pendientes
 
-- **9. Fecha de migración:** la tiene que dar el dueño.
-- **11.** En curso en otra rama.
+- **9. Fecha de migración:** 06-10-2026, la misma que pavimentos-albufera (confirmada por el dueño el 15-11-2026). La caída de indexadas del 20 al 24-10 cae dos semanas después: es el relevo normal de URLs viejas por nuevas.
+- **10 y 11.** Hechos en esta misma rama: títulos y guía en las páginas de servicio, pulido unificado en `/hormigon-pulido/`, servicio nuevo `/hormigon-fratasado/` y zonas de Calpe y Benissa (en `noindex` hasta tener foto real; ver `docs/seo-zonas.md`).

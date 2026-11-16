@@ -72,9 +72,7 @@ cuerpos ya eran distintos.
 
 1. **Una foto real de cualquiera de las dos obras de Calpe** (vale la de 2016 de la web antigua o la
    de 2021) → se rellena `confirmedPhoto` y `/zonas/calpe/` pasa a indexable. Igual para Benissa.
-2. **Confirmar de dónde son** `impreso-piscina-ocre.jpg` y `portada.png` (¿Calpe o Moraira/Carlet?).
-   Si no son de Calpe, deberían salir de las fichas de Calpe (y la de Calpe 2 sale en la portada,
-   es destacada).
+2. ~~Confirmar de dónde son `impreso-piscina-ocre.jpg` y `portada.png`.~~ **Resuelto el 2026-11-16:** el dueño confirma que son de Moraira y de Carlet. Se han quitado de las dos fichas de Calpe, que ahora muestran el hueco de foto pendiente.
 3. **Calpe 2**: color «arena» frente a lo que se ve (ocre); y si el hormigón fue HM25 o HA-25 (lleva
    mallazo). No se ha cambiado: es el dato tal como lo publicó la web antigua.
 4. **Calpe 2**: tipo de espacio real (hoy «Pavimento exterior», genérico) y si fue para un particular.

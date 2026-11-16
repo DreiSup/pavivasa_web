@@ -231,7 +231,7 @@ for (const tab of home.heroTabs) {
 for (const space of home.spaces) checkImageSrc(`home.spaces (${space.name.es})`, space.image.src)
 for (const service of services as readonly Service[]) checkImageSrc(`service "${service.id}".heroImage`, service.heroImage.src)
 for (const project of projects) {
-  for (const [i, image] of project.images.entries()) checkImageSrc(`project "${project.slug.es}".images[${i}]`, image.src)
+  for (const [i, image] of project.images.entries()) checkImageSrc(`project "${project.slug.es}".images[${i}]`, (image as { src?: string }).src)
 }
 for (const area of serviceAreas) {
   if ('confirmedPhoto' in area) checkImageSrc(`service area "${area.slug.es}".confirmedPhoto`, (area.confirmedPhoto as { src?: string }).src)

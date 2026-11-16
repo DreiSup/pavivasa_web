@@ -10,13 +10,11 @@ import type { ServiceArea } from '../schemas/service-area.ts'
  * that the source doesn't give.
  *
  * Neither area has `confirmedPhoto`, so both pages are `noindex, follow` and
- * out of the sitemap. Reason: the photos the Calpe and Benissa projects show
- * today are stand-ins picked from the shared photo library, not photos of
- * these jobs. `impreso-piscina-ocre.jpg` (hormigon-impreso-calpe-2) is
- * byte-for-byte the photo the sister brand publishes as a job in Moraira, and
- * its own label says the original was a 300 px phone photo; `portada.png`
- * (hormigon-impreso-calpe) is a 2021 shoot of a house the sister brand files
- * under Carlet, while the Calpe job is from 2016. Publishing an indexable
+ * out of the sitemap. Reason: neither town has a photo of its own jobs. The
+ * Calpe projects showed `impreso-piscina-ocre.jpg` (a Moraira job) and
+ * `portada.png` (a house in Carlet); the owner confirmed both on 2026-11-16
+ * and they were removed. Benissa's photos are stand-ins from the shared photo
+ * library. Publishing an indexable
  * "Hormigón impreso en Calpe" page on top of those would state something we
  * can't back. As soon as the owner sends (or confirms) one real photo of a
  * job in the town, set `confirmedPhoto` and the page becomes indexable, enters

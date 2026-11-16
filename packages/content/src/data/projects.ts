@@ -129,9 +129,9 @@ export const projects = [
     ],
     images: [
       {
-        label: { es: 'Foto principal · sillería grande arena · original de móvil, 300 px' },
-        src: '/img/impreso-piscina-ocre.jpg',
-        alt: { es: 'Pavimento exterior de hormigón impreso con molde de sillería grande en color arena junto a la piscina' },
+        // The photo shown here until 2026-11-16 (`impreso-piscina-ocre.jpg`)
+        // is the sister brand's Moraira job, confirmed by the owner: removed.
+        label: { es: 'Foto principal · sillería grande arena en Calpe · falta foto de esta obra' },
       },
     ],
     featured: true,
@@ -285,9 +285,9 @@ export const projects = [
     ],
     images: [
       {
-        label: { es: 'Foto principal · piedra inglesa gris medio' },
-        src: '/img/portada.png',
-        alt: { es: 'Patio de una vivienda en urbanización pavimentado con piedra inglesa en gris medio' },
+        // The photo shown here until 2026-11-16 (`portada.png`) is a house in
+        // Carlet, confirmed by the owner: removed.
+        label: { es: 'Foto principal · piedra inglesa gris medio en Calpe · falta foto de esta obra' },
       },
     ],
     featured: false,

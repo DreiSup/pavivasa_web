@@ -69,7 +69,7 @@ export const serviceAreas = [
         es: 'Benissa está en la Marina Alta. Los tres trabajos que tenemos documentados aquí son en urbanizaciones: uno en Montemar la Viña y dos en Monte Mar.',
       },
       {
-        es: 'En Montemar la Viña, una vivienda unifamiliar lleva el mismo pulido fratasado en 117 crema marfil en el interior, en el exterior y en el contorno de la piscina, sin cambiar de material al cruzar la puerta.',
+        es: 'En Montemar la Viña, una vivienda unifamiliar lleva el mismo hormigón pulido en 117 crema marfil en el interior, en el exterior y en el contorno de la piscina, sin cambiar de material al cruzar la puerta.',
       },
       {
         es: 'En Monte Mar repetimos el color 117 en pulido, esta vez dejando constancia de la ejecución: mallazo, fibra de polipropileno y 4 kg de color por metro cuadrado.',

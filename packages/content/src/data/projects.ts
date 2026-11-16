@@ -138,13 +138,13 @@ export const projects = [
   },
   {
     slug: { es: 'hormigon-pulido-xabia' },
-    title: { es: 'Fratasado, crema 117' },
+    title: { es: 'Residencia, crema 117' },
     longTitle: { es: '120 m² de hormigón pulido en crema 117 para una residencia en urbanización' },
     service: 'hormigon-pulido',
     town: 'Xàbia',
     province: 'Alicante',
     spaceType: { es: 'Residencia en urbanización' },
-    model: { es: 'Fratasado' },
+    model: { es: 'Pulido' },
     color: { es: 'Crema 117' },
     surfaceArea: 120,
     photoYear: 2016,
@@ -152,7 +152,7 @@ export const projects = [
     brief: [{ es: 'Residencia en una urbanización de Xàbia, en la costa norte de la provincia de Alicante, en la comarca de la Marina Alta.' }],
     execution: [
       {
-        es: '120 metros de pavimentación de hormigón pulido (fratasado) en color crema 117, elegido por el cliente. Este pavimento destaca por la variedad de colores disponibles y, sobre todo, por su dureza y su resistencia a las manchas y a las condiciones climatológicas.',
+        es: '120 metros de pavimentación de hormigón pulido en color crema 117, elegido por el cliente. Este pavimento destaca por la variedad de colores disponibles y, sobre todo, por su dureza y su resistencia a las manchas y a las condiciones climatológicas.',
       },
     ],
     images: [
@@ -166,14 +166,14 @@ export const projects = [
   },
   {
     slug: { es: 'hormigon-pulido-alicante' },
-    title: { es: 'Fratasado, 117 crema marfil' },
+    title: { es: 'Unifamiliar, 117 crema marfil' },
     longTitle: { es: 'Hormigón pulido en 117 crema marfil: interior, exterior y contorno de piscina' },
     service: 'hormigon-pulido',
     town: 'Benissa',
     province: 'Alicante',
     district: 'Urbanización Montemar la Viña',
     spaceType: { es: 'Unifamiliar: interior, exterior y piscina' },
-    model: { es: 'Fratasado' },
+    model: { es: 'Pulido' },
     color: { es: '117 crema marfil' },
     photoYear: 2017,
     executionSpecs: {},
@@ -184,7 +184,7 @@ export const projects = [
     ],
     execution: [
       {
-        es: 'Hormigón pulido (fratasado) en color 117, crema marfil, en el interior y el exterior de la vivienda y alrededor de la piscina. El resultado es muy vanguardista y el cliente quedó satisfecho.',
+        es: 'Hormigón pulido en color 117, crema marfil, en el interior y el exterior de la vivienda y alrededor de la piscina. El resultado es muy vanguardista y el cliente quedó satisfecho.',
       },
     ],
     images: [

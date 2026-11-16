@@ -280,7 +280,7 @@ export const services = [
           title: { es: 'Pulido o fratasado' },
           paragraphs: [
             {
-              es: 'El pulido trabaja la superficie con abrasivos hasta sacarle brillo; el [hormigón fratasado](/hormigon-fratasado/) se alisa con llana mientras el hormigón está fresco y deja un suelo liso y continuo. Las obras de Benissa y Xàbia de arriba llevan acabado fratasado.',
+              es: 'El pulido trabaja la superficie con abrasivos hasta sacarle brillo; el [hormigón fratasado](/hormigon-fratasado/) se alisa con llana mientras el hormigón está fresco y deja un suelo liso y continuo.',
             },
           ],
         },
@@ -351,7 +351,7 @@ export const services = [
       {
         question: { es: '¿El fratasado sirve para el salón o la cocina?' },
         answer: {
-          es: 'Sí. Es una de sus aplicaciones en vivienda: un suelo continuo, sin juntas, que aguanta bien el paso diario y se limpia con agua y jabón neutro. En Benissa hicimos un mismo pavimento fratasado para el interior, el exterior y el contorno de la piscina de una vivienda unifamiliar.',
+          es: 'Sí. Es una de sus aplicaciones en vivienda: un suelo continuo, sin juntas, que aguanta bien el paso diario y se limpia con agua y jabón neutro.',
         },
       },
       { question: { es: '¿Resbala fuera de casa o junto a la piscina?' } },
@@ -396,7 +396,7 @@ export const services = [
           title: { es: 'Fuera: patio, terraza y piscina' },
           paragraphs: [
             {
-              es: 'Fuera se pone en patios, terrazas, contornos de piscina y fachadas. Tenemos dos obras documentadas con acabado fratasado: una [vivienda unifamiliar de Benissa](/proyectos/hormigon-pulido-alicante/), con el mismo pavimento en 117 crema marfil dentro, fuera y alrededor de la piscina, y una [residencia de Xàbia](/proyectos/hormigon-pulido-xabia/) con 120 m² en crema 117. En el borde de la piscina importa que no resbale: {{cómo dejáis el fratasado en exterior y junto a la piscina (acabado antideslizante, clase de resbaladicidad)}}.',
+              es: 'Fuera se pone en patios, terrazas, contornos de piscina y fachadas. En el borde de la piscina importa que no resbale: {{cómo dejáis el fratasado en exterior y junto a la piscina (acabado antideslizante, clase de resbaladicidad)}}.',
             },
           ],
         },

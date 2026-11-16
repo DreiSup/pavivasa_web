@@ -49,6 +49,9 @@ const nextConfig: NextConfig = {
       { source: '/microcemento-decorativo/', destination: '/microcemento/', permanent: true },
       { source: '/morteros-autonivelantes/', destination: '/autonivelantes/', permanent: true },
       { source: '/pavimentos-caucho/', destination: '/pavimentos-de-caucho/', permanent: true },
+      // Archivo de categoría de WordPress que hoy da 404 y aún sale en Search
+      // Console (20 impresiones, 1 clic): se manda a la página del servicio.
+      { source: '/category/hormigon-lavado/', destination: '/hormigon-lavado/', permanent: true },
       // Fichas de obra que colgaban de la raíz en WordPress
       { source: '/hormigon-impreso-denia/', destination: '/proyectos/hormigon-impreso-denia/', permanent: true },
       { source: '/hormigon-impreso-moraira/', destination: '/proyectos/hormigon-impreso-moraira/', permanent: true },
@@ -71,16 +74,19 @@ const nextConfig: NextConfig = {
         destination: '/blog/hormigon-impreso-denia-la-solucion-ideal-embellecer-tus-espacios/',
         permanent: true,
       },
+      // «Hormigón fratasado fino decorativo en viviendas» (2024) es desde el
+      // 2026-11-15 el texto de /hormigon-fratasado/: misma búsqueda, una URL.
       {
         source: '/hormigon-fratasado-fino-decorativo-viviendas-la-revolucion-diseno-funcionalidad/',
-        destination: '/blog/hormigon-fratasado-fino-decorativo-viviendas/',
+        destination: '/hormigon-fratasado/',
         permanent: true,
       },
-      {
-        source: '/brillo-elegancia-explorando-hormigon-pulido/',
-        destination: '/blog/brillo-elegancia-explorando-hormigon-pulido/',
-        permanent: true,
-      },
+      { source: '/blog/hormigon-fratasado-fino-decorativo-viviendas/', destination: '/hormigon-fratasado/', permanent: true },
+      // «Brillo y elegancia» (2023) se fusionó en /hormigon-pulido/ el 2026-11-15:
+      // misma búsqueda, contenido reescrito en la guía del servicio. La URL de
+      // WordPress va directa al destino final (un solo salto).
+      { source: '/brillo-elegancia-explorando-hormigon-pulido/', destination: '/hormigon-pulido/', permanent: true },
+      { source: '/blog/brillo-elegancia-explorando-hormigon-pulido/', destination: '/hormigon-pulido/', permanent: true },
       {
         source: '/hormigon-desactivado-piedra-vista-estetica-funcionalidad-solo-material/',
         destination: '/blog/hormigon-desactivado-piedra-vista/',

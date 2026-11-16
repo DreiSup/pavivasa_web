@@ -30,6 +30,7 @@ export type ServiceCatalogEntry = {
 export const serviceCatalog: ServiceCatalogEntry[] = [
   { id: 'hormigon-impreso', slug: { es: 'hormigon-impreso' }, shortName: { es: 'Impreso' }, name: { es: 'Hormigón impreso' }, flagship: true },
   { id: 'hormigon-pulido', slug: { es: 'hormigon-pulido' }, shortName: { es: 'Pulido' }, name: { es: 'Hormigón pulido' }, flagship: true },
+  { id: 'hormigon-fratasado', slug: { es: 'hormigon-fratasado' }, shortName: { es: 'Fratasado' }, name: { es: 'Hormigón fratasado' }, flagship: false },
   { id: 'hormigon-lavado', slug: { es: 'hormigon-lavado' }, shortName: { es: 'Lavado' }, name: { es: 'Hormigón lavado' }, flagship: false },
   { id: 'microcemento', slug: { es: 'microcemento' }, shortName: { es: 'Microcemento' }, name: { es: 'Microcemento decorativo' }, flagship: true },
   { id: 'autonivelantes', slug: { es: 'autonivelantes' }, shortName: { es: 'Autonivelantes' }, name: { es: 'Autonivelantes' }, flagship: false },

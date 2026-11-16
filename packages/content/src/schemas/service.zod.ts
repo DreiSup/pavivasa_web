@@ -6,6 +6,7 @@ import { questionSchema } from './faq.zod.ts'
 export const serviceIdSchema = z.enum([
   'hormigon-impreso',
   'hormigon-pulido',
+  'hormigon-fratasado',
   'hormigon-lavado',
   'microcemento',
   'autonivelantes',
@@ -44,6 +45,16 @@ const specListSchema = z.object({
   lines: z.array(z.object({ label: localizedText, value: localizedText })),
 })
 
+/** `RichText` (see `schemas/service.ts`): a plain string; its links are checked by `scripts/validate.ts`. */
+const richText = localizedText
+
+const serviceGuideSchema = z.object({
+  kicker: localizedText,
+  title: localizedText,
+  intro: richText,
+  blocks: z.array(z.object({ title: localizedText, paragraphs: z.array(richText).min(1) })).min(1),
+})
+
 export const serviceSchema = z.object({
   id: serviceIdSchema,
   slug: localizedText,
@@ -52,6 +63,8 @@ export const serviceSchema = z.object({
   shortName: localizedText,
   summary: localizedText,
   description: localizedText,
+  seoTitle: localizedText.optional(),
+  headingPlace: localizedText.optional(),
   intro: localizedText,
   introMobile: localizedText,
   heroImage: imageSchema,
@@ -62,6 +75,7 @@ export const serviceSchema = z.object({
   colors: z.array(localizedText),
   specSheet: specSheetSchema.optional(),
   specList: specListSchema.optional(),
+  guide: serviceGuideSchema.optional(),
   faq: z.array(questionSchema),
   cta: localizedText,
   flagship: z.boolean(),

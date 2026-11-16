@@ -276,9 +276,9 @@ Bloques de `Article.body`: `paragraph`, `heading` (con `id` ancla plano), `order
 
 | Dato | Cifra | Comprobación |
 |---|---|---|
-| Servicios | 7 (`hormigon-impreso`, `hormigon-pulido`, `hormigon-lavado`, `microcemento`, `autonivelantes`, `pavimentos-de-caucho`, `alicatados`) | `data/services.ts` + `data/service-catalog.ts` (7 entradas cada uno, mantenidas en sync a mano, validadas por `content:validate`) |
+| Servicios | 8 (`hormigon-impreso`, `hormigon-pulido`, `hormigon-fratasado`, `hormigon-lavado`, `microcemento`, `autonivelantes`, `pavimentos-de-caucho`, `alicatados`) | `data/services.ts` + `data/service-catalog.ts` (8 entradas cada uno, mantenidas en sync a mano, validadas por `content:validate`) |
 | Proyectos | 15 (3 `featured:true`) | `grep -c 'slug: {' packages/content/src/data/projects.ts` |
-| Artículos | **4** (1 con `X-Robots-Tag: noindex`: `hormigon-desactivado-piedra-vista`) | `grep -c 'slug: {' packages/content/src/data/articles.ts` = 4 |
+| Artículos | **2** (1 con `X-Robots-Tag: noindex`: `hormigon-desactivado-piedra-vista`). Pulido y fratasado se fusionaron en sus servicios el 2026-11-15 (301, ver `docs/CONTEXTO.md`) | `grep -c 'slug: {' packages/content/src/data/articles.ts` = 2 |
 | FAQ en servicios | 24 preguntas (sin respuestas redactadas aún) | `grep -c 'question:' packages/content/src/data/services.ts` |
 | FAQ en home | 5 preguntas | `data/home.ts` |
 | Espacios (home) | 6 + `otherSpaceLabel` | `data/home.ts` |
@@ -385,11 +385,7 @@ Reglas: `NEXT_PUBLIC_*` se lee solo como literal exacto (nunca `process.env[nomb
 | i — secrets-scan | Sin nombres/valores de secreto en `.next/static` ni `.next/server/app` (solo vía `verify:secrets`) |
 | j — page-count | El nº de páginas indexables debe ser **al menos** el esperado a partir de `@site/content` (nunca cero, nunca por debajo); un build con *más* páginas indexables que las esperadas pasa igual — no exige igualdad (`scripts/verify/checks/page-count.mjs:65,72`) |
 
-**`known-issues.json`**: allowlist por `(check, code, route, detail)`; lo que no coincide con una entrada sigue rompiendo el build. Hoy 2 entradas, ambas `metadata`/`duplicate-title`, por colisión de contenido pre-existente en `data/projects.ts`:
-- `/proyectos/hormigon-impreso-calpe-2/` (dos obras distintas en Calpe con el mismo título generado)
-- `/proyectos/hormigon-pulido-benissa/` (el proyecto `hormigon-pulido-alicante` tiene `town:'Benissa'`, colisiona con el proyecto real `hormigon-pulido-benissa`)
-
-No se arreglan aún porque la salida pública debe seguir byte-idéntica durante la migración. Una entrada que deja de dispararse se reporta "stale": `index.mjs` solo informa; `secrets-scan.mjs` sí falla el run si una entrada `secrets` queda stale.
+**`known-issues.json`**: allowlist por `(check, code, route, detail)`; lo que no coincide con una entrada sigue rompiendo el build. Hoy vacía: las 2 entradas `metadata`/`duplicate-title` (Calpe/Calpe 2 y las dos obras de pulido en Benissa) se retiraron el 2026-11-15 al dar a cada ficha de obra un `<title>` con su titular corto (ver `docs/seo-zonas.md`).
 
 **CI** (`.github/workflows/ci.yml`, un solo job): `actions/checkout@v7` → `pnpm/action-setup@v6` (sin versión, lee `packageManager`) → `actions/setup-node@v7` (Node 22) → `pnpm install --frozen-lockfile` → `pnpm content:validate` → `pnpm lint` → `pnpm typecheck` → `pnpm --filter web build` → `pnpm verify` → `pnpm verify:secrets`. **Sin paso de deploy** — Vercel despliega por su integración Git propia; un CI en rojo no bloquea el despliegue salvo que se configure aparte (deployment gating de Vercel o branch protection de GitHub). **Nunca se ha ejecutado en un runner real**: la rama `monorepo-migration` no está subida a `origin` (README.md:262-266) — todo lo anterior está razonado, no verificado en verde.
 

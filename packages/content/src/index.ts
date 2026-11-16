@@ -18,7 +18,8 @@ export type { BusinessOverrides, ResolvedBusiness } from './queries/business.ts'
 export { getClaims } from './queries/claims.ts'
 export type { ResolvedClaims } from './queries/claims.ts'
 export { getServices, getService, getServiceCatalog, getServiceSlugMap } from './queries/services.ts'
-export type { ResolvedService, ResolvedServiceCatalogEntry } from './queries/services.ts'
+export type { ResolvedService, ResolvedServiceCatalogEntry, ResolvedServiceGuide } from './queries/services.ts'
+export type { ResolvedRichTextRun } from './queries/rich-text.ts'
 export {
   getProjects,
   getProject,
@@ -28,6 +29,8 @@ export {
   getTownsWithProjects,
 } from './queries/projects.ts'
 export type { ResolvedProject, ResolvedExecutionSpecs } from './queries/projects.ts'
+export { getServiceAreas, getServiceArea } from './queries/service-areas.ts'
+export type { ResolvedServiceArea } from './queries/service-areas.ts'
 export { getArticles, getArticle } from './queries/articles.ts'
 export type { ResolvedArticle, ResolvedArticleBlock } from './queries/articles.ts'
 export { getHome } from './queries/home.ts'
@@ -47,8 +50,12 @@ export type {
   Service,
   SpecSheet,
   SpecList,
+  RichText,
+  ServiceGuide,
+  ServiceGuideBlock,
   Project,
   ExecutionSpecs,
+  ServiceArea,
   Article,
   ArticleBlock,
   ParagraphBlock,

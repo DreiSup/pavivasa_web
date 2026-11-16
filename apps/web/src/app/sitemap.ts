@@ -3,6 +3,7 @@ import { buildSitemapEntries } from '@site/seo'
 import { sitio } from '@/lib/config'
 import { ARTICULOS_SIN_INDEXAR, articulos, proyectos } from '@/lib/datos'
 import { ORDEN_SERVICIOS, RUTA_SERVICIO } from '@/lib/tipos'
+import { indexableServiceAreas } from '@/lib/service-areas'
 
 /** Generado, nunca manual. Añadir aquí cada ruta estática nueva. */
 const rutasEstaticas = ['/', '/proyectos/', '/empresa/', '/presupuesto/', '/blog/']
@@ -13,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     staticRoutes: rutasEstaticas,
     serviceRoutes: ORDEN_SERVICIOS.map((id) => RUTA_SERVICIO[id]),
     projectSlugs: proyectos.map((p) => p.slug),
+    // Solo zonas indexables: una zona sin foto confirmada es noindex y no va aquí.
+    serviceAreaSlugs: indexableServiceAreas.map((z) => z.slug),
     articles: articulos.map((a) => ({ slug: a.slug, dateIso: a.fechaIso })),
     noindexSlugs: ARTICULOS_SIN_INDEXAR,
   })

@@ -4,6 +4,15 @@ import type { Service, ServiceId } from '../schemas/service.ts'
 import { pickLocalized, pickLocalizedList, resolveImage } from './resolve.ts'
 import type { Locale, ResolvedImage, ResolvedQuestion } from './resolve.ts'
 import { resolveQuestions } from './resolve.ts'
+import { parseRichText } from './rich-text.ts'
+import type { ResolvedRichTextRun } from './rich-text.ts'
+
+export type ResolvedServiceGuide = {
+  kicker: string
+  title: string
+  intro: ResolvedRichTextRun[]
+  blocks: { title: string; paragraphs: ResolvedRichTextRun[][] }[]
+}
 
 export type ResolvedService = {
   id: ServiceId
@@ -13,6 +22,8 @@ export type ResolvedService = {
   shortName: string
   summary: string
   description: string
+  seoTitle?: string
+  headingPlace?: string
   intro: string
   introMobile: string
   heroImage: ResolvedImage
@@ -28,9 +39,25 @@ export type ResolvedService = {
     rows: { parameter: string; values: (string | null)[] }[]
   }
   specList?: { title: string; text: string; lines: { label: string; value: string }[] }
+  guide?: ResolvedServiceGuide
   faq: ResolvedQuestion[]
   cta: string
   flagship: boolean
+}
+
+/** A guide with no translation for its heading or intro is dropped whole (never a half-Spanish band); a block without its title is dropped. */
+function resolveGuide(guide: NonNullable<Service['guide']>, locale: Locale): ResolvedServiceGuide | undefined {
+  const kicker = pickLocalized(guide.kicker, locale)
+  const title = pickLocalized(guide.title, locale)
+  const intro = pickLocalized(guide.intro, locale)
+  if (kicker === undefined || title === undefined || intro === undefined) return undefined
+  const blocks: ResolvedServiceGuide['blocks'] = []
+  for (const block of guide.blocks) {
+    const blockTitle = pickLocalized(block.title, locale)
+    if (blockTitle === undefined) continue
+    blocks.push({ title: blockTitle, paragraphs: pickLocalizedList(block.paragraphs, locale).map(parseRichText) })
+  }
+  return { kicker, title, intro: parseRichText(intro), blocks }
 }
 
 function resolveService(rawService: (typeof services)[number], locale: Locale): ResolvedService | undefined {
@@ -39,6 +66,9 @@ function resolveService(rawService: (typeof services)[number], locale: Locale): 
   const name = pickLocalized(service.name, locale)
   const slug = pickLocalized(service.slug, locale)
   if (name === undefined || slug === undefined) return undefined // no translation at all: not publishable in this locale
+  const seoTitle = pickLocalized(service.seoTitle, locale)
+  const headingPlace = pickLocalized(service.headingPlace, locale)
+  const guide = service.guide ? resolveGuide(service.guide, locale) : undefined
 
   return {
     id: service.id,
@@ -48,6 +78,8 @@ function resolveService(rawService: (typeof services)[number], locale: Locale): 
     shortName: pickLocalized(service.shortName, locale) ?? name,
     summary: pickLocalized(service.summary, locale) ?? '',
     description: pickLocalized(service.description, locale) ?? '',
+    ...(seoTitle !== undefined ? { seoTitle } : {}),
+    ...(headingPlace !== undefined ? { headingPlace } : {}),
     intro: pickLocalized(service.intro, locale) ?? '',
     introMobile: pickLocalized(service.introMobile, locale) ?? '',
     heroImage: resolveImage(service.heroImage, locale),
@@ -84,13 +116,14 @@ function resolveService(rawService: (typeof services)[number], locale: Locale): 
           },
         }
       : {}),
+    ...(guide ? { guide } : {}),
     faq: resolveQuestions(service.faq, locale),
     cta: pickLocalized(service.cta, locale) ?? '',
     flagship: service.flagship,
   }
 }
 
-/** All 7 services, in menu order, resolved for `locale`. Services without a translation for `locale` are dropped (never a silent Spanish fallback). */
+/** All services, in menu order, resolved for `locale`. Services without a translation for `locale` are dropped (never a silent Spanish fallback). */
 export function getServices(locale: Locale): ResolvedService[] {
   const out: ResolvedService[] = []
   for (const service of services) {

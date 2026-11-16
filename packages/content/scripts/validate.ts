@@ -24,9 +24,11 @@ import { businessSchema } from '../src/schemas/business.zod.ts'
 import { claimsSchema } from '../src/schemas/claims.zod.ts'
 import { serviceSchema, serviceIdSchema } from '../src/schemas/service.zod.ts'
 import { projectSchema } from '../src/schemas/project.zod.ts'
+import { serviceAreaSchema } from '../src/schemas/service-area.zod.ts'
 import { articleSchema } from '../src/schemas/article.zod.ts'
 import { homeContentSchema } from '../src/schemas/home.zod.ts'
 import { localizedText } from '../src/schemas/localized.zod.ts'
+import { parseRichText } from '../src/queries/rich-text.ts'
 
 import { business } from '../src/data/business.ts'
 import { claims } from '../src/data/claims.ts'
@@ -34,6 +36,7 @@ import { services } from '../src/data/services.ts'
 import { serviceCatalog } from '../src/data/service-catalog.ts'
 import { spaceNames } from '../src/data/space-names.ts'
 import { projects } from '../src/data/projects.ts'
+import { serviceAreas } from '../src/data/service-areas.ts'
 import { articles } from '../src/data/articles.ts'
 import { home } from '../src/data/home.ts'
 
@@ -64,6 +67,10 @@ for (const project of projects) {
   zodIssues(`project "${project.slug.es}"`, projectSchema.safeParse(project))
 }
 
+for (const area of serviceAreas) {
+  zodIssues(`service area "${area.slug.es}"`, serviceAreaSchema.safeParse(area))
+}
+
 for (const article of articles) {
   zodIssues(`article "${article.slug.es}"`, articleSchema.safeParse(article))
 }
@@ -85,7 +92,7 @@ for (const entry of serviceCatalog) {
 // (data/service-catalog.ts intentionally duplicates a few fields out of
 // data/services.ts for client-bundle-size reasons — see its own comment.)
 
-const serviceIds = new Set(services.map((s) => s.id))
+const serviceIds = new Set<string>(services.map((s) => s.id))
 for (const entry of serviceCatalog) {
   if (!serviceIds.has(entry.id)) fail(`service catalog: "${entry.id}" has no matching entry in services.ts`)
 }
@@ -137,6 +144,58 @@ for (const article of articles) {
   }
 }
 
+// ---- 3b. Service guides: every internal link points to a page this content
+// (or a static route of apps/web) produces, and no markup is left half-open.
+// Static routes mirror apps/web/src/app/** (kept by hand, like
+// scripts/verify/checks/page-count.mjs's own list).
+
+const STATIC_ROUTES = ['/', '/proyectos/', '/empresa/', '/presupuesto/', '/blog/']
+const knownRoutes = new Set<string>([
+  ...STATIC_ROUTES,
+  ...services.map((s) => `/${s.slug.es}/`),
+  ...projects.map((p) => `/proyectos/${p.slug.es}/`),
+  ...articles.map((a) => `/blog/${a.slug.es}/`),
+])
+for (const service of services as readonly Service[]) {
+  if (!service.guide) continue
+  const texts = [service.guide.intro.es, ...service.guide.blocks.flatMap((b) => b.paragraphs.map((p) => p.es))]
+  for (const text of texts) {
+    for (const run of parseRichText(text)) {
+      if (run.type === 'link' && !knownRoutes.has(run.href)) {
+        fail(`service "${service.id}": guide links to "${run.href}", which is not a page this content produces`)
+      }
+      if (run.type === 'text' && (/\]\(/.test(run.text) || /\{\{|\}\}/.test(run.text))) {
+        fail(`service "${service.id}": malformed guide markup near "${run.text.slice(0, 60)}"`)
+      }
+    }
+  }
+}
+
+// A service area only lists real projects in its own town, and only names
+// (in `services`, hence in its H1/title) techniques actually done there.
+const projectsBySlug = new Map(projects.map((p) => [p.slug.es as string, p]))
+for (const area of serviceAreas) {
+  const label = `service area "${area.slug.es}"`
+  const done = new Set<string>()
+  for (const id of area.projects) {
+    const project = projectsBySlug.get(id)
+    if (!project) {
+      fail(`${label}: unknown project "${id}"`)
+      continue
+    }
+    if (project.town !== area.town) fail(`${label}: project "${id}" is in "${project.town}", not "${area.town}"`)
+    if (project.province !== area.province) fail(`${label}: project "${id}" is in province "${project.province}", not "${area.province}"`)
+    done.add(project.service)
+  }
+  const declared = new Set<string>(area.services)
+  for (const s of declared) if (!done.has(s)) fail(`${label}: service "${s}" is declared but none of its projects is "${s}"`)
+  for (const s of done) if (!declared.has(s)) fail(`${label}: its projects include "${s}" but \`services\` doesn't`)
+  const townProjects = projects.filter((p) => p.town === area.town).map((p) => p.slug.es as string)
+  for (const id of townProjects) {
+    if (!(area.projects as readonly string[]).includes(id)) fail(`${label}: project "${id}" is in ${area.town} but not listed in the area`)
+  }
+}
+
 // ---- 4. Slugs unique per locale --------------------------------------------
 
 function checkUniqueSlugs(label: string, slugs: readonly { es: string; en?: string; fr?: string; de?: string }[]) {
@@ -155,6 +214,7 @@ function checkUniqueSlugs(label: string, slugs: readonly { es: string; en?: stri
 checkUniqueSlugs('projects', projects.map((p) => p.slug))
 checkUniqueSlugs('articles', articles.map((a) => a.slug))
 checkUniqueSlugs('services', services.map((s) => s.slug))
+checkUniqueSlugs('service areas', serviceAreas.map((a) => a.slug))
 
 // ---- 5. Referenced image files exist under apps/web/public -----------------
 
@@ -171,7 +231,10 @@ for (const tab of home.heroTabs) {
 for (const space of home.spaces) checkImageSrc(`home.spaces (${space.name.es})`, space.image.src)
 for (const service of services as readonly Service[]) checkImageSrc(`service "${service.id}".heroImage`, service.heroImage.src)
 for (const project of projects) {
-  for (const [i, image] of project.images.entries()) checkImageSrc(`project "${project.slug.es}".images[${i}]`, image.src)
+  for (const [i, image] of project.images.entries()) checkImageSrc(`project "${project.slug.es}".images[${i}]`, (image as { src?: string }).src)
+}
+for (const area of serviceAreas) {
+  if ('confirmedPhoto' in area) checkImageSrc(`service area "${area.slug.es}".confirmedPhoto`, (area.confirmedPhoto as { src?: string }).src)
 }
 for (const article of articles) checkImageSrc(`article "${article.slug.es}".image`, article.image.src)
 
@@ -185,5 +248,5 @@ if (errors.length > 0) {
 
 const counts = readdirSync(path.join(publicDir, 'img')).length
 console.log(
-  `content:validate — OK (business, ${services.length} services, ${projects.length} projects, ${articles.length} articles, home, ${counts} images under public/img)`,
+  `content:validate — OK (business, ${services.length} services, ${projects.length} projects, ${serviceAreas.length} service areas, ${articles.length} articles, home, ${counts} images under public/img)`,
 )

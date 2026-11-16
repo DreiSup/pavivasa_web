@@ -11,6 +11,9 @@ export type { LocalBusinessInput } from './json-ld/business.ts'
 export { buildServiceJsonLd } from './json-ld/service.ts'
 export type { ServiceInput } from './json-ld/service.ts'
 
+export { buildServiceAreaJsonLd } from './json-ld/service-area.ts'
+export type { ServiceAreaInput } from './json-ld/service-area.ts'
+
 export { buildFaqJsonLd } from './json-ld/faq.ts'
 export type { FaqQuestion } from './json-ld/faq.ts'
 

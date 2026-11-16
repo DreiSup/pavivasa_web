@@ -24,7 +24,7 @@ function Rotulo({ children, className = '' }: { children: React.ReactNode; class
 
 const enlacePie = 'text-sobre-tinta no-underline hover:text-fondo-alt'
 
-/** Pie: NAP, siete servicios, empresa y redes, legales. Fondo tinta. */
+/** Pie: NAP, servicios, empresa y redes, legales. Fondo tinta. */
 export default function Pie() {
   const anio = new Date().getFullYear()
 
